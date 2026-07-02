@@ -586,7 +586,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>REEL · A FIRST DRAFT · TMDB + JUSTWATCH DATA COMING NEXT</footer>
+  <footer>REEL · LIVE DATA VIA WATCHMODE · MULTIPLAYER SYNC COMING NEXT</footer>
 
   <!-- ═══════════════ MATCH OVERLAY ═══════════════ -->
   <div class="match-overlay" id="matchOverlay">
@@ -602,12 +602,12 @@
 <script>
   /* ════════════════════════════════════════════════════════════
      DATA LAYER
-     Mock data below stands in for real calls to:
-       - TMDB /discover + /watch/providers  (titles, posters, platform availability)
-       - A future backend for real multi-user room sync
-     Swap MOCK_MOVIES for a fetch() to TMDB when the API key is wired in.
-     Each movie keeps the shape TMDB roughly returns, so the swap is a
-     data-mapping change, not a UI rewrite.
+     Real movie data now comes from the Reel backend (BACKEND_URL below),
+     which proxies Watchmode's list-titles + title/details endpoints.
+     MOCK_MOVIES below is kept only as an offline fallback — used if the
+     backend is unreachable (e.g. Render free-tier cold start) so the
+     demo never looks broken.
+     Still missing: real multi-user room sync (friend votes are simulated).
      ════════════════════════════════════════════════════════════ */
 
   const PLATFORMS = [
@@ -638,7 +638,7 @@
   const BACKEND_URL = 'https://watchtogether-backend-zxwy.onrender.com';
 
   // friendLikes: how many of the (mocked) other room members already liked this title.
-  // gradient: stand-in for a TMDB poster image until real fetches are wired in.
+  // gradient: fallback poster styling used only when a real poster_url is unavailable.
   const MOCK_MOVIES = [
     { title:'Paper Moons',      year:2019, genre:'Comedy',   runtime:98,  platform:'Netflix',     emoji:'🌙', gradient:'linear-gradient(160deg,#3b2f63,#1a1430)', friendLikes:2 },
     { title:'The Long Static',  year:2022, genre:'Thriller', runtime:112, platform:'HBO Max',      emoji:'📺', gradient:'linear-gradient(160deg,#1c3b3a,#0d1a1f)', friendLikes:0 },
@@ -988,7 +988,9 @@
     document.getElementById('matchOverlay').classList.add('active');
 
     document.getElementById('btnMatchWatch').onclick = () => {
-      // Placeholder: in production this routes to the platform deep link or a JustWatch search.
+      // Placeholder: in production this should route to the exact streaming platform's
+      // page for this title (Watchmode's /title/{id}/sources/ can provide that link).
+      // For now it opens a JustWatch search as a reasonable interim destination.
       window.open(`https://www.justwatch.com/us/search?q=${encodeURIComponent(movie.title)}`, '_blank', 'noopener');
     };
     document.getElementById('btnMatchContinue').onclick = () => {
