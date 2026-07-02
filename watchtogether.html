@@ -321,6 +321,7 @@
     font-size:3.2rem;
     position:relative;
     overflow:hidden;
+    background-color:var(--surface-2);
   }
   .card .poster .title-overlay{
     position:absolute; inset:auto 0 0 0;
@@ -861,6 +862,7 @@
     const upcoming = deck.slice(state.deckIndex, state.deckIndex+2);
     upcoming.forEach((movie, i) => {
       const card = buildCard(movie, i === 0);
+      card.style.zIndex = i === 0 ? '2' : '1';
       if(i === 1){ card.style.transform = 'scale(.95) translateY(10px)'; card.style.opacity = '.6'; }
       wrap.appendChild(card);
     });
