@@ -501,6 +501,8 @@
     transition:transform .15s, border-color .15s;
     display:flex;
     flex-direction:column;
+    color:var(--ink);
+    font-family:inherit;
   }
   .favorite-brick:hover{ transform:translateY(-3px); border-color:var(--amber); }
   .favorite-brick .brick-poster{
@@ -520,6 +522,7 @@
     line-height:1.1;
     letter-spacing:.01em;
     margin-bottom:.25rem;
+    color:var(--ink);
   }
   .favorite-brick .brick-meta{
     font-family:var(--font-mono);
@@ -583,7 +586,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v1.0</div>
+    <div class="wordmark">Reel — build v1.1</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
