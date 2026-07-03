@@ -370,30 +370,22 @@
     border-radius:6px;
     letter-spacing:.04em;
   }
-  .card .seen-toggle{
-    position:absolute; top:14px; left:26px; z-index:3;
-    background:rgba(11,14,20,.55);
-    border:1px solid rgba(255,255,255,.25);
-    color:var(--ink);
-    width:30px; height:30px;
-    border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:.85rem;
-  }
-  .card .seen-toggle[data-seen="true"]{ background:var(--rose); border-color:var(--rose); }
 
   .card .info-toggle{
     position:absolute; bottom:14px; right:14px; z-index:4;
-    background:rgba(11,14,20,.6);
+    background:rgba(11,14,20,.65);
     border:1px solid rgba(255,255,255,.3);
     color:var(--ink);
-    width:30px; height:30px;
-    border-radius:50%;
+    padding:.4rem .75rem;
+    border-radius:999px;
     display:flex; align-items:center; justify-content:center;
-    font-size:.95rem;
+    font-size:.75rem;
+    font-family:var(--font-mono);
+    letter-spacing:.02em;
+    white-space:nowrap;
     transition:background .15s;
   }
-  .card .info-toggle:hover{ background:rgba(11,14,20,.85); }
+  .card .info-toggle:hover{ background:rgba(11,14,20,.9); }
 
   .card .overview-overlay{
     position:absolute; inset:0;
@@ -543,7 +535,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v0.5</div>
+    <div class="wordmark">Reel — build v0.6</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -797,7 +789,6 @@
     moods: new Set(),
     time: null,
     deckIndex: 0,
-    seen: new Set(),
     favorites: [],         // movies swiped right, across the whole session
     backendPage: 1,        // Watchmode page currently loaded — used for "load more"
     loadingMore: false,
@@ -1053,11 +1044,11 @@
     const hint = document.getElementById('deckHint');
     if(state.mode === 'solo'){
       eyebrow.textContent = 'Just for you';
-      hint.textContent = "Drag a card, or use the buttons. ⓘ shows the plot, 👁 marks it as already seen.";
+      hint.textContent = 'Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.';
     } else {
       const code = document.getElementById('roomCode').textContent || 'ROOM';
       eyebrow.textContent = `Room ${code} · 3 watching`;
-      hint.textContent = "Drag a card, or use the buttons. Amber flag = a friend already liked it · ⓘ shows the plot · 👁 marks it as seen.";
+      hint.textContent = 'Drag a card, or use the buttons. Amber flag = a friend already liked it. Tap "Plot summary" to read more.';
     }
   }
 
@@ -1115,19 +1106,6 @@
       card.appendChild(flag);
     }
 
-    const seenBtn = document.createElement('button');
-    seenBtn.className = 'seen-toggle';
-    seenBtn.setAttribute('aria-label','Mark as already seen');
-    seenBtn.textContent = '👁';
-    seenBtn.dataset.seen = state.seen.has(movie.title) ? 'true' : 'false';
-    seenBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const nowSeen = seenBtn.dataset.seen !== 'true';
-      seenBtn.dataset.seen = nowSeen ? 'true' : 'false';
-      if(nowSeen) state.seen.add(movie.title); else state.seen.delete(movie.title);
-    });
-    card.appendChild(seenBtn);
-
     const left = document.createElement('div');
     left.className = 'sprockets left';
     const right = document.createElement('div');
@@ -1160,7 +1138,7 @@
     const infoBtn = document.createElement('button');
     infoBtn.className = 'info-toggle';
     infoBtn.setAttribute('aria-label','Show plot summary');
-    infoBtn.textContent = 'ⓘ';
+    infoBtn.innerHTML = 'ⓘ Plot summary';
     infoBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       overviewOverlay.classList.toggle('show');
