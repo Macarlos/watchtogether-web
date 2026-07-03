@@ -540,7 +540,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v0.8</div>
+    <div class="wordmark">Reel — build v0.9</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -993,11 +993,11 @@
     }));
   }
 
-  function fetchDiscoverPage(page){
+  function fetchDiscoverPage(page, limit){
     const platformParam = [...state.platforms].join(',');
     const moodParam = [...state.moods].join(',');
     const timeParam = state.time ? `&time_budget=${state.time}` : '';
-    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}${timeParam}&region=US&limit=16&page=${page}`;
+    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}${timeParam}&region=US&limit=${limit}&page=${page}`;
     return fetch(url)
       .then(r => { if(!r.ok) throw new Error('bad response'); return r.json(); })
       .then(data => mapApiResults(data.results || []));
@@ -1011,11 +1011,15 @@
     const wrap = document.getElementById('deckWrap');
     wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>Finding what you can watch…</p></div>`;
 
-    fetchDiscoverPage(1)
+    // A smaller first batch enriches faster, so the first card appears sooner.
+    // We immediately start pulling more in the background right after, rather
+    // than waiting until the visible stack is almost empty.
+    fetchDiscoverPage(1, 8)
       .then(mapped => {
         if(mapped.length === 0) throw new Error('empty');
         deck = mapped;
         renderDeck();
+        loadMoreIfNeeded(true);
       })
       .catch(() => {
         // Backend unreachable (likely Render cold-start) or no matches — fall back to mock data.
@@ -1029,12 +1033,14 @@
   }
 
   // Fetches the next page in the background once the visible stack is running
-  // low, so swiping never hard-stops at an arbitrary small number.
-  function loadMoreIfNeeded(){
+  // low, so swiping never hard-stops at an arbitrary small number. Pass
+  // `eager=true` to prefetch immediately regardless of remaining count (used
+  // right after the first small batch loads, so more is ready ahead of time).
+  function loadMoreIfNeeded(eager){
     if(state.loadingMore) return;
-    if(deck.length - state.deckIndex > 3) return;
+    if(!eager && deck.length - state.deckIndex > 4) return;
     state.loadingMore = true;
-    fetchDiscoverPage(state.backendPage + 1)
+    fetchDiscoverPage(state.backendPage + 1, 14)
       .then(more => {
         state.backendPage++;
         state.loadingMore = false;
