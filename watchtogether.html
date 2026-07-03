@@ -455,6 +455,38 @@
   }
   .match-card .who span{ color:var(--amber); }
 
+  /* ───────────────────────── Where-to-watch panel ───────────────────────── */
+  .providers-panel{ width:100%; text-align:left; }
+  .provider-section{ margin-bottom:1rem; }
+  .provider-section:last-child{ margin-bottom:0; }
+  .provider-section-label{
+    font-family:var(--font-mono);
+    font-size:.68rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:.5rem;
+  }
+  .provider-chips{ display:flex; flex-wrap:wrap; gap:.5rem; }
+  .provider-chip{
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:.4rem .7rem .4rem .4rem;
+    font-size:.82rem;
+  }
+  .provider-chip img{
+    width:22px; height:22px; border-radius:5px; object-fit:cover; flex-shrink:0;
+  }
+  .provider-chip .price{ color:var(--teal); font-family:var(--font-mono); font-size:.75rem; margin-left:.15rem; }
+  .providers-loading, .providers-empty{
+    color:var(--muted); font-size:.85rem; font-style:italic;
+  }
+  .providers-empty a{ color:var(--teal); }
+
   /* ───────────────────────── Empty state ───────────────────────── */
   .empty-state{
     text-align:center;
@@ -479,7 +511,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v0.3</div>
+    <div class="wordmark">Reel — build v0.4</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -620,8 +652,12 @@
       <div class="ticket" id="finalPickCard" style="text-align:left; border-style:solid;">
         <!-- populated by JS -->
       </div>
-      <button class="btn btn-primary btn-block" id="btnFinalWatch">Find it to watch →</button>
-      <button class="btn btn-ghost btn-block" id="btnFinalRestart" style="margin-top:.6rem;">Start a new session</button>
+      <div class="card" style="position:static; padding:1.4rem; margin-bottom:1rem;">
+        <div class="providers-panel" id="finalPickProviders">
+          <p class="providers-loading">Checking where to watch…</p>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-block" id="btnFinalRestart">Start a new session</button>
     </section>
 
     <!-- ═══════════════ SCREEN 5 — EMPTY / DONE ═══════════════ -->
@@ -647,8 +683,10 @@
       <div class="flash">It's a match</div>
       <p class="sub">Everyone in the room is in.</p>
       <div class="who" id="matchWho">Liked by <span>you, Ola, Marcin</span></div>
-      <button class="btn btn-primary btn-block" id="btnMatchWatch">Find it to watch →</button>
-      <button class="btn btn-ghost btn-block" id="btnMatchContinue" style="margin-top:.6rem;">Keep swiping</button>
+      <div class="providers-panel" id="matchProviders" style="margin-bottom:1.3rem;">
+        <p class="providers-loading">Checking where to watch…</p>
+      </div>
+      <button class="btn btn-ghost btn-block" id="btnMatchContinue">Keep swiping</button>
     </div>
   </div>
 
@@ -905,6 +943,7 @@
 
   function mapApiResults(results){
     return results.map((m, i) => ({
+      watchmodeId: m.watchmode_id,
       title: m.title,
       year: m.year,
       genre: (m.genres || []).slice(0,2).join(' · ') || 'Movie',
@@ -1222,6 +1261,44 @@
     resolveFinalSwipe(movie, true, topCard);
   });
 
+  /* ════════════════════════════════════════════════════════════
+     WHERE TO WATCH — real subscription/rent/buy info with icons,
+     fetched on-demand only for the one title being decided (not
+     for every card in the deck, to keep API usage reasonable).
+     ════════════════════════════════════════════════════════════ */
+  function providersSectionHtml(label, items, showPrice){
+    if(!items || items.length === 0) return '';
+    const chips = items.map(p => `
+      <div class="provider-chip">
+        ${p.logo_url ? `<img src="${p.logo_url}" alt="${p.name}" />` : ''}
+        <span>${p.name}${showPrice && p.price ? `<span class="price"> · $${p.price}</span>` : ''}</span>
+      </div>
+    `).join('');
+    return `<div class="provider-section"><div class="provider-section-label">${label}</div><div class="provider-chips">${chips}</div></div>`;
+  }
+
+  function renderProvidersPanel(containerEl, watchmodeId, movieTitle){
+    if(!watchmodeId){
+      containerEl.innerHTML = `<p class="providers-empty">Streaming info isn't available for this title yet. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
+      return;
+    }
+    containerEl.innerHTML = `<p class="providers-loading">Checking where to watch…</p>`;
+    fetch(`${BACKEND_URL}/api/movie/${watchmodeId}/providers?region=US`)
+      .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
+      .then(data => {
+        const html = [
+          providersSectionHtml('Stream with subscription', data.subscription, false),
+          providersSectionHtml('Rent', data.rent, true),
+          providersSectionHtml('Buy', data.buy, true),
+          providersSectionHtml('Free with ads', data.free, false),
+        ].join('');
+        containerEl.innerHTML = html || `<p class="providers-empty">No US streaming info found for this title. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
+      })
+      .catch(() => {
+        containerEl.innerHTML = `<p class="providers-empty">Couldn't load streaming info right now. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
+      });
+  }
+
   function showFinalPick(movie){
     const el = document.getElementById('finalPickCard');
     el.innerHTML = `
@@ -1234,9 +1311,7 @@
         </div>
       </div>
     `;
-    document.getElementById('btnFinalWatch').onclick = () => {
-      window.open(`https://www.justwatch.com/us/search?q=${encodeURIComponent(movie.title)}`, '_blank', 'noopener');
-    };
+    renderProvidersPanel(document.getElementById('finalPickProviders'), movie.watchmodeId, movie.title);
     showScreen('screen-final-pick');
   }
 
@@ -1248,15 +1323,10 @@
      ════════════════════════════════════════════════════════════ */
   function showMatch(movie){
     const names = MOCK_FRIEND_NAMES.slice(0, movie.friendLikes);
-    document.getElementById('matchWho').innerHTML = `Liked by <span>you, ${names.join(', ')}</span> — on ${movie.platform}`;
+    document.getElementById('matchWho').innerHTML = `Liked by <span>you, ${names.join(', ')}</span>`;
     document.getElementById('matchOverlay').classList.add('active');
+    renderProvidersPanel(document.getElementById('matchProviders'), movie.watchmodeId, movie.title);
 
-    document.getElementById('btnMatchWatch').onclick = () => {
-      // Placeholder: in production this should route to the exact streaming platform's
-      // page for this title (Watchmode's /title/{id}/sources/ can provide that link).
-      // For now it opens a JustWatch search as a reasonable interim destination.
-      window.open(`https://www.justwatch.com/us/search?q=${encodeURIComponent(movie.title)}`, '_blank', 'noopener');
-    };
     document.getElementById('btnMatchContinue').onclick = () => {
       document.getElementById('matchOverlay').classList.remove('active');
       renderDeck();
