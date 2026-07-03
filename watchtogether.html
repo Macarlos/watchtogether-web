@@ -540,7 +540,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v0.7</div>
+    <div class="wordmark">Reel — build v0.8</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -1155,6 +1155,11 @@
     infoBtn.className = 'info-toggle';
     infoBtn.setAttribute('aria-label','Show plot summary');
     infoBtn.innerHTML = 'ⓘ Plot summary';
+    // The card listens for pointerdown/pointerup to power dragging — without
+    // stopping propagation here too, a tap on this button gets briefly caught
+    // by that drag logic as well, which caused the summary to flash and close.
+    infoBtn.addEventListener('pointerdown', e => e.stopPropagation());
+    infoBtn.addEventListener('pointerup', e => e.stopPropagation());
     infoBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       overviewOverlay.classList.toggle('show');
@@ -1322,7 +1327,7 @@
     return `<div class="provider-section"><div class="provider-section-label">${label}</div><div class="provider-chips">${chips}</div></div>`;
   }
 
-  function renderProvidersPanel(containerEl, watchmodeId, movieTitle){
+  function renderProvidersPanel(containerEl, watchmodeId, movieTitle, badgeEl){
     if(!watchmodeId){
       containerEl.innerHTML = `<p class="providers-empty">Streaming info isn't available for this title yet. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
       return;
@@ -1338,6 +1343,19 @@
           providersSectionHtml('Free with ads', data.free, false),
         ].join('');
         containerEl.innerHTML = html || `<p class="providers-empty">No US streaming info found for this title. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
+
+        // The badge above was only ever a placeholder echoing whichever platforms
+        // were selected as filters — now that we have the real answer, replace it.
+        if(badgeEl){
+          const subNames = (data.subscription || []).map(p => p.name);
+          if(subNames.length > 0){
+            badgeEl.textContent = subNames.join(', ');
+          } else if((data.rent || []).length > 0 || (data.buy || []).length > 0){
+            badgeEl.textContent = 'Rent or buy only';
+          } else {
+            badgeEl.textContent = 'Availability varies';
+          }
+        }
       })
       .catch(() => {
         containerEl.innerHTML = `<p class="providers-empty">Couldn't load streaming info right now. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
@@ -1352,11 +1370,16 @@
         <div>
           <div style="font-family:var(--font-display); font-size:1.7rem; text-transform:uppercase; letter-spacing:.01em; line-height:1;">${movie.title}</div>
           <div style="font-family:var(--font-mono); font-size:.75rem; color:var(--muted); margin-top:.4rem;">${movie.year} · ${movie.genre} · ${movie.runtime} min</div>
-          <div style="margin-top:.55rem;"><span class="platform-badge">${movie.platform}</span></div>
+          <div style="margin-top:.55rem;"><span class="platform-badge" id="finalPickPlatformBadge">Checking…</span></div>
         </div>
       </div>
     `;
-    renderProvidersPanel(document.getElementById('finalPickProviders'), movie.watchmodeId, movie.title);
+    renderProvidersPanel(
+      document.getElementById('finalPickProviders'),
+      movie.watchmodeId,
+      movie.title,
+      document.getElementById('finalPickPlatformBadge')
+    );
     showScreen('screen-final-pick');
   }
 
