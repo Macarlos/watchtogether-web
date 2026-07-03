@@ -484,6 +484,49 @@
   }
   .match-card .who span{ color:var(--amber); }
 
+  /* ───────────────────────── Favorites grid ───────────────────────── */
+  .favorites-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap:.9rem;
+    width:100%;
+  }
+  .favorite-brick{
+    cursor:pointer;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    text-align:left;
+    transition:transform .15s, border-color .15s;
+    display:flex;
+    flex-direction:column;
+  }
+  .favorite-brick:hover{ transform:translateY(-3px); border-color:var(--amber); }
+  .favorite-brick .brick-poster{
+    width:100%;
+    aspect-ratio:2/3;
+    background-size:cover;
+    background-position:center;
+    display:flex; align-items:center; justify-content:center;
+    font-size:2rem;
+    flex-shrink:0;
+  }
+  .favorite-brick .brick-info{ padding:.55rem .6rem .7rem; }
+  .favorite-brick .brick-title{
+    font-family:var(--font-display);
+    font-size:.95rem;
+    text-transform:uppercase;
+    line-height:1.1;
+    letter-spacing:.01em;
+    margin-bottom:.25rem;
+  }
+  .favorite-brick .brick-meta{
+    font-family:var(--font-mono);
+    font-size:.65rem;
+    color:var(--muted);
+  }
+
   /* ───────────────────────── Where-to-watch panel ───────────────────────── */
   .providers-panel{ width:100%; text-align:left; }
   .provider-section{ margin-bottom:1rem; }
@@ -540,7 +583,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v0.9</div>
+    <div class="wordmark">Reel — build v1.0</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -655,27 +698,22 @@
       <button class="btn btn-ghost" id="btnGoToFavorites" style="margin-top:1rem; display:none;">See my picks so far →</button>
     </section>
 
-    <!-- ═══════════════ SCREEN 4B — FINAL ROUND (swipe through favorites) ═══════════════ -->
-    <section class="screen" id="screen-final-round">
+    <!-- ═══════════════ SCREEN 4B — FAVORITES GRID (browse everything you liked) ═══════════════ -->
+    <section class="screen" id="screen-favorites-grid">
       <div class="section-head" style="text-align:center;">
-        <span class="eyebrow">Round 2</span>
-        <h2>Pick tonight's winner</h2>
+        <span class="eyebrow" id="favoritesCount">3 picks</span>
+        <h2>Everything you liked</h2>
       </div>
 
-      <div class="deck-progress" id="finalDeckProgress">1 / 3</div>
-      <div class="deck-wrap" id="finalDeckWrap"></div>
+      <div class="favorites-grid" id="favoritesGrid"></div>
 
-      <div class="swipe-controls">
-        <button class="swipe-btn pass" id="btnFinalPass" aria-label="Not tonight">✕</button>
-        <button class="swipe-btn like" id="btnFinalLike" aria-label="This is the one">♥</button>
-      </div>
-      <p class="demo-note">✕ drops it from the shortlist · ♥ locks it in as tonight's pick.</p>
+      <button class="btn btn-ghost" id="btnBackFromFavorites" style="margin-top:1.5rem;">← Back to swiping</button>
     </section>
 
     <!-- ═══════════════ SCREEN 4C — FINAL PICK ═══════════════ -->
     <section class="screen" id="screen-final-pick">
       <div class="section-head" style="text-align:center;">
-        <span class="eyebrow">Decided</span>
+        <span class="eyebrow">Selected</span>
         <h2>Tonight you're watching</h2>
       </div>
       <div class="ticket" id="finalPickCard" style="text-align:left; border-style:solid;">
@@ -686,7 +724,8 @@
           <p class="providers-loading">Checking where to watch…</p>
         </div>
       </div>
-      <button class="btn btn-ghost btn-block" id="btnFinalRestart">Start a new session</button>
+      <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid">← Back to your picks</button>
+      <button class="btn btn-ghost btn-block" id="btnFinalRestart" style="margin-top:.6rem;">Start a new session</button>
     </section>
 
     <!-- ═══════════════ SCREEN 5 — EMPTY / DONE ═══════════════ -->
@@ -695,7 +734,7 @@
         <div class="icon">🍿</div>
         <h3 id="doneTitle">That's the stack</h3>
         <p id="doneText">Everyone's swiped. Whatever matched is above — no match yet? Widen the mood or add another platform.</p>
-        <button class="btn btn-primary" id="btnGoToFavoritesFromDone" style="display:none; margin-bottom:.6rem;">Pick from my favorites →</button>
+        <button class="btn btn-primary" id="btnGoToFavoritesFromDone" style="display:none; margin-bottom:.6rem;">See my picks →</button>
         <button class="btn btn-ghost" id="btnRestart">Start a new session</button>
       </div>
     </section>
@@ -1260,62 +1299,55 @@
   });
 
   /* ════════════════════════════════════════════════════════════
-     FINAL ROUND — swipe through just your favorites to pick one
+     FAVORITES GRID — browse everything you liked, tap any poster
+     to see the full where-to-watch details for that one title.
      ════════════════════════════════════════════════════════════ */
-  let finalDeck = [];
-  let finalIndex = 0;
+  let favoritesReturnScreen = 'screen-deck';
 
-  function startFinalRound(){
+  function showFavoritesGrid(returnScreen){
     if(state.favorites.length === 0) return;
-    if(state.favorites.length === 1){ showFinalPick(state.favorites[0]); return; }
-    finalDeck = [...state.favorites];
-    finalIndex = 0;
-    showScreen('screen-final-round');
-    renderFinalRound();
+    favoritesReturnScreen = returnScreen || 'screen-deck';
+    renderFavoritesGrid();
+    showScreen('screen-favorites-grid');
   }
 
-  function renderFinalRound(){
-    const wrap = document.getElementById('finalDeckWrap');
-    if(finalIndex >= finalDeck.length){
-      // Passed on everything — fall back to the last favorite rather than dead-ending.
-      showFinalPick(state.favorites[state.favorites.length - 1]);
-      return;
-    }
-    document.getElementById('finalDeckProgress').textContent = `${finalIndex+1} / ${finalDeck.length}`;
-    wrap.innerHTML = '';
-    const upcoming = finalDeck.slice(finalIndex, finalIndex+2);
-    upcoming.forEach((movie, i) => {
-      const card = buildCard(movie, i === 0, resolveFinalSwipe);
-      card.style.zIndex = i === 0 ? '2' : '1';
-      if(i === 1){ card.style.transform = 'scale(.95) translateY(10px)'; card.style.opacity = '.6'; }
-      wrap.appendChild(card);
+  function renderFavoritesGrid(){
+    const grid = document.getElementById('favoritesGrid');
+    const countEl = document.getElementById('favoritesCount');
+    countEl.textContent = `${state.favorites.length} pick${state.favorites.length !== 1 ? 's' : ''}`;
+    grid.innerHTML = '';
+
+    state.favorites.forEach(movie => {
+      const brick = document.createElement('button');
+      brick.className = 'favorite-brick';
+
+      const poster = document.createElement('div');
+      poster.className = 'brick-poster';
+      if(movie.poster_url){
+        poster.style.backgroundImage = `url('${movie.poster_url}')`;
+      } else {
+        poster.style.background = movie.gradient || 'linear-gradient(160deg,#2a3040,#151a28)';
+        poster.textContent = movie.emoji || '🎬';
+      }
+      brick.appendChild(poster);
+
+      const info = document.createElement('div');
+      info.className = 'brick-info';
+      info.innerHTML = `
+        <div class="brick-title">${movie.title}</div>
+        <div class="brick-meta">${movie.year} · ${movie.runtime} min</div>
+      `;
+      brick.appendChild(info);
+
+      brick.addEventListener('click', () => showFinalPick(movie));
+      grid.appendChild(brick);
     });
   }
 
-  function resolveFinalSwipe(movie, liked, cardEl){
-    const flyX = liked ? 600 : -600;
-    if(cardEl){
-      cardEl.style.transform = `translateX(${flyX}px) rotate(${flyX/14}deg)`;
-      cardEl.style.opacity = '0';
-    }
-    setTimeout(() => {
-      if(liked){ showFinalPick(movie); }
-      else { finalIndex++; renderFinalRound(); }
-    }, 260);
-  }
-
-  document.getElementById('btnFinalPass').addEventListener('click', () => {
-    const movie = finalDeck[finalIndex];
-    if(!movie) return;
-    const topCard = document.querySelector('#finalDeckWrap .card');
-    resolveFinalSwipe(movie, false, topCard);
-  });
-  document.getElementById('btnFinalLike').addEventListener('click', () => {
-    const movie = finalDeck[finalIndex];
-    if(!movie) return;
-    const topCard = document.querySelector('#finalDeckWrap .card');
-    resolveFinalSwipe(movie, true, topCard);
-  });
+  document.getElementById('btnGoToFavorites').addEventListener('click', () => showFavoritesGrid('screen-deck'));
+  document.getElementById('btnGoToFavoritesFromDone').addEventListener('click', () => showFavoritesGrid('screen-done'));
+  document.getElementById('btnBackFromFavorites').addEventListener('click', () => showScreen(favoritesReturnScreen));
+  document.getElementById('btnBackToFavoritesGrid').addEventListener('click', () => showScreen('screen-favorites-grid'));
 
   /* ════════════════════════════════════════════════════════════
      WHERE TO WATCH — real subscription/rent/buy info with icons,
@@ -1389,9 +1421,6 @@
     showScreen('screen-final-pick');
   }
 
-  document.getElementById('btnGoToFavorites').addEventListener('click', startFinalRound);
-  document.getElementById('btnGoToFavoritesFromDone').addEventListener('click', startFinalRound);
-
   /* ════════════════════════════════════════════════════════════
      MATCH OVERLAY
      ════════════════════════════════════════════════════════════ */
@@ -1422,8 +1451,6 @@
     state.loadingMore = false;
     document.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
     if(friendJoinTimer) clearInterval(friendJoinTimer);
-    finalDeck = [];
-    finalIndex = 0;
     showScreen('screen-hero');
   }
 
