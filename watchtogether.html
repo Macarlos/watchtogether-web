@@ -489,46 +489,6 @@
   }
   .demo-note strong{ color:var(--teal); }
 
-  /* ───────────────────────── Match overlay ───────────────────────── */
-  .match-overlay{
-    position:fixed; inset:0;
-    background:rgba(5,7,14,.85);
-    backdrop-filter:blur(4px);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:50;
-    padding:1.5rem;
-  }
-  .match-overlay.active{ display:flex; }
-  .match-card{
-    background:var(--surface);
-    border:1px solid var(--teal);
-    border-radius:var(--radius);
-    padding:2.2rem 1.8rem;
-    text-align:center;
-    max-width:340px;
-    width:100%;
-    animation:pop .4s cubic-bezier(.2,.9,.25,1.4);
-  }
-  @keyframes pop{ from{ opacity:0; transform:scale(.85);} to{opacity:1; transform:scale(1);} }
-  .match-card .flash{
-    font-family:var(--font-display);
-    font-size:2.6rem;
-    color:var(--teal);
-    text-transform:uppercase;
-    letter-spacing:.02em;
-    margin-bottom:.4rem;
-  }
-  .match-card p.sub{ color:var(--muted); font-size:.88rem; margin-bottom:1.3rem; }
-  .match-card .who{
-    font-family:var(--font-mono);
-    font-size:.78rem;
-    color:var(--ink);
-    margin-bottom:1.5rem;
-  }
-  .match-card .who span{ color:var(--amber); }
-
   /* ───────────────────────── Favorites grid ───────────────────────── */
   .favorites-grid{
     display:grid;
@@ -639,7 +599,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v2.0</div>
+    <div class="wordmark">Reel — build v2.1</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -790,11 +750,13 @@
     <!-- ═══════════════ SCREEN 4C — FINAL PICK ═══════════════ -->
     <section class="screen" id="screen-final-pick">
       <div class="section-head" style="text-align:center;">
-        <span class="eyebrow">Selected</span>
-        <h2>Tonight you're watching</h2>
+        <span class="eyebrow" id="finalPickEyebrow">Selected</span>
+        <h2 id="finalPickHeading">Tonight you're watching</h2>
+        <p class="hero-sub" id="finalPickMatchedBy" style="display:none; margin-top:.4rem;"></p>
       </div>
 
       <div class="final-pick-nav">
+        <button class="btn btn-primary" id="btnKeepSwipingTop" style="display:none;">Keep swiping →</button>
         <button class="btn btn-ghost" id="btnBackToFavoritesGridTop">← Back to your picks</button>
         <button class="btn btn-ghost" id="btnFinalRestartTop">Start a new session</button>
       </div>
@@ -813,6 +775,7 @@
         </div>
       </div>
 
+      <button class="btn btn-primary btn-block" id="btnKeepSwiping" style="display:none; margin-bottom:.6rem;">Keep swiping →</button>
       <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid">← Back to your picks</button>
       <button class="btn btn-ghost btn-block" id="btnFinalRestart" style="margin-top:.6rem;">Start a new session</button>
     </section>
@@ -834,19 +797,6 @@
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
   <footer>REEL · LIVE DATA VIA WATCHMODE · MULTIPLAYER SYNC COMING NEXT</footer>
-
-  <!-- ═══════════════ MATCH OVERLAY ═══════════════ -->
-  <div class="match-overlay" id="matchOverlay">
-    <div class="match-card">
-      <div class="flash">It's a match</div>
-      <p class="sub">Everyone in the room is in.</p>
-      <div class="who" id="matchWho">Liked by <span>you, Ola, Marcin</span></div>
-      <div class="providers-panel" id="matchProviders" style="margin-bottom:1.3rem;">
-        <p class="providers-loading">Checking where to watch…</p>
-      </div>
-      <button class="btn btn-ghost btn-block" id="btnMatchContinue">Keep swiping</button>
-    </div>
-  </div>
 
 <script>
   /* ════════════════════════════════════════════════════════════
@@ -1463,7 +1413,8 @@
       if(liked){
         addToFavorites(movie);
         if(state.mode === 'group' && movie.friendLikes > 0){
-          showMatch(movie);
+          const names = MOCK_FRIEND_NAMES.slice(0, movie.friendLikes);
+          showFinalPick(movie, names);
           return;
         }
         showAddedToast();
@@ -1600,7 +1551,25 @@
     attempt(1);
   }
 
-  function showFinalPick(movie){
+  function showFinalPick(movie, matchedNames){
+    const isMatch = Array.isArray(matchedNames) && matchedNames.length > 0;
+
+    document.getElementById('finalPickEyebrow').textContent = isMatch ? "It's a match" : 'Selected';
+    document.getElementById('finalPickHeading').textContent = isMatch ? "Everyone's in" : "Tonight you're watching";
+
+    const matchedByEl = document.getElementById('finalPickMatchedBy');
+    if(isMatch){
+      matchedByEl.innerHTML = `Liked by <strong style="color:var(--amber);">you, ${matchedNames.join(', ')}</strong>`;
+      matchedByEl.style.display = 'block';
+    } else {
+      matchedByEl.style.display = 'none';
+    }
+
+    // "Keep swiping" only makes sense mid-session (a match) — from the
+    // favorites grid you're just browsing, so it isn't shown there.
+    document.getElementById('btnKeepSwipingTop').style.display = isMatch ? 'inline-block' : 'none';
+    document.getElementById('btnKeepSwiping').style.display = isMatch ? 'inline-block' : 'none';
+
     const el = document.getElementById('finalPickCard');
     const yearLabel = movie.endYear && movie.endYear !== movie.year
       ? `${movie.year}–${movie.endYear}`
@@ -1661,23 +1630,15 @@
     showScreen('screen-final-pick');
   }
 
+  function keepSwipingFromMatch(){
+    renderDeck();
+    showScreen('screen-deck');
+  }
+  document.getElementById('btnKeepSwipingTop').addEventListener('click', keepSwipingFromMatch);
+  document.getElementById('btnKeepSwiping').addEventListener('click', keepSwipingFromMatch);
+
   document.getElementById('btnBackToFavoritesGridTop').addEventListener('click', () => showScreen('screen-favorites-grid'));
   document.getElementById('btnFinalRestartTop').addEventListener('click', () => fullRestart());
-
-  /* ════════════════════════════════════════════════════════════
-     MATCH OVERLAY
-     ════════════════════════════════════════════════════════════ */
-  function showMatch(movie){
-    const names = MOCK_FRIEND_NAMES.slice(0, movie.friendLikes);
-    document.getElementById('matchWho').innerHTML = `Liked by <span>you, ${names.join(', ')}</span>`;
-    document.getElementById('matchOverlay').classList.add('active');
-    renderProvidersPanel(document.getElementById('matchProviders'), movie.watchmodeId, movie.title);
-
-    document.getElementById('btnMatchContinue').onclick = () => {
-      document.getElementById('matchOverlay').classList.remove('active');
-      renderDeck();
-    };
-  }
 
   /* ════════════════════════════════════════════════════════════
      RESTART — shared by the "done" screen, the final-pick screen,
