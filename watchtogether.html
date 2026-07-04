@@ -140,27 +140,6 @@
   .path-card h3{ font-family:var(--font-display); font-size:1.5rem; letter-spacing:.02em; text-transform:uppercase; }
   .path-card p{ color:var(--muted); font-size:.87rem; line-height:1.5; }
 
-  .join-inline{
-    margin-top:1rem;
-    display:flex;
-    gap:.5rem;
-    width:100%;
-  }
-  .join-inline input{
-    flex:1;
-    background:var(--bg-soft);
-    border:1.5px solid var(--border);
-    border-radius:8px;
-    padding:.6rem .8rem;
-    color:var(--ink);
-    font-family:var(--font-mono);
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    font-size:.85rem;
-  }
-  .join-inline input:focus{ border-color:var(--teal); }
-  .join-inline input::placeholder{ color:var(--muted); letter-spacing:.05em; }
-
   /* ───────────────────────── Buttons ───────────────────────── */
   .btn{
     border:none;
@@ -290,41 +269,6 @@
   }
   .ticket::before{ left:-11px; }
   .ticket::after{ right:-11px; }
-  .ticket .label{
-    font-family:var(--font-mono);
-    font-size:.68rem;
-    letter-spacing:.24em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin-bottom:.6rem;
-  }
-  .ticket .code{
-    font-family:var(--font-mono);
-    font-size:2.1rem;
-    letter-spacing:.28em;
-    color:var(--amber);
-    font-weight:700;
-    margin-bottom:1rem;
-  }
-  .ticket .copy-row{ display:flex; gap:.6rem; justify-content:center; }
-
-  .avatars-row{
-    display:flex;
-    align-items:center;
-    gap:.5rem;
-    margin:1.4rem 0;
-    color:var(--muted);
-    font-size:.85rem;
-  }
-  .avatar-stack{ display:flex; }
-  .avatar{
-    width:34px; height:34px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:.85rem; font-weight:700;
-    border:2px solid var(--bg);
-    margin-left:-10px;
-  }
-  .avatar:first-child{ margin-left:0; }
 
   /* ───────────────────────── Swipe deck ───────────────────────── */
   .deck-wrap{
@@ -402,18 +346,6 @@
     border-radius:6px;
     font-weight:700;
   }
-  .card .friend-flag{
-    position:absolute; top:14px; right:26px; z-index:3;
-    background:rgba(255,176,32,.92);
-    color:#1a1305;
-    font-family:var(--font-mono);
-    font-size:.66rem;
-    font-weight:700;
-    padding:.28rem .55rem;
-    border-radius:6px;
-    letter-spacing:.04em;
-  }
-
   .card .info-toggle-row{
     display:flex;
     justify-content:center;
@@ -599,57 +531,12 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v2.1</div>
+    <div class="wordmark">Reel — build v2.2</div>
 
-    <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
-    <section class="screen active" id="screen-hero">
-      <h1 class="hero">Tonight we're<br><span class="accent">watching.</span></h1>
-      <p class="hero-sub">Swipe through what's actually available on your platforms — solo, or as a group where everyone has to agree.</p>
-
-      <div class="path-row">
-        <button class="path-card" id="btnGoSolo">
-          <span class="icon">🍿</span>
-          <h3>Watching solo</h3>
-          <p>Set your platforms and mood, then start swiping right away.</p>
-        </button>
-        <button class="path-card" id="btnGoGroup">
-          <span class="icon">🎬</span>
-          <h3>Watching with friends</h3>
-          <p>Start a room to share, or join one with a code.</p>
-        </button>
-      </div>
-    </section>
-
-    <!-- ═══════════════ SCREEN 1B — GROUP CHOICE (start vs join) ═══════════════ -->
-    <section class="screen" id="screen-group-choice">
-      <h1 class="hero" style="font-size:clamp(2rem,7vw,3rem);">Watching<br><span class="accent">with friends.</span></h1>
-      <p class="hero-sub">Open a room, add your streaming services, swipe as a group — Reel only shows what everyone can actually watch.</p>
-
-      <div class="path-row">
-        <button class="path-card" id="btnStart">
-          <span class="icon">🎬</span>
-          <h3>Start a room</h3>
-          <p>Set your platforms and mood, get a code to send your friends.</p>
-        </button>
-        <button class="path-card" id="btnJoinCard">
-          <span class="icon">🎟️</span>
-          <h3>Join a room</h3>
-          <p>Got a code from a friend? Drop in and start swiping.</p>
-        </button>
-      </div>
-
-      <div class="join-inline" id="joinInline" style="display:none;">
-        <input type="text" id="joinCode" placeholder="ROOM CODE" maxlength="6" />
-        <button class="btn btn-primary" id="btnJoinGo">Join →</button>
-      </div>
-
-      <button class="btn btn-ghost" id="btnBackToHero" style="margin-top:1.5rem;">← Back</button>
-    </section>
-
-    <!-- ═══════════════ SCREEN 1C — CONTENT TYPE (movies vs series) ═══════════════ -->
-    <section class="screen" id="screen-content-type">
-      <h1 class="hero" style="font-size:clamp(2rem,7vw,3rem);">Movies<br><span class="accent">or series?</span></h1>
-      <p class="hero-sub">This changes what we search for — series don't have a single runtime, so the time filter won't apply to them.</p>
+    <!-- ═══════════════ SCREEN 1 — MOVIES OR SERIES (the new first screen) ═══════════════ -->
+    <section class="screen active" id="screen-content-type">
+      <h1 class="hero">Tonight you're<br><span class="accent">watching.</span></h1>
+      <p class="hero-sub">Swipe through what's actually available on your platforms. Save what you like, then share your picks with anyone.</p>
 
       <div class="path-row">
         <button class="path-card" id="btnPickMovies">
@@ -663,8 +550,6 @@
           <p>Something to binge — no runtime filter needed.</p>
         </button>
       </div>
-
-      <button class="btn btn-ghost" id="btnBackFromContentType" style="margin-top:1.5rem;">← Back</button>
     </section>
 
     <!-- ═══════════════ SCREEN 2 — SETUP ═══════════════ -->
@@ -690,33 +575,8 @@
       </div>
 
       <div class="setup-actions">
-        <button class="btn btn-primary" id="btnCreateRoom">Create room →</button>
+        <button class="btn btn-primary" id="btnCreateRoom">Start swiping →</button>
       </div>
-    </section>
-
-    <!-- ═══════════════ SCREEN 3 — ROOM / TICKET ═══════════════ -->
-    <section class="screen" id="screen-room">
-      <div class="section-head">
-        <span class="eyebrow">Room is open</span>
-        <h2>Send this to your friends</h2>
-      </div>
-
-      <div class="ticket">
-        <div class="label">Room code</div>
-        <div class="code" id="roomCode">FN9X2Q</div>
-        <div class="copy-row">
-          <button class="btn btn-ghost" id="btnCopyCode">Copy code</button>
-          <button class="btn btn-ghost" id="btnCopyLink">Copy link</button>
-        </div>
-      </div>
-
-      <div class="avatars-row">
-        <div class="avatar-stack" id="avatarStack"></div>
-        <span id="joinedCount">You're in. Waiting for friends to join…</span>
-      </div>
-
-      <button class="btn btn-primary btn-block" id="btnStartSwiping">Start swiping →</button>
-      <p class="demo-note"><strong>Demo mode:</strong> friend syncing is simulated for this first draft — real-time rooms come once this connects to a backend.</p>
     </section>
 
     <!-- ═══════════════ SCREEN 4 — SWIPE DECK ═══════════════ -->
@@ -744,7 +604,20 @@
 
       <div class="favorites-grid" id="favoritesGrid"></div>
 
-      <button class="btn btn-ghost" id="btnBackFromFavorites" style="margin-top:1.5rem;">← Back to swiping</button>
+      <button class="btn btn-primary btn-block" id="btnSharePicks" style="margin-top:1.5rem;">Share my picks →</button>
+      <button class="btn btn-ghost" id="btnBackFromFavorites" style="margin-top:.6rem;">← Back to swiping</button>
+    </section>
+
+    <!-- ═══════════════ SCREEN 4B-2 — SHARED PICKS (viewing someone else's link) ═══════════════ -->
+    <section class="screen" id="screen-shared-picks">
+      <div class="section-head" style="text-align:center;">
+        <span class="eyebrow">Shared with you</span>
+        <h2>Their picks</h2>
+      </div>
+
+      <div class="favorites-grid" id="sharedGrid"></div>
+
+      <button class="btn btn-primary btn-block" id="btnStartOwnSearch" style="margin-top:1.5rem;">Start my own search →</button>
     </section>
 
     <!-- ═══════════════ SCREEN 4C — FINAL PICK ═══════════════ -->
@@ -752,11 +625,9 @@
       <div class="section-head" style="text-align:center;">
         <span class="eyebrow" id="finalPickEyebrow">Selected</span>
         <h2 id="finalPickHeading">Tonight you're watching</h2>
-        <p class="hero-sub" id="finalPickMatchedBy" style="display:none; margin-top:.4rem;"></p>
       </div>
 
       <div class="final-pick-nav">
-        <button class="btn btn-primary" id="btnKeepSwipingTop" style="display:none;">Keep swiping →</button>
         <button class="btn btn-ghost" id="btnBackToFavoritesGridTop">← Back to your picks</button>
         <button class="btn btn-ghost" id="btnFinalRestartTop">Start a new session</button>
       </div>
@@ -775,7 +646,6 @@
         </div>
       </div>
 
-      <button class="btn btn-primary btn-block" id="btnKeepSwiping" style="display:none; margin-bottom:.6rem;">Keep swiping →</button>
       <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid">← Back to your picks</button>
       <button class="btn btn-ghost btn-block" id="btnFinalRestart" style="margin-top:.6rem;">Start a new session</button>
     </section>
@@ -851,13 +721,10 @@
   // Your deployed Reel backend — swap this if you redeploy elsewhere.
   const BACKEND_URL = 'https://watchtogether-backend-zxwy.onrender.com';
 
-  const MOCK_FRIEND_NAMES = ['Ola', 'Marcin'];
-
   /* ════════════════════════════════════════════════════════════
      STATE
      ════════════════════════════════════════════════════════════ */
   const state = {
-    mode: 'group',        // 'group' | 'solo'
     contentType: 'movie', // 'movie' | 'tv_series'
     platforms: new Set(),
     moods: new Set(),
@@ -891,43 +758,8 @@
     document.getElementById(id).classList.add('active');
     window.scrollTo({top:0, behavior:'smooth'});
     // Hidden only on the very first screen — nothing to "restart" from there yet.
-    document.getElementById('btnNewSearchPersistent').style.display = id === 'screen-hero' ? 'none' : 'block';
+    document.getElementById('btnNewSearchPersistent').style.display = id === 'screen-content-type' ? 'none' : 'block';
   }
-
-  document.getElementById('btnGoSolo').addEventListener('click', () => {
-    state.mode = 'solo';
-    showScreen('screen-content-type');
-  });
-
-  document.getElementById('btnGoGroup').addEventListener('click', () => {
-    showScreen('screen-group-choice');
-  });
-
-  document.getElementById('btnBackToHero').addEventListener('click', () => {
-    document.getElementById('joinInline').style.display = 'none';
-    showScreen('screen-hero');
-  });
-
-  document.getElementById('btnStart').addEventListener('click', () => {
-    state.mode = 'group';
-    showScreen('screen-content-type');
-  });
-
-  document.getElementById('btnJoinCard').addEventListener('click', () => {
-    const inline = document.getElementById('joinInline');
-    inline.style.display = inline.style.display === 'none' ? 'flex' : 'none';
-  });
-
-  document.getElementById('btnJoinGo').addEventListener('click', () => {
-    const code = document.getElementById('joinCode').value.trim();
-    if(!code){ return; }
-    // Demo: joining an existing room skips straight to a pre-filled deck.
-    state.mode = 'group';
-    state.contentType = 'movie';
-    state.platforms = new Set(['netflix','hbo','prime']);
-    buildDeck();
-    showScreen('screen-deck');
-  });
 
   document.getElementById('btnPickMovies').addEventListener('click', () => {
     state.contentType = 'movie';
@@ -942,10 +774,6 @@
     state.time = null;
     document.querySelectorAll('#chipTime .chip').forEach(c => c.dataset.active = 'false');
     showScreen('screen-setup');
-  });
-
-  document.getElementById('btnBackFromContentType').addEventListener('click', () => {
-    showScreen(state.mode === 'solo' ? 'screen-hero' : 'screen-group-choice');
   });
 
   /* ════════════════════════════════════════════════════════════
@@ -989,83 +817,16 @@
   buildChips(document.getElementById('chipMoods'), MOODS, state.moods);
   buildChips(document.getElementById('chipTime'), TIME_BUDGETS, null);
 
-  function randomRoomCode(){
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let out = '';
-    for(let i=0;i<6;i++) out += chars[Math.floor(Math.random()*chars.length)];
-    return out;
-  }
-
   document.getElementById('btnCreateRoom').addEventListener('click', () => {
-    if(state.mode === 'solo'){
-      // Solo path skips the room/ticket screen entirely.
-      buildDeck();
-      showScreen('screen-deck');
-      return;
-    }
-    document.getElementById('roomCode').textContent = randomRoomCode();
-    renderAvatars();
-    simulateFriendsJoining();
-    showScreen('screen-room');
+    buildDeck();
+    showScreen('screen-deck');
   });
 
-  /* ════════════════════════════════════════════════════════════
-     ROOM SCREEN
-     ════════════════════════════════════════════════════════════ */
-  function renderAvatars(){
-    const stack = document.getElementById('avatarStack');
-    stack.innerHTML = '';
-    const you = document.createElement('div');
-    you.className = 'avatar';
-    you.style.background = 'var(--amber)';
-    you.style.color = '#1a1305';
-    you.textContent = 'Y';
-    stack.appendChild(you);
-  }
-
-  document.getElementById('btnCopyCode').addEventListener('click', (e) => {
-    const code = document.getElementById('roomCode').textContent;
-    navigator.clipboard?.writeText(code).catch(()=>{});
-    flashButton(e.target, 'Copied!');
-  });
-  document.getElementById('btnCopyLink').addEventListener('click', (e) => {
-    const code = document.getElementById('roomCode').textContent;
-    navigator.clipboard?.writeText(`https://reel.app/join/${code}`).catch(()=>{});
-    flashButton(e.target, 'Link copied');
-  });
   function flashButton(btn, text){
     const original = btn.textContent;
     btn.textContent = text;
     setTimeout(()=> btn.textContent = original, 1400);
   }
-
-  // Simulate friends trickling into the room, for demo purposes only.
-  let friendJoinTimer = null;
-  function simulateFriendsJoining(){
-    let joined = 0;
-    const stack = document.getElementById('avatarStack');
-    const label = document.getElementById('joinedCount');
-    friendJoinTimer = setInterval(() => {
-      if(joined >= MOCK_FRIEND_NAMES.length){ clearInterval(friendJoinTimer); return; }
-      const name = MOCK_FRIEND_NAMES[joined];
-      const av = document.createElement('div');
-      av.className = 'avatar';
-      av.style.background = 'var(--surface-2)';
-      av.style.color = 'var(--teal)';
-      av.textContent = name[0];
-      stack.appendChild(av);
-      joined++;
-      label.textContent = joined === MOCK_FRIEND_NAMES.length
-        ? `${MOCK_FRIEND_NAMES.join(' and ')} joined. Ready when you are.`
-        : `${name} joined…`;
-    }, 1100);
-  }
-  // Called from btnCreateRoom when mode === 'group' — not on page load.
-
-  document.getElementById('btnStartSwiping').addEventListener('click', () => {
-    buildDeck();
-    showScreen('screen-deck');
-  });
 
   /* ════════════════════════════════════════════════════════════
      SWIPE DECK
@@ -1084,7 +845,7 @@
   }
 
   function mapApiResults(results){
-    return results.map((m, i) => ({
+    return results.map((m) => ({
       watchmodeId: m.watchmode_id,
       title: m.title,
       year: m.year,
@@ -1101,10 +862,6 @@
       trailerUrl: m.trailer_url,
       overview: m.overview || '',
       willYouLikeThis: m.will_you_like_this || '',
-      // Real multiplayer voting isn't wired in yet — in group mode this simulates
-      // a friend having already liked roughly every third card so the match flow
-      // still has something to demo. Solo sessions never get a friend flag.
-      friendLikes: state.mode === 'group' ? (i % 3 === 0 ? (i % 6 === 0 ? 2 : 1) : 0) : 0,
     }));
   }
 
@@ -1191,12 +948,7 @@
   }
 
   function updateDeckHeader(){
-    const hint = document.getElementById('deckHint');
-    if(state.mode === 'solo'){
-      hint.textContent = 'Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.';
-    } else {
-      hint.textContent = 'Drag a card, or use the buttons. Amber flag = a friend already liked it. Tap "Plot summary" to read more.';
-    }
+    document.getElementById('deckHint').textContent = 'Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.';
   }
 
 
@@ -1211,9 +963,7 @@
       document.getElementById('doneTitle').textContent = hasFavorites ? 'Nice pile of picks!' : "That's the stack";
       document.getElementById('doneText').textContent = hasFavorites
         ? `You liked ${state.favorites.length} title${state.favorites.length > 1 ? 's' : ''} — ready to pick tonight's winner?`
-        : (state.mode === 'solo'
-            ? 'Nothing landed — try widening your platforms or moods.'
-            : 'Nobody swiped right on anything — widen the mood or add another platform.');
+        : 'Nothing landed — try widening your platforms or moods.';
     }
 
     document.getElementById('btnExploreAllCategories').style.display = hasMoodFilter ? 'inline-block' : 'none';
@@ -1270,13 +1020,6 @@
   function buildCard(movie, isTop, resolveFn){
     const card = document.createElement('div');
     card.className = 'card';
-
-    if(movie.friendLikes > 0){
-      const flag = document.createElement('div');
-      flag.className = 'friend-flag';
-      flag.textContent = movie.friendLikes === 1 ? '1 friend liked this' : `${movie.friendLikes} friends liked this`;
-      card.appendChild(flag);
-    }
 
     const left = document.createElement('div');
     left.className = 'sprockets left';
@@ -1380,9 +1123,7 @@
 
   function addToFavorites(movie){
     if(state.favorites.some(f => f.title === movie.title)) return;
-    // Store a clean copy without friendLikes so round 2 never shows a stale flag.
-    const { friendLikes, ...clean } = movie;
-    state.favorites.push(clean);
+    state.favorites.push(movie);
   }
 
   function showAddedToast(){
@@ -1412,11 +1153,6 @@
       state.deckIndex++;
       if(liked){
         addToFavorites(movie);
-        if(state.mode === 'group' && movie.friendLikes > 0){
-          const names = MOCK_FRIEND_NAMES.slice(0, movie.friendLikes);
-          showFinalPick(movie, names);
-          return;
-        }
         showAddedToast();
       }
       renderDeck();
@@ -1445,17 +1181,16 @@
   function showFavoritesGrid(returnScreen){
     if(state.favorites.length === 0) return;
     favoritesReturnScreen = returnScreen || 'screen-deck';
-    renderFavoritesGrid();
+    renderMovieGrid(document.getElementById('favoritesGrid'), state.favorites);
+    document.getElementById('favoritesCount').textContent =
+      `${state.favorites.length} pick${state.favorites.length !== 1 ? 's' : ''}`;
     showScreen('screen-favorites-grid');
   }
 
-  function renderFavoritesGrid(){
-    const grid = document.getElementById('favoritesGrid');
-    const countEl = document.getElementById('favoritesCount');
-    countEl.textContent = `${state.favorites.length} pick${state.favorites.length !== 1 ? 's' : ''}`;
+  // Shared by the favorites grid and the "someone shared a link with you" grid.
+  function renderMovieGrid(grid, movies){
     grid.innerHTML = '';
-
-    state.favorites.forEach(movie => {
+    movies.forEach(movie => {
       const brick = document.createElement('button');
       brick.className = 'favorite-brick';
 
@@ -1472,7 +1207,7 @@
       const info = document.createElement('div');
       info.className = 'brick-info';
       info.innerHTML = `
-        <div class="brick-title">${movie.title}</div>
+        <div class="brick-title">${escapeHtml(movie.title)}</div>
         <div class="brick-meta">${movie.year} · ${formatDuration(movie)}</div>
       `;
       brick.appendChild(info);
@@ -1486,6 +1221,71 @@
   document.getElementById('btnGoToFavoritesFromDone').addEventListener('click', () => showFavoritesGrid('screen-done'));
   document.getElementById('btnBackFromFavorites').addEventListener('click', () => showScreen(favoritesReturnScreen));
   document.getElementById('btnBackToFavoritesGrid').addEventListener('click', () => showScreen('screen-favorites-grid'));
+
+  /* ════════════════════════════════════════════════════════════
+     SHARING — since there's no real multiplayer backend, sharing is
+     async: build a link encoding just the Watchmode ids of your picks,
+     which the recipient's page resolves back into full titles.
+     ════════════════════════════════════════════════════════════ */
+  function buildShareUrl(){
+    const ids = state.favorites.map(m => m.watchmodeId).filter(Boolean);
+    const url = new URL(location.href);
+    url.search = '';
+    url.searchParams.set('shared', ids.join(','));
+    return url.toString();
+  }
+
+  document.getElementById('btnSharePicks').addEventListener('click', async (e) => {
+    const url = buildShareUrl();
+    try{
+      if(navigator.share){
+        await navigator.share({ title: 'My Reel picks', text: 'Here\'s what I liked — take a look:', url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      flashButton(e.currentTarget, 'Link copied!');
+    } catch(err){
+      // User cancelled a native share sheet, or clipboard permission denied — not a real error.
+      if(err && err.name === 'AbortError') return;
+      flashButton(e.currentTarget, 'Could not copy — try again');
+    }
+  });
+
+  function fetchTitleById(id){
+    return fetch(`${BACKEND_URL}/api/title/${id}`)
+      .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); });
+  }
+
+  function loadSharedPicks(idsParam){
+    const ids = idsParam.split(',').map(s => s.trim()).filter(Boolean);
+    const grid = document.getElementById('sharedGrid');
+    grid.innerHTML = `<p class="providers-loading">Loading their picks…</p>`;
+    showScreen('screen-shared-picks');
+
+    Promise.all(ids.map(id => fetchTitleById(id).catch(() => null)))
+      .then(rawResults => {
+        const valid = rawResults.filter(Boolean);
+        const movies = mapApiResults(valid);
+        if(movies.length === 0){
+          grid.innerHTML = `<p class="providers-empty">Couldn't load this shared list — the link may be broken.</p>`;
+          return;
+        }
+        renderMovieGrid(grid, movies);
+      });
+  }
+
+  document.getElementById('btnStartOwnSearch').addEventListener('click', () => {
+    // Drop the ?shared= param so a refresh doesn't reopen someone else's list.
+    history.replaceState(null, '', location.pathname);
+    showScreen('screen-content-type');
+  });
+
+  // On page load, if this URL was opened from a shared link, show that instead
+  // of the normal start screen.
+  (function checkForSharedLink(){
+    const sharedParam = new URLSearchParams(location.search).get('shared');
+    if(sharedParam){ loadSharedPicks(sharedParam); }
+  })();
 
   /* ════════════════════════════════════════════════════════════
      WHERE TO WATCH — real subscription/rent/buy info with icons,
@@ -1551,24 +1351,9 @@
     attempt(1);
   }
 
-  function showFinalPick(movie, matchedNames){
-    const isMatch = Array.isArray(matchedNames) && matchedNames.length > 0;
-
-    document.getElementById('finalPickEyebrow').textContent = isMatch ? "It's a match" : 'Selected';
-    document.getElementById('finalPickHeading').textContent = isMatch ? "Everyone's in" : "Tonight you're watching";
-
-    const matchedByEl = document.getElementById('finalPickMatchedBy');
-    if(isMatch){
-      matchedByEl.innerHTML = `Liked by <strong style="color:var(--amber);">you, ${matchedNames.join(', ')}</strong>`;
-      matchedByEl.style.display = 'block';
-    } else {
-      matchedByEl.style.display = 'none';
-    }
-
-    // "Keep swiping" only makes sense mid-session (a match) — from the
-    // favorites grid you're just browsing, so it isn't shown there.
-    document.getElementById('btnKeepSwipingTop').style.display = isMatch ? 'inline-block' : 'none';
-    document.getElementById('btnKeepSwiping').style.display = isMatch ? 'inline-block' : 'none';
+  function showFinalPick(movie){
+    document.getElementById('finalPickEyebrow').textContent = 'Selected';
+    document.getElementById('finalPickHeading').textContent = "Tonight you're watching";
 
     const el = document.getElementById('finalPickCard');
     const yearLabel = movie.endYear && movie.endYear !== movie.year
@@ -1630,13 +1415,6 @@
     showScreen('screen-final-pick');
   }
 
-  function keepSwipingFromMatch(){
-    renderDeck();
-    showScreen('screen-deck');
-  }
-  document.getElementById('btnKeepSwipingTop').addEventListener('click', keepSwipingFromMatch);
-  document.getElementById('btnKeepSwiping').addEventListener('click', keepSwipingFromMatch);
-
   document.getElementById('btnBackToFavoritesGridTop').addEventListener('click', () => showScreen('screen-favorites-grid'));
   document.getElementById('btnFinalRestartTop').addEventListener('click', () => fullRestart());
 
@@ -1645,7 +1423,7 @@
      and anywhere else a full reset is needed.
      ════════════════════════════════════════════════════════════ */
   function fullRestart(){
-    state.mode = 'group';
+    history.replaceState(null, '', location.pathname);
     state.contentType = 'movie';
     state.platforms.clear();
     state.moods.clear();
@@ -1657,8 +1435,7 @@
     state.noMoreResultsStreak = 0;
     document.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
     document.getElementById('timeBudgetStep').style.display = '';
-    if(friendJoinTimer) clearInterval(friendJoinTimer);
-    showScreen('screen-hero');
+    showScreen('screen-content-type');
   }
 
   document.getElementById('btnRestart').addEventListener('click', fullRestart);
