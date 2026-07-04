@@ -421,6 +421,53 @@
   }
   .demo-note strong{ color:var(--teal); }
 
+  /* ───────────────────────── Share dialog ───────────────────────── */
+  .share-overlay{
+    position:fixed; inset:0;
+    background:rgba(5,7,14,.85);
+    backdrop-filter:blur(4px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:95;
+    padding:1.5rem;
+  }
+  .share-overlay.active{ display:flex; }
+  .share-dialog{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:1.8rem;
+    max-width:380px;
+    width:100%;
+  }
+  .share-dialog h3{
+    font-family:var(--font-display);
+    font-size:1.5rem;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+    margin-bottom:.5rem;
+  }
+  .share-dialog p{
+    color:var(--muted);
+    font-size:.85rem;
+    margin-bottom:1.1rem;
+    line-height:1.5;
+  }
+  .share-link-row{ display:flex; gap:.5rem; }
+  .share-link-row input{
+    flex:1;
+    min-width:0;
+    background:var(--bg-soft);
+    border:1.5px solid var(--border);
+    border-radius:8px;
+    padding:.6rem .7rem;
+    color:var(--ink);
+    font-family:var(--font-mono);
+    font-size:.78rem;
+  }
+  .share-link-row input:focus{ border-color:var(--teal); }
+
   /* ───────────────────────── Favorites grid ───────────────────────── */
   .favorites-grid{
     display:grid;
@@ -528,10 +575,23 @@
     display:none;
   ">↺ New search</button>
 
+  <!-- ═══════════════ SHARE DIALOG ═══════════════ -->
+  <div class="share-overlay" id="shareOverlay">
+    <div class="share-dialog">
+      <h3>Share your picks</h3>
+      <p>Send this link to anyone — it opens straight to your list.</p>
+      <div class="share-link-row">
+        <input type="text" id="shareLinkInput" readonly />
+        <button class="btn btn-primary" id="btnCopyShareLink">Copy</button>
+      </div>
+      <button class="btn btn-ghost btn-block" id="btnCloseShareDialog" style="margin-top:1rem;">Close</button>
+    </div>
+  </div>
+
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v2.2</div>
+    <div class="wordmark">Reel — build v2.3</div>
 
     <!-- ═══════════════ SCREEN 1 — MOVIES OR SERIES (the new first screen) ═══════════════ -->
     <section class="screen active" id="screen-content-type">
@@ -565,14 +625,6 @@
         <h2>What's the mood?</h2>
       </div>
       <div class="chip-group" id="chipMoods"></div>
-
-      <div id="timeBudgetStep">
-        <div class="section-head">
-          <span class="eyebrow">Optional</span>
-          <h2>Got time?</h2>
-        </div>
-        <div class="chip-group" id="chipTime"></div>
-      </div>
 
       <div class="setup-actions">
         <button class="btn btn-primary" id="btnCreateRoom">Start swiping →</button>
@@ -712,12 +764,6 @@
     { id:'nostalgic',   label:'Nostalgic' },
   ];
 
-  const TIME_BUDGETS = [
-    { id:'90',   label:'~90 min' },
-    { id:'120',  label:'~2 hrs' },
-    { id:'long', label:'All night' },
-  ];
-
   // Your deployed Reel backend — swap this if you redeploy elsewhere.
   const BACKEND_URL = 'https://watchtogether-backend-zxwy.onrender.com';
 
@@ -728,7 +774,6 @@
     contentType: 'movie', // 'movie' | 'tv_series'
     platforms: new Set(),
     moods: new Set(),
-    time: null,
     deckIndex: 0,
     favorites: [],         // movies swiped right, across the whole session
     backendPage: 1,        // Watchmode page currently loaded — used for "load more"
@@ -763,16 +808,11 @@
 
   document.getElementById('btnPickMovies').addEventListener('click', () => {
     state.contentType = 'movie';
-    document.getElementById('timeBudgetStep').style.display = '';
     showScreen('screen-setup');
   });
 
   document.getElementById('btnPickSeries').addEventListener('click', () => {
     state.contentType = 'tv_series';
-    // Series don't have a single runtime, so the time-budget step doesn't apply.
-    document.getElementById('timeBudgetStep').style.display = 'none';
-    state.time = null;
-    document.querySelectorAll('#chipTime .chip').forEach(c => c.dataset.active = 'false');
     showScreen('screen-setup');
   });
 
@@ -788,12 +828,7 @@
       chip.innerHTML = `<span class="dot"></span>${item.label}`;
       chip.addEventListener('click', () => {
         const active = chip.dataset.active === 'true';
-        if(container.id === 'chipTime'){
-          // single-select group
-          container.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
-          chip.dataset.active = 'true';
-          state.time = item.id;
-        } else if(container.id === 'chipMoods' && item.id === 'all'){
+        if(container.id === 'chipMoods' && item.id === 'all'){
           // "All categories" is exclusive with picking specific genres —
           // selecting it clears everything else, same as leaving nothing picked.
           container.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
@@ -815,7 +850,6 @@
 
   buildChips(document.getElementById('chipPlatforms'), PLATFORMS, state.platforms);
   buildChips(document.getElementById('chipMoods'), MOODS, state.moods);
-  buildChips(document.getElementById('chipTime'), TIME_BUDGETS, null);
 
   document.getElementById('btnCreateRoom').addEventListener('click', () => {
     buildDeck();
@@ -868,8 +902,7 @@
   function fetchDiscoverPage(page, limit){
     const platformParam = [...state.platforms].join(',');
     const moodParam = [...state.moods].join(',');
-    const timeParam = state.time ? `&time_budget=${state.time}` : '';
-    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}${timeParam}&region=US&limit=${limit}&page=${page}&content_type=${state.contentType}`;
+    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=US&limit=${limit}&page=${page}&content_type=${state.contentType}`;
     return fetch(url)
       .then(r => { if(!r.ok) throw new Error('bad response'); return r.json(); })
       .then(data => mapApiResults(data.results || []));
@@ -1235,19 +1268,33 @@
     return url.toString();
   }
 
-  document.getElementById('btnSharePicks').addEventListener('click', async (e) => {
-    const url = buildShareUrl();
-    try{
-      if(navigator.share){
-        await navigator.share({ title: 'My Reel picks', text: 'Here\'s what I liked — take a look:', url });
-        return;
-      }
-      await navigator.clipboard.writeText(url);
-      flashButton(e.currentTarget, 'Link copied!');
-    } catch(err){
-      // User cancelled a native share sheet, or clipboard permission denied — not a real error.
-      if(err && err.name === 'AbortError') return;
-      flashButton(e.currentTarget, 'Could not copy — try again');
+  document.getElementById('btnSharePicks').addEventListener('click', () => {
+    document.getElementById('shareLinkInput').value = buildShareUrl();
+    document.getElementById('shareOverlay').classList.add('active');
+  });
+
+  document.getElementById('btnCloseShareDialog').addEventListener('click', () => {
+    document.getElementById('shareOverlay').classList.remove('active');
+  });
+
+  document.getElementById('btnCopyShareLink').addEventListener('click', (e) => {
+    const input = document.getElementById('shareLinkInput');
+    input.focus();
+    input.select();
+    input.setSelectionRange(0, 99999); // needed for some mobile browsers
+
+    const done = () => flashButton(e.currentTarget, 'Copied!');
+    const manual = () => flashButton(e.currentTarget, 'Select & copy manually');
+
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(input.value).then(done).catch(() => {
+        // Fall back to the older execCommand approach before giving up.
+        try{ document.execCommand('copy') ? done() : manual(); }
+        catch(err){ manual(); }
+      });
+    } else {
+      try{ document.execCommand('copy') ? done() : manual(); }
+      catch(err){ manual(); }
     }
   });
 
@@ -1427,14 +1474,12 @@
     state.contentType = 'movie';
     state.platforms.clear();
     state.moods.clear();
-    state.time = null;
     state.deckIndex = 0;
     state.favorites = [];
     state.backendPage = 1;
     state.loadingMore = false;
     state.noMoreResultsStreak = 0;
     document.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
-    document.getElementById('timeBudgetStep').style.display = '';
     showScreen('screen-content-type');
   }
 
