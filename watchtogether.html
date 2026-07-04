@@ -586,7 +586,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v1.4</div>
+    <div class="wordmark">Reel — build v1.5</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -1133,7 +1133,11 @@
       .then(more => {
         state.backendPage++;
         state.loadingMore = false;
-        if(more.length){ deck = deck.concat(more); }
+        if(more.length){
+          const existingTitles = new Set(deck.map(m => m.title));
+          const fresh = more.filter(m => !existingTitles.has(m.title));
+          deck = deck.concat(fresh);
+        }
         renderDeck();
       })
       .catch(() => { state.loadingMore = false; });
