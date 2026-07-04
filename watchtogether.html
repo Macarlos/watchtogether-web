@@ -586,7 +586,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v1.6</div>
+    <div class="wordmark">Reel — build v1.7</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -849,6 +849,7 @@
     favorites: [],         // movies swiped right, across the whole session
     backendPage: 1,        // Watchmode page currently loaded — used for "load more"
     loadingMore: false,
+    noMoreResultsStreak: 0, // consecutive load-more attempts that added nothing
   };
 
   /* ════════════════════════════════════════════════════════════
@@ -1095,6 +1096,7 @@
     state.backendPage = 1;
     state.favorites = [];
     state.loadingMore = false;
+    state.noMoreResultsStreak = 0;
     const wrap = document.getElementById('deckWrap');
     wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>Finding what you can watch…</p></div>`;
 
@@ -1138,10 +1140,17 @@
           const existingTitles = new Set(deck.map(m => m.title));
           const fresh = more.filter(m => !existingTitles.has(m.title));
           deck = deck.concat(fresh);
+          state.noMoreResultsStreak = fresh.length > 0 ? 0 : state.noMoreResultsStreak + 1;
+        } else {
+          state.noMoreResultsStreak++;
         }
         renderDeck();
       })
-      .catch(() => { state.loadingMore = false; });
+      .catch(() => {
+        state.loadingMore = false;
+        state.noMoreResultsStreak++;
+        renderDeck();
+      });
   }
 
   function updateDeckHeader(){
@@ -1174,6 +1183,15 @@
     if(state.deckIndex >= deck.length){
       if(state.loadingMore){
         wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>Finding more titles…</p></div>`;
+        return;
+      }
+      // Don't trust a possibly-stale "not currently loading" state at face value —
+      // actively try again (up to a few times) before concluding there's truly
+      // nothing left. This is what was silently capping decks at the first
+      // batch size whenever the one background prefetch attempt had failed.
+      if(state.noMoreResultsStreak < 3){
+        wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>Finding more titles…</p></div>`;
+        loadMoreIfNeeded(true);
         return;
       }
       showScreenDone();
