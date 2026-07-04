@@ -222,6 +222,54 @@
   .setup-actions{ width:100%; display:flex; justify-content:flex-end; margin-top:.5rem; }
 
   /* ───────────────────────── Ticket stub ───────────────────────── */
+  .final-pick-nav{
+    display:flex;
+    gap:.6rem;
+    width:100%;
+    margin-bottom:1.2rem;
+    flex-wrap:wrap;
+  }
+  .final-pick-nav .btn{ flex:1; font-size:.78rem; padding:.55rem .8rem; }
+
+  .detail-block{ display:flex; flex-direction:column; gap:.4rem; }
+  .detail-label{
+    font-family:var(--font-mono);
+    font-size:.66rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--teal);
+  }
+  .detail-text{
+    font-size:.9rem;
+    line-height:1.6;
+    color:var(--ink);
+  }
+  .detail-stats-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.6rem;
+  }
+  .detail-stat{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:.4rem .7rem;
+    font-family:var(--font-mono);
+    font-size:.75rem;
+    color:var(--muted);
+  }
+  .detail-stat strong{ color:var(--ink); }
+  .detail-trailer-link{
+    display:inline-flex;
+    align-items:center;
+    gap:.4rem;
+    color:var(--amber);
+    font-size:.85rem;
+    font-weight:600;
+    text-decoration:none;
+  }
+  .detail-trailer-link:hover{ text-decoration:underline; }
+
   .ticket{
     width:100%;
     background:var(--surface);
@@ -586,7 +634,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v1.7</div>
+    <div class="wordmark">Reel — build v1.8</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -740,14 +788,26 @@
         <span class="eyebrow">Selected</span>
         <h2>Tonight you're watching</h2>
       </div>
+
+      <div class="final-pick-nav">
+        <button class="btn btn-ghost" id="btnBackToFavoritesGridTop">← Back to your picks</button>
+        <button class="btn btn-ghost" id="btnFinalRestartTop">Start a new session</button>
+      </div>
+
       <div class="ticket" id="finalPickCard" style="text-align:left; border-style:solid;">
         <!-- populated by JS -->
       </div>
+
+      <div class="card" id="finalPickDetails" style="position:static; padding:1.4rem; margin-bottom:1rem; display:flex; flex-direction:column; gap:1rem;">
+        <!-- populated by JS: description, will-you-like-this, ratings, trailer -->
+      </div>
+
       <div class="card" style="position:static; padding:1.4rem; margin-bottom:1rem;">
         <div class="providers-panel" id="finalPickProviders">
           <p class="providers-loading">Checking where to watch…</p>
         </div>
       </div>
+
       <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid">← Back to your picks</button>
       <button class="btn btn-ghost btn-block" id="btnFinalRestart" style="margin-top:.6rem;">Start a new session</button>
     </section>
@@ -1058,12 +1118,19 @@
       watchmodeId: m.watchmode_id,
       title: m.title,
       year: m.year,
+      endYear: m.end_year,
       genre: (m.genres || []).slice(0,2).join(' · ') || 'Movie',
+      allGenres: (m.genres || []).join(', '),
       runtime: m.runtime_minutes || null,
       platform: PLATFORMS.filter(p => state.platforms.has(p.id)).map(p => p.label).join(', ') || 'Streaming',
       poster_url: m.poster_url,
+      backdrop_url: m.backdrop_url,
       rating: m.rating,
+      criticScore: m.critic_score,
+      contentRating: m.content_rating,
+      trailerUrl: m.trailer_url,
       overview: m.overview || '',
+      willYouLikeThis: m.will_you_like_this || '',
       // Real multiplayer voting isn't wired in yet — in group mode this simulates
       // a friend having already liked roughly every third card so the match flow
       // still has something to demo. Solo sessions never get a friend flag.
@@ -1482,16 +1549,56 @@
 
   function showFinalPick(movie){
     const el = document.getElementById('finalPickCard');
+    const yearLabel = movie.endYear && movie.endYear !== movie.year
+      ? `${movie.year}–${movie.endYear}`
+      : movie.year;
     el.innerHTML = `
       <div style="display:flex; gap:1rem; align-items:center; text-align:left;">
         ${movie.poster_url ? `<img src="${movie.poster_url}" alt="" style="width:72px; border-radius:8px; flex-shrink:0;">` : ''}
         <div>
           <div style="font-family:var(--font-display); font-size:1.7rem; text-transform:uppercase; letter-spacing:.01em; line-height:1;">${movie.title}</div>
-          <div style="font-family:var(--font-mono); font-size:.75rem; color:var(--muted); margin-top:.4rem;">${movie.year} · ${movie.genre} · ${formatDuration(movie)}</div>
+          <div style="font-family:var(--font-mono); font-size:.75rem; color:var(--muted); margin-top:.4rem;">${yearLabel} · ${movie.genre} · ${formatDuration(movie)}</div>
           <div style="margin-top:.55rem;"><span class="platform-badge" id="finalPickPlatformBadge">Checking…</span></div>
         </div>
       </div>
     `;
+
+    const detailsEl = document.getElementById('finalPickDetails');
+    const blocks = [];
+
+    if(movie.overview){
+      blocks.push(`
+        <div class="detail-block">
+          <span class="detail-label">Description</span>
+          <p class="detail-text">${escapeHtml(movie.overview)}</p>
+        </div>
+      `);
+    }
+
+    if(movie.willYouLikeThis){
+      blocks.push(`
+        <div class="detail-block">
+          <span class="detail-label">Is it for you?</span>
+          <p class="detail-text">${escapeHtml(movie.willYouLikeThis)}</p>
+        </div>
+      `);
+    }
+
+    const stats = [];
+    if(movie.rating) stats.push(`<div class="detail-stat">★ <strong>${movie.rating}</strong>/10 user rating</div>`);
+    if(movie.criticScore) stats.push(`<div class="detail-stat">Critic score <strong>${movie.criticScore}</strong>%</div>`);
+    if(movie.contentRating) stats.push(`<div class="detail-stat"><strong>${movie.contentRating}</strong></div>`);
+    if(movie.allGenres) stats.push(`<div class="detail-stat">${escapeHtml(movie.allGenres)}</div>`);
+    if(stats.length){
+      blocks.push(`<div class="detail-stats-row">${stats.join('')}</div>`);
+    }
+
+    if(movie.trailerUrl){
+      blocks.push(`<a class="detail-trailer-link" href="${movie.trailerUrl}" target="_blank" rel="noopener">▶ Watch trailer</a>`);
+    }
+
+    detailsEl.innerHTML = blocks.join('') || `<p class="detail-text" style="color:var(--muted);">No extra details available for this title.</p>`;
+
     renderProvidersPanel(
       document.getElementById('finalPickProviders'),
       movie.watchmodeId,
@@ -1500,6 +1607,9 @@
     );
     showScreen('screen-final-pick');
   }
+
+  document.getElementById('btnBackToFavoritesGridTop').addEventListener('click', () => showScreen('screen-favorites-grid'));
+  document.getElementById('btnFinalRestartTop').addEventListener('click', () => fullRestart());
 
   /* ════════════════════════════════════════════════════════════
      MATCH OVERLAY
