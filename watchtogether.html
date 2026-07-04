@@ -586,7 +586,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v1.5</div>
+    <div class="wordmark">Reel — build v1.6</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -785,11 +785,12 @@
 <script>
   /* ════════════════════════════════════════════════════════════
      DATA LAYER
-     Real movie data now comes from the Reel backend (BACKEND_URL below),
-     which proxies Watchmode's list-titles + title/details endpoints.
-     MOCK_MOVIES below is kept only as an offline fallback — used if the
-     backend is unreachable (e.g. Render free-tier cold start) so the
-     demo never looks broken.
+     All movie data comes from the Reel backend (BACKEND_URL below), which
+     proxies Watchmode's list-titles + title/details endpoints. There is
+     deliberately no offline mock-data fallback — an earlier version had one,
+     but silently substituting fake titles when the backend failed was
+     actively misleading rather than helpful. Failures now show an honest
+     "couldn't load, try again" state instead (see buildDeck below).
      Still missing: real multi-user room sync (friend votes are simulated).
      ════════════════════════════════════════════════════════════ */
 
@@ -832,19 +833,6 @@
 
   // Your deployed Reel backend — swap this if you redeploy elsewhere.
   const BACKEND_URL = 'https://watchtogether-backend-zxwy.onrender.com';
-
-  // friendLikes: how many of the (mocked) other room members already liked this title.
-  // gradient: fallback poster styling used only when a real poster_url is unavailable.
-  const MOCK_MOVIES = [
-    { title:'Paper Moons',      year:2019, genre:'Comedy',   runtime:98,  platform:'Netflix',     emoji:'🌙', gradient:'linear-gradient(160deg,#3b2f63,#1a1430)', friendLikes:2 },
-    { title:'The Long Static',  year:2022, genre:'Thriller', runtime:112, platform:'HBO Max',      emoji:'📺', gradient:'linear-gradient(160deg,#1c3b3a,#0d1a1f)', friendLikes:0 },
-    { title:'Low Tide Diner',   year:2021, genre:'Feel-good',runtime:104, platform:'Prime Video',  emoji:'🍳', gradient:'linear-gradient(160deg,#5a3a1e,#241407)', friendLikes:1 },
-    { title:'Nine Red Doors',   year:2023, genre:'Mind-bending', runtime:131, platform:'Apple TV+', emoji:'🚪', gradient:'linear-gradient(160deg,#4a1740,#1a0818)', friendLikes:2 },
-    { title:'Static Bloom',     year:2020, genre:'Romance',  runtime:96,  platform:'Disney+',      emoji:'🌸', gradient:'linear-gradient(160deg,#6b2340,#26091a)', friendLikes:0 },
-    { title:'Second Shift',     year:2018, genre:'Thriller', runtime:108, platform:'Netflix',      emoji:'🌃', gradient:'linear-gradient(160deg,#122442,#050b16)', friendLikes:1 },
-    { title:'The Warm Static',  year:2024, genre:'Nostalgic',runtime:118, platform:'Hulu',         emoji:'📼', gradient:'linear-gradient(160deg,#5c421c,#241a0b)', friendLikes:0 },
-    { title:'Blue Hour Radio',  year:2017, genre:'Comedy',   runtime:92,  platform:'HBO Max',      emoji:'📻', gradient:'linear-gradient(160deg,#1e3a5f,#0a1522)', friendLikes:2 },
-  ];
 
   const MOCK_FRIEND_NAMES = ['Ola', 'Marcin'];
 
@@ -1092,6 +1080,16 @@
       .then(data => mapApiResults(data.results || []));
   }
 
+  // Render's free tier occasionally returns a brief error while waking from
+  // sleep (cold start) — retrying a couple of times before giving up avoids
+  // treating a slow-but-working backend as a hard failure.
+  function fetchWithRetries(fn, retries, delayMs){
+    return fn().catch(err => {
+      if(retries <= 0) throw err;
+      return new Promise(resolve => setTimeout(resolve, delayMs)).then(() => fetchWithRetries(fn, retries - 1, delayMs));
+    });
+  }
+
   function buildDeck(){
     state.deckIndex = 0;
     state.backendPage = 1;
@@ -1103,7 +1101,7 @@
     // A smaller first batch enriches faster, so the first card appears sooner.
     // We immediately start pulling more in the background right after, rather
     // than waiting until the visible stack is almost empty.
-    fetchDiscoverPage(1, 8)
+    fetchWithRetries(() => fetchDiscoverPage(1, 8), 2, 1500)
       .then(mapped => {
         if(mapped.length === 0) throw new Error('empty');
         deck = mapped;
@@ -1111,13 +1109,16 @@
         loadMoreIfNeeded(true);
       })
       .catch(() => {
-        // Backend unreachable (likely Render cold-start) or no matches — fall back to mock data.
-        const platformLabels = PLATFORMS.filter(p => state.platforms.has(p.id)).map(p => p.label);
-        deck = platformLabels.length
-          ? MOCK_MOVIES.filter(m => platformLabels.includes(m.platform))
-          : [...MOCK_MOVIES];
-        if(deck.length === 0) deck = [...MOCK_MOVIES];
-        renderDeck();
+        // Real backend genuinely unreachable after retries — never silently
+        // substitute fake movies here; show an honest error with a retry button.
+        wrap.innerHTML = `
+          <div class="empty-state" style="padding-top:5rem;">
+            <div class="icon">⚠️</div>
+            <h3 style="font-size:1.3rem;">Couldn't load movies</h3>
+            <p>The server didn't respond in time — this can happen right after it wakes up from being idle.</p>
+            <button class="btn btn-primary" id="btnRetryDeck">Try again</button>
+          </div>`;
+        document.getElementById('btnRetryDeck').addEventListener('click', buildDeck);
       });
   }
 
@@ -1129,7 +1130,7 @@
     if(state.loadingMore) return;
     if(!eager && deck.length - state.deckIndex > 4) return;
     state.loadingMore = true;
-    fetchDiscoverPage(state.backendPage + 1, 14)
+    fetchWithRetries(() => fetchDiscoverPage(state.backendPage + 1, 14), 2, 1500)
       .then(more => {
         state.backendPage++;
         state.loadingMore = false;
