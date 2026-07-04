@@ -628,10 +628,18 @@
 </head>
 <body>
 
+  <button id="btnNewSearchPersistent" style="
+    position:fixed; top:14px; right:14px; z-index:90;
+    background:rgba(11,14,20,.7); border:1px solid var(--border);
+    color:var(--ink); font-family:var(--font-mono); font-size:.7rem;
+    padding:.4rem .7rem; border-radius:999px; letter-spacing:.02em;
+    display:none;
+  ">↺ New search</button>
+
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v1.9</div>
+    <div class="wordmark">Reel — build v2.0</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -932,6 +940,8 @@
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     window.scrollTo({top:0, behavior:'smooth'});
+    // Hidden only on the very first screen — nothing to "restart" from there yet.
+    document.getElementById('btnNewSearchPersistent').style.display = id === 'screen-hero' ? 'none' : 'block';
   }
 
   document.getElementById('btnGoSolo').addEventListener('click', () => {
@@ -1168,10 +1178,10 @@
     });
   }
 
-  function buildDeck(){
+  function buildDeck(preserveFavorites){
     state.deckIndex = 0;
     state.backendPage = 1;
-    state.favorites = [];
+    if(!preserveFavorites){ state.favorites = []; }
     state.loadingMore = false;
     state.noMoreResultsStreak = 0;
     const wrap = document.getElementById('deckWrap');
@@ -1266,7 +1276,7 @@
     document.querySelectorAll('#chipMoods .chip').forEach(c => {
       c.dataset.active = c.textContent.includes('All categories') ? 'true' : 'false';
     });
-    buildDeck();
+    buildDeck(true); // preserve favorites — this is a continuation, not a new session
     showScreen('screen-deck');
   });
 
@@ -1683,6 +1693,7 @@
     state.favorites = [];
     state.backendPage = 1;
     state.loadingMore = false;
+    state.noMoreResultsStreak = 0;
     document.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
     document.getElementById('timeBudgetStep').style.display = '';
     if(friendJoinTimer) clearInterval(friendJoinTimer);
@@ -1691,6 +1702,7 @@
 
   document.getElementById('btnRestart').addEventListener('click', fullRestart);
   document.getElementById('btnFinalRestart').addEventListener('click', fullRestart);
+  document.getElementById('btnNewSearchPersistent').addEventListener('click', fullRestart);
 </script>
 </body>
 </html>
