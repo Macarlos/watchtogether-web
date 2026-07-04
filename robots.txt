@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://macarlos.github.io/watchtogether-web/sitemap.xml
