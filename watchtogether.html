@@ -371,25 +371,20 @@
     overflow:hidden;
     background-color:var(--surface-2);
   }
-  .card .poster .title-overlay{
-    position:absolute; inset:auto 0 0 0;
-    padding:1.6rem 1rem .9rem;
-    background:linear-gradient(to top, rgba(0,0,0,.75), transparent);
-    text-align:left;
-  }
-  .card .poster .title-overlay h3{
-    font-family:var(--font-display);
-    font-size:1.55rem;
-    text-transform:uppercase;
-    letter-spacing:.01em;
-    line-height:1;
-  }
   .card .meta{
     margin:0 16px;
     padding:.85rem 0 1rem;
     display:flex;
     flex-direction:column;
     gap:.45rem;
+  }
+  .card .meta-title{
+    font-family:var(--font-display);
+    font-size:1.4rem;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+    line-height:1.05;
+    color:var(--ink);
   }
   .card .meta-row{
     display:flex;
@@ -422,8 +417,10 @@
   .card .info-toggle-row{
     display:flex;
     justify-content:center;
+    gap:.5rem;
     padding:.55rem 0 .8rem;
     margin:0 16px;
+    flex-wrap:wrap;
   }
   .card .info-toggle{
     background:var(--surface-2);
@@ -634,7 +631,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v1.8</div>
+    <div class="wordmark">Reel — build v1.9</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -818,6 +815,7 @@
         <div class="icon">🍿</div>
         <h3 id="doneTitle">That's the stack</h3>
         <p id="doneText">Everyone's swiped. Whatever matched is above — no match yet? Widen the mood or add another platform.</p>
+        <button class="btn btn-primary" id="btnExploreAllCategories" style="display:none; margin-bottom:.6rem;">Explore all categories →</button>
         <button class="btn btn-primary" id="btnGoToFavoritesFromDone" style="display:none; margin-bottom:.6rem;">See my picks →</button>
         <button class="btn btn-ghost" id="btnRestart">Start a new session</button>
       </div>
@@ -864,6 +862,7 @@
   ];
 
   const MOODS = [
+    { id:'all',         label:'All categories' },
     { id:'comedy',      label:'Comedy' },
     { id:'thriller',    label:'Thriller' },
     { id:'romance',     label:'Romance' },
@@ -1006,9 +1005,20 @@
           container.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
           chip.dataset.active = 'true';
           state.time = item.id;
+        } else if(container.id === 'chipMoods' && item.id === 'all'){
+          // "All categories" is exclusive with picking specific genres —
+          // selecting it clears everything else, same as leaving nothing picked.
+          container.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
+          chip.dataset.active = 'true';
+          targetSet.clear();
         } else {
           chip.dataset.active = active ? 'false' : 'true';
           if(active) targetSet.delete(item.id); else targetSet.add(item.id);
+          if(container.id === 'chipMoods' && !active){
+            // Picking a specific genre after "All" was selected turns "All" back off.
+            const allChip = [...container.querySelectorAll('.chip')].find(c => c.textContent.includes('All categories'));
+            if(allChip) allChip.dataset.active = 'false';
+          }
         }
       });
       container.appendChild(chip);
@@ -1232,15 +1242,33 @@
 
   function showScreenDone(){
     const hasFavorites = state.favorites.length > 0;
-    document.getElementById('doneTitle').textContent = hasFavorites ? 'Nice pile of picks!' : "That's the stack";
-    document.getElementById('doneText').textContent = hasFavorites
-      ? `You liked ${state.favorites.length} title${state.favorites.length > 1 ? 's' : ''} — ready to pick tonight's winner?`
-      : (state.mode === 'solo'
-          ? 'Nothing landed — try widening your platforms or moods.'
-          : 'Nobody swiped right on anything — widen the mood or add another platform.');
+    const hasMoodFilter = state.moods.size > 0;
+
+    if(hasMoodFilter){
+      document.getElementById('doneTitle').textContent = 'That\'s everything in these categories';
+      document.getElementById('doneText').textContent = 'You\'ve swiped through everything matching your selected categories. Want to keep going with all categories, or wrap up here?';
+    } else {
+      document.getElementById('doneTitle').textContent = hasFavorites ? 'Nice pile of picks!' : "That's the stack";
+      document.getElementById('doneText').textContent = hasFavorites
+        ? `You liked ${state.favorites.length} title${state.favorites.length > 1 ? 's' : ''} — ready to pick tonight's winner?`
+        : (state.mode === 'solo'
+            ? 'Nothing landed — try widening your platforms or moods.'
+            : 'Nobody swiped right on anything — widen the mood or add another platform.');
+    }
+
+    document.getElementById('btnExploreAllCategories').style.display = hasMoodFilter ? 'inline-block' : 'none';
     document.getElementById('btnGoToFavoritesFromDone').style.display = hasFavorites ? 'inline-block' : 'none';
     showScreen('screen-done');
   }
+
+  document.getElementById('btnExploreAllCategories').addEventListener('click', () => {
+    state.moods.clear();
+    document.querySelectorAll('#chipMoods .chip').forEach(c => {
+      c.dataset.active = c.textContent.includes('All categories') ? 'true' : 'false';
+    });
+    buildDeck();
+    showScreen('screen-deck');
+  });
 
   function renderDeck(){
     const wrap = document.getElementById('deckWrap');
@@ -1303,10 +1331,9 @@
       poster.style.backgroundImage = `url('${movie.poster_url}')`;
       poster.style.backgroundSize = 'cover';
       poster.style.backgroundPosition = 'center';
-      poster.innerHTML = `<div class="title-overlay"><h3>${movie.title}</h3></div>`;
     } else {
       poster.style.background = movie.gradient || 'linear-gradient(160deg,#2a3040,#151a28)';
-      poster.innerHTML = `${movie.emoji || '🎬'}<div class="title-overlay"><h3>${movie.title}</h3></div>`;
+      poster.textContent = movie.emoji || '🎬';
     }
 
     const overviewOverlay = document.createElement('div');
@@ -1323,6 +1350,7 @@
     meta.className = 'meta';
     const ratingBit = movie.rating ? `<span>·</span><span>★ ${movie.rating}</span>` : '';
     meta.innerHTML = `
+      <div class="meta-title">${escapeHtml(movie.title)}</div>
       <div class="meta-row"><span>${movie.year}</span><span>·</span><span>${movie.genre}</span><span>·</span><span>${formatDuration(movie)}</span>${ratingBit}</div>
       <div class="meta-row"><span class="platform-badge">${movie.platform}</span></div>
     `;
@@ -1330,6 +1358,7 @@
 
     const infoRow = document.createElement('div');
     infoRow.className = 'info-toggle-row';
+
     const infoBtn = document.createElement('button');
     infoBtn.className = 'info-toggle';
     infoBtn.setAttribute('aria-label','Show plot summary');
@@ -1344,6 +1373,20 @@
       overviewOverlay.classList.toggle('show');
     });
     infoRow.appendChild(infoBtn);
+
+    if(movie.trailerUrl){
+      const trailerLink = document.createElement('a');
+      trailerLink.className = 'info-toggle';
+      trailerLink.href = movie.trailerUrl;
+      trailerLink.target = '_blank';
+      trailerLink.rel = 'noopener';
+      trailerLink.innerHTML = '▶ Trailer';
+      trailerLink.addEventListener('pointerdown', e => e.stopPropagation());
+      trailerLink.addEventListener('pointerup', e => e.stopPropagation());
+      trailerLink.addEventListener('click', e => e.stopPropagation());
+      infoRow.appendChild(trailerLink);
+    }
+
     card.appendChild(infoRow);
 
     if(isTop){ attachDrag(card, movie, resolveFn); }
