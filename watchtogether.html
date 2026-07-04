@@ -586,7 +586,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v1.2</div>
+    <div class="wordmark">Reel — build v1.4</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -709,11 +709,9 @@
     <!-- ═══════════════ SCREEN 4 — SWIPE DECK ═══════════════ -->
     <section class="screen" id="screen-deck">
       <div class="section-head" style="text-align:center;">
-        <span class="eyebrow" id="deckEyebrow">Room FN9X2Q · 3 watching</span>
         <h2>Swipe to decide</h2>
       </div>
 
-      <div class="deck-progress" id="deckProgress">1 / 8</div>
       <div class="deck-wrap" id="deckWrap"></div>
 
       <div class="swipe-controls">
@@ -1142,14 +1140,10 @@
   }
 
   function updateDeckHeader(){
-    const eyebrow = document.getElementById('deckEyebrow');
     const hint = document.getElementById('deckHint');
     if(state.mode === 'solo'){
-      eyebrow.textContent = 'Just for you';
       hint.textContent = 'Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.';
     } else {
-      const code = document.getElementById('roomCode').textContent || 'ROOM';
-      eyebrow.textContent = `Room ${code} · 3 watching`;
       hint.textContent = 'Drag a card, or use the buttons. Amber flag = a friend already liked it. Tap "Plot summary" to read more.';
     }
   }
@@ -1175,7 +1169,6 @@
     if(state.deckIndex >= deck.length){
       if(state.loadingMore){
         wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>Finding more titles…</p></div>`;
-        document.getElementById('deckProgress').textContent = `${state.favorites.length} liked so far`;
         return;
       }
       showScreenDone();
@@ -1183,7 +1176,6 @@
     }
 
     wrap.innerHTML = '';
-    document.getElementById('deckProgress').textContent = `Card ${state.deckIndex+1} · ${state.favorites.length} liked`;
 
     // Render current + next card (next sits behind, slightly scaled) for a stacked feel.
     const upcoming = deck.slice(state.deckIndex, state.deckIndex+2);
@@ -1420,36 +1412,49 @@
   function renderProvidersPanel(containerEl, watchmodeId, movieTitle, badgeEl){
     if(!watchmodeId){
       containerEl.innerHTML = `<p class="providers-empty">Streaming info isn't available for this title yet. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
+      if(badgeEl){ badgeEl.textContent = 'Availability unknown'; }
       return;
     }
     containerEl.innerHTML = `<p class="providers-loading">Checking where to watch…</p>`;
-    fetch(`${BACKEND_URL}/api/movie/${watchmodeId}/providers?region=US`)
-      .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
-      .then(data => {
-        const html = [
-          providersSectionHtml('Stream with subscription', data.subscription, false),
-          providersSectionHtml('Rent', data.rent, true),
-          providersSectionHtml('Buy', data.buy, true),
-          providersSectionHtml('Free with ads', data.free, false),
-        ].join('');
-        containerEl.innerHTML = html || `<p class="providers-empty">No US streaming info found for this title. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
 
-        // The badge above was only ever a placeholder echoing whichever platforms
-        // were selected as filters — now that we have the real answer, replace it.
-        if(badgeEl){
-          const subNames = (data.subscription || []).map(p => p.name);
-          if(subNames.length > 0){
-            badgeEl.textContent = subNames.join(', ');
-          } else if((data.rent || []).length > 0 || (data.buy || []).length > 0){
-            badgeEl.textContent = 'Rent or buy only';
-          } else {
-            badgeEl.textContent = 'Availability varies';
+    const attempt = (retriesLeft) => {
+      fetch(`${BACKEND_URL}/api/movie/${watchmodeId}/providers?region=US`)
+        .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
+        .then(data => {
+          const html = [
+            providersSectionHtml('Stream with subscription', data.subscription, false),
+            providersSectionHtml('Rent', data.rent, true),
+            providersSectionHtml('Buy', data.buy, true),
+            providersSectionHtml('Free with ads', data.free, false),
+          ].join('');
+          containerEl.innerHTML = html || `<p class="providers-empty">No US streaming info found for this title. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
+
+          // The badge above was only ever a placeholder echoing whichever platforms
+          // were selected as filters — now that we have the real answer, replace it.
+          if(badgeEl){
+            const subNames = (data.subscription || []).map(p => p.name);
+            if(subNames.length > 0){
+              badgeEl.textContent = subNames.join(', ');
+            } else if((data.rent || []).length > 0 || (data.buy || []).length > 0){
+              badgeEl.textContent = 'Rent or buy only';
+            } else {
+              badgeEl.textContent = 'Availability varies';
+            }
           }
-        }
-      })
-      .catch(() => {
-        containerEl.innerHTML = `<p class="providers-empty">Couldn't load streaming info right now. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
-      });
+        })
+        .catch(() => {
+          // Transient Render/Watchmode hiccups are common on the free tier —
+          // one silent retry clears most of them without the user noticing.
+          if(retriesLeft > 0){
+            setTimeout(() => attempt(retriesLeft - 1), 900);
+            return;
+          }
+          containerEl.innerHTML = `<p class="providers-empty">Couldn't load streaming info right now. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
+          if(badgeEl){ badgeEl.textContent = 'Availability unknown'; }
+        });
+    };
+
+    attempt(1);
   }
 
   function showFinalPick(movie){
