@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Reel — pick a room, swipe together</title>
+<title>Reel — swipe to find something to watch</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -591,7 +591,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v2.3</div>
+    <div class="wordmark">Reel — build v2.5</div>
 
     <!-- ═══════════════ SCREEN 1 — MOVIES OR SERIES (the new first screen) ═══════════════ -->
     <section class="screen active" id="screen-content-type">
@@ -643,7 +643,7 @@
         <button class="swipe-btn pass" id="btnPass" aria-label="Pass">✕</button>
         <button class="swipe-btn like" id="btnLike" aria-label="Like">♥</button>
       </div>
-      <p class="demo-note" id="deckHint">Drag a card, or use the buttons. Titles with an <strong>amber flag</strong> already have a friend's vote.</p>
+      <p class="demo-note" id="deckHint">Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.</p>
       <button class="btn btn-ghost" id="btnGoToFavorites" style="margin-top:1rem; display:none;">See my picks so far →</button>
     </section>
 
@@ -718,7 +718,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>REEL · LIVE DATA VIA WATCHMODE · MULTIPLAYER SYNC COMING NEXT</footer>
+  <footer>REEL · LIVE DATA VIA WATCHMODE · SHARE YOUR PICKS WITH ANYONE</footer>
 
 <script>
   /* ════════════════════════════════════════════════════════════
@@ -729,7 +729,9 @@
      but silently substituting fake titles when the backend failed was
      actively misleading rather than helpful. Failures now show an honest
      "couldn't load, try again" state instead (see buildDeck below).
-     Still missing: real multi-user room sync (friend votes are simulated).
+     This app is intentionally solo-only — the earlier simulated "watch with
+     friends" room/matching mechanic was removed in favor of async sharing
+     (see the SHARING section below) rather than building real-time multiplayer.
      ════════════════════════════════════════════════════════════ */
 
   const PLATFORMS = [
@@ -1065,8 +1067,9 @@
     poster.className = 'poster';
     if(movie.poster_url){
       poster.style.backgroundImage = `url('${movie.poster_url}')`;
-      poster.style.backgroundSize = 'cover';
+      poster.style.backgroundSize = 'contain';
       poster.style.backgroundPosition = 'center';
+      poster.style.backgroundRepeat = 'no-repeat';
     } else {
       poster.style.background = movie.gradient || 'linear-gradient(160deg,#2a3040,#151a28)';
       poster.textContent = movie.emoji || '🎬';
