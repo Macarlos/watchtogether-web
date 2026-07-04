@@ -586,7 +586,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v1.1</div>
+    <div class="wordmark">Reel — build v1.2</div>
 
     <!-- ═══════════════ SCREEN 1 — HERO (solo vs group only) ═══════════════ -->
     <section class="screen active" id="screen-hero">
@@ -633,6 +633,27 @@
       <button class="btn btn-ghost" id="btnBackToHero" style="margin-top:1.5rem;">← Back</button>
     </section>
 
+    <!-- ═══════════════ SCREEN 1C — CONTENT TYPE (movies vs series) ═══════════════ -->
+    <section class="screen" id="screen-content-type">
+      <h1 class="hero" style="font-size:clamp(2rem,7vw,3rem);">Movies<br><span class="accent">or series?</span></h1>
+      <p class="hero-sub">This changes what we search for — series don't have a single runtime, so the time filter won't apply to them.</p>
+
+      <div class="path-row">
+        <button class="path-card" id="btnPickMovies">
+          <span class="icon">🎬</span>
+          <h3>Movies</h3>
+          <p>One-and-done, with a runtime you can filter by.</p>
+        </button>
+        <button class="path-card" id="btnPickSeries">
+          <span class="icon">📺</span>
+          <h3>Series</h3>
+          <p>Something to binge — no runtime filter needed.</p>
+        </button>
+      </div>
+
+      <button class="btn btn-ghost" id="btnBackFromContentType" style="margin-top:1.5rem;">← Back</button>
+    </section>
+
     <!-- ═══════════════ SCREEN 2 — SETUP ═══════════════ -->
     <section class="screen" id="screen-setup">
       <div class="section-head">
@@ -647,11 +668,13 @@
       </div>
       <div class="chip-group" id="chipMoods"></div>
 
-      <div class="section-head">
-        <span class="eyebrow">Optional</span>
-        <h2>Got time?</h2>
+      <div id="timeBudgetStep">
+        <div class="section-head">
+          <span class="eyebrow">Optional</span>
+          <h2>Got time?</h2>
+        </div>
+        <div class="chip-group" id="chipTime"></div>
       </div>
-      <div class="chip-group" id="chipTime"></div>
 
       <div class="setup-actions">
         <button class="btn btn-primary" id="btnCreateRoom">Create room →</button>
@@ -832,6 +855,7 @@
      ════════════════════════════════════════════════════════════ */
   const state = {
     mode: 'group',        // 'group' | 'solo'
+    contentType: 'movie', // 'movie' | 'tv_series'
     platforms: new Set(),
     moods: new Set(),
     time: null,
@@ -866,7 +890,7 @@
 
   document.getElementById('btnGoSolo').addEventListener('click', () => {
     state.mode = 'solo';
-    showScreen('screen-setup');
+    showScreen('screen-content-type');
   });
 
   document.getElementById('btnGoGroup').addEventListener('click', () => {
@@ -880,7 +904,7 @@
 
   document.getElementById('btnStart').addEventListener('click', () => {
     state.mode = 'group';
-    showScreen('screen-setup');
+    showScreen('screen-content-type');
   });
 
   document.getElementById('btnJoinCard').addEventListener('click', () => {
@@ -893,9 +917,29 @@
     if(!code){ return; }
     // Demo: joining an existing room skips straight to a pre-filled deck.
     state.mode = 'group';
+    state.contentType = 'movie';
     state.platforms = new Set(['netflix','hbo','prime']);
     buildDeck();
     showScreen('screen-deck');
+  });
+
+  document.getElementById('btnPickMovies').addEventListener('click', () => {
+    state.contentType = 'movie';
+    document.getElementById('timeBudgetStep').style.display = '';
+    showScreen('screen-setup');
+  });
+
+  document.getElementById('btnPickSeries').addEventListener('click', () => {
+    state.contentType = 'tv_series';
+    // Series don't have a single runtime, so the time-budget step doesn't apply.
+    document.getElementById('timeBudgetStep').style.display = 'none';
+    state.time = null;
+    document.querySelectorAll('#chipTime .chip').forEach(c => c.dataset.active = 'false');
+    showScreen('screen-setup');
+  });
+
+  document.getElementById('btnBackFromContentType').addEventListener('click', () => {
+    showScreen(state.mode === 'solo' ? 'screen-hero' : 'screen-group-choice');
   });
 
   /* ════════════════════════════════════════════════════════════
@@ -1017,13 +1061,18 @@
     return div.innerHTML;
   }
 
+  function formatDuration(movie){
+    if(movie.runtime){ return `${movie.runtime} min`; }
+    return 'Series';
+  }
+
   function mapApiResults(results){
     return results.map((m, i) => ({
       watchmodeId: m.watchmode_id,
       title: m.title,
       year: m.year,
       genre: (m.genres || []).slice(0,2).join(' · ') || 'Movie',
-      runtime: m.runtime_minutes || '—',
+      runtime: m.runtime_minutes || null,
       platform: PLATFORMS.filter(p => state.platforms.has(p.id)).map(p => p.label).join(', ') || 'Streaming',
       poster_url: m.poster_url,
       rating: m.rating,
@@ -1039,7 +1088,7 @@
     const platformParam = [...state.platforms].join(',');
     const moodParam = [...state.moods].join(',');
     const timeParam = state.time ? `&time_budget=${state.time}` : '';
-    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}${timeParam}&region=US&limit=${limit}&page=${page}`;
+    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}${timeParam}&region=US&limit=${limit}&page=${page}&content_type=${state.contentType}`;
     return fetch(url)
       .then(r => { if(!r.ok) throw new Error('bad response'); return r.json(); })
       .then(data => mapApiResults(data.results || []));
@@ -1192,7 +1241,7 @@
     meta.className = 'meta';
     const ratingBit = movie.rating ? `<span>·</span><span>★ ${movie.rating}</span>` : '';
     meta.innerHTML = `
-      <div class="meta-row"><span>${movie.year}</span><span>·</span><span>${movie.genre}</span><span>·</span><span>${movie.runtime} min</span>${ratingBit}</div>
+      <div class="meta-row"><span>${movie.year}</span><span>·</span><span>${movie.genre}</span><span>·</span><span>${formatDuration(movie)}</span>${ratingBit}</div>
       <div class="meta-row"><span class="platform-badge">${movie.platform}</span></div>
     `;
     card.appendChild(meta);
@@ -1338,7 +1387,7 @@
       info.className = 'brick-info';
       info.innerHTML = `
         <div class="brick-title">${movie.title}</div>
-        <div class="brick-meta">${movie.year} · ${movie.runtime} min</div>
+        <div class="brick-meta">${movie.year} · ${formatDuration(movie)}</div>
       `;
       brick.appendChild(info);
 
@@ -1410,7 +1459,7 @@
         ${movie.poster_url ? `<img src="${movie.poster_url}" alt="" style="width:72px; border-radius:8px; flex-shrink:0;">` : ''}
         <div>
           <div style="font-family:var(--font-display); font-size:1.7rem; text-transform:uppercase; letter-spacing:.01em; line-height:1;">${movie.title}</div>
-          <div style="font-family:var(--font-mono); font-size:.75rem; color:var(--muted); margin-top:.4rem;">${movie.year} · ${movie.genre} · ${movie.runtime} min</div>
+          <div style="font-family:var(--font-mono); font-size:.75rem; color:var(--muted); margin-top:.4rem;">${movie.year} · ${movie.genre} · ${formatDuration(movie)}</div>
           <div style="margin-top:.55rem;"><span class="platform-badge" id="finalPickPlatformBadge">Checking…</span></div>
         </div>
       </div>
@@ -1445,6 +1494,7 @@
      ════════════════════════════════════════════════════════════ */
   function fullRestart(){
     state.mode = 'group';
+    state.contentType = 'movie';
     state.platforms.clear();
     state.moods.clear();
     state.time = null;
@@ -1453,6 +1503,7 @@
     state.backendPage = 1;
     state.loadingMore = false;
     document.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
+    document.getElementById('timeBudgetStep').style.display = '';
     if(friendJoinTimer) clearInterval(friendJoinTimer);
     showScreen('screen-hero');
   }
