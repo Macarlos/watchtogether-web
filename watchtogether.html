@@ -591,7 +591,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v2.5</div>
+    <div class="wordmark">Reel — build v2.6</div>
 
     <!-- ═══════════════ SCREEN 1 — MOVIES OR SERIES (the new first screen) ═══════════════ -->
     <section class="screen active" id="screen-content-type">
@@ -1301,26 +1301,23 @@
     }
   });
 
-  function fetchTitleById(id){
-    return fetch(`${BACKEND_URL}/api/title/${id}`)
-      .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); });
-  }
-
   function loadSharedPicks(idsParam){
-    const ids = idsParam.split(',').map(s => s.trim()).filter(Boolean);
     const grid = document.getElementById('sharedGrid');
     grid.innerHTML = `<p class="providers-loading">Loading their picks…</p>`;
     showScreen('screen-shared-picks');
 
-    Promise.all(ids.map(id => fetchTitleById(id).catch(() => null)))
-      .then(rawResults => {
-        const valid = rawResults.filter(Boolean);
-        const movies = mapApiResults(valid);
+    fetch(`${BACKEND_URL}/api/titles?ids=${encodeURIComponent(idsParam)}`)
+      .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
+      .then(data => {
+        const movies = mapApiResults(data.results || []);
         if(movies.length === 0){
           grid.innerHTML = `<p class="providers-empty">Couldn't load this shared list — the link may be broken.</p>`;
           return;
         }
         renderMovieGrid(grid, movies);
+      })
+      .catch(() => {
+        grid.innerHTML = `<p class="providers-empty">Couldn't load this shared list right now. Try refreshing.</p>`;
       });
   }
 
