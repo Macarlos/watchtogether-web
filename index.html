@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Reel — swipe to find something to watch</title>
+<title>Watch2Night — swipe to find something to watch</title>
 <meta name="description" content="Stuck on what to watch? Pick your streaming platforms and mood, swipe through real movies and shows, see exact prices and trailers, and save or share your picks. Free, no account needed." />
 <link rel="canonical" href="https://macarlos.github.io/watchtogether-web/" />
 
 <!-- Open Graph (Facebook, Reddit, LinkedIn, etc.) -->
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Reel — swipe to find something to watch" />
+<meta property="og:title" content="Watch2Night — swipe to find something to watch" />
 <meta property="og:description" content="Pick your streaming platforms and mood, swipe through real movies and shows, see exact prices and trailers, and save or share your picks. Free, no account needed." />
 <meta property="og:url" content="https://macarlos.github.io/watchtogether-web/" />
 
 <!-- Twitter / X card -->
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="Reel — swipe to find something to watch" />
+<meta name="twitter:title" content="Watch2Night — swipe to find something to watch" />
 <meta name="twitter:description" content="Pick your streaming platforms and mood, swipe through real movies and shows, see exact prices and trailers, and save or share your picks." />
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>" />
@@ -26,7 +26,7 @@
 <meta name="theme-color" content="#08081a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Reel">
+<meta name="apple-mobile-web-app-title" content="Watch2Night">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,7 +107,7 @@
   .wordmark{
     font-family:var(--font-mono);
     font-size:.72rem;
-    letter-spacing:.32em;
+    letter-spacing:.16em;
     color:var(--amber);
     text-transform:uppercase;
     margin-bottom:1.75rem;
@@ -660,7 +660,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v3.9</div>
+    <div class="wordmark">Watch2Night — build v3.10</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -816,12 +816,12 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>REEL · LIVE DATA VIA WATCHMODE · <a href="legal.html" style="color:inherit;">LEGAL & PRIVACY</a></footer>
+  <footer>WATCH2NIGHT · LIVE DATA VIA WATCHMODE · <a href="legal.html" style="color:inherit;">LEGAL & PRIVACY</a></footer>
 
 <script>
   /* ════════════════════════════════════════════════════════════
      DATA LAYER
-     All movie data comes from the Reel backend (BACKEND_URL below), which
+     All movie data comes from the Watch2Night backend (BACKEND_URL below), which
      proxies Watchmode's list-titles + title/details endpoints. There is
      deliberately no offline mock-data fallback — an earlier version had one,
      but silently substituting fake titles when the backend failed was
@@ -864,7 +864,7 @@
     { id:'nostalgic',   label:'Nostalgic' },
   ];
 
-  // Your deployed Reel backend — swap this if you redeploy elsewhere.
+  // Your deployed Watch2Night backend — swap this if you redeploy elsewhere.
   const BACKEND_URL = 'https://watchtogether-backend-zxwy.onrender.com';
 
   // Anonymous session counter — one silent ping per page load, no cookie or

@@ -1,0 +1,37 @@
+{
+  "name": "Watch2Night — swipe to find something to watch",
+  "short_name": "Watch2Night",
+  "description": "Pick your streaming platforms and mood, swipe through real movies and shows, and save or share your picks.",
+  "start_url": "/watchtogether-web/?source=pwa",
+  "scope": "/watchtogether-web/",
+  "display": "standalone",
+  "background_color": "#08081a",
+  "theme_color": "#08081a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
