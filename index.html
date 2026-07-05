@@ -652,7 +652,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v3.5</div>
+    <div class="wordmark">Reel — build v3.6</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -851,6 +851,10 @@
 
   // Your deployed Reel backend — swap this if you redeploy elsewhere.
   const BACKEND_URL = 'https://watchtogether-backend-zxwy.onrender.com';
+
+  // Anonymous session counter — one silent ping per page load, no cookie or
+  // identifier attached. Purely a "how many times has this been opened" tally.
+  fetch(`${BACKEND_URL}/api/ping`, { method: 'POST' }).catch(() => {});
 
   /* ════════════════════════════════════════════════════════════
      STATE
