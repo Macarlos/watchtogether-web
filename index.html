@@ -20,6 +20,14 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>" />
 
+<!-- PWA: installability -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#08081a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Reel">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -652,7 +660,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v3.6</div>
+    <div class="wordmark">Reel — build v3.8</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -709,8 +717,10 @@
         <button class="swipe-btn like" id="btnLike" aria-label="Like">♥</button>
       </div>
       <p class="demo-note" id="deckHint">Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.</p>
-      <button class="btn btn-ghost" id="btnAdjustCategories" style="margin-top:1rem;">🏷 Adjust categories</button>
-      <button class="btn btn-ghost" id="btnGoToFavorites" style="margin-top:.6rem; display:none;">See my picks so far →</button>
+      <div style="width:100%; max-width:230px; display:flex; flex-direction:column; gap:.6rem; margin-top:1rem;">
+        <button class="btn btn-ghost" id="btnAdjustCategories" style="width:100%;">🏷 Adjust categories</button>
+        <button class="btn btn-ghost" id="btnGoToFavorites" style="width:100%; display:none;">See my picks so far →</button>
+      </div>
     </section>
 
     <!-- ═══════════════ SCREEN 4B — FAVORITES GRID (browse everything you liked) ═══════════════ -->
@@ -1776,6 +1786,13 @@
   document.getElementById('btnRestart').addEventListener('click', fullRestart);
   document.getElementById('btnFinalRestart').addEventListener('click', fullRestart);
   document.getElementById('btnNewSearchPersistent').addEventListener('click', fullRestart);
+
+  // PWA: register service worker (app shell caching + offline fallback)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+    });
+  }
 </script>
 </body>
 </html>
