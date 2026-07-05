@@ -529,7 +529,25 @@
     display:flex; align-items:center; justify-content:center;
     font-size:2rem;
     flex-shrink:0;
+    position:relative;
   }
+  .favorite-brick .brick-heart{
+    position:absolute; top:8px; right:8px; z-index:2;
+    width:30px; height:30px;
+    border-radius:50%;
+    background:rgba(11,14,20,.65);
+    border:1px solid rgba(255,255,255,.25);
+    color:var(--ink);
+    font-size:1.05rem;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .15s, color .15s;
+  }
+  .favorite-brick .brick-heart[data-saved="true"]{
+    color:var(--amber);
+    background:rgba(11,14,20,.8);
+    border-color:var(--amber);
+  }
+  .favorite-brick .brick-heart:hover{ background:rgba(11,14,20,.9); }
   .favorite-brick .brick-info{ padding:.55rem .6rem .7rem; }
   .favorite-brick .brick-title{
     font-family:var(--font-display);
@@ -623,7 +641,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v3.2</div>
+    <div class="wordmark">Reel — build v3.3</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -706,7 +724,8 @@
 
       <div class="favorites-grid" id="searchResultsGrid"></div>
 
-      <button class="btn btn-ghost" id="btnBackFromSearch" style="margin-top:1.5rem;">← Back</button>
+      <button class="btn btn-primary btn-block" id="btnContinueSwipingFromSearch" style="margin-top:1.5rem;">Continue swiping →</button>
+      <button class="btn btn-ghost" id="btnBackFromSearch" style="margin-top:.6rem;">← Back</button>
     </section>
 
     <!-- ═══════════════ SCREEN 4B-2 — SHARED PICKS (viewing someone else's link) ═══════════════ -->
@@ -729,6 +748,7 @@
       </div>
 
       <div class="final-pick-nav">
+        <button class="btn btn-primary" id="btnContinueSwipingTop">Continue swiping →</button>
         <button class="btn btn-ghost" id="btnBackToFavoritesGridTop">← Back to your picks</button>
         <button class="btn btn-ghost" id="btnFinalRestartTop">Start a new session</button>
       </div>
@@ -747,6 +767,7 @@
         </div>
       </div>
 
+      <button class="btn btn-primary btn-block" id="btnContinueSwiping" style="margin-bottom:.6rem;">Continue swiping →</button>
       <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid">← Back to your picks</button>
       <button class="btn btn-ghost btn-block" id="btnFinalRestart" style="margin-top:.6rem;">Start a new session</button>
     </section>
@@ -1235,6 +1256,15 @@
     persistFavorites();
   }
 
+  function removeFromFavorites(movieTitle){
+    state.favorites = state.favorites.filter(f => f.title !== movieTitle);
+    persistFavorites();
+  }
+
+  function isFavorited(movieTitle){
+    return state.favorites.some(f => f.title === movieTitle);
+  }
+
   function showAddedToast(){
     const toast = document.createElement('div');
     toast.textContent = '♥ Added to your picks';
@@ -1286,6 +1316,7 @@
      to see the full where-to-watch details for that one title.
      ════════════════════════════════════════════════════════════ */
   let favoritesReturnScreen = 'screen-deck';
+  let finalPickReturnScreen = 'screen-favorites-grid';
 
   function showFavoritesGrid(returnScreen){
     if(state.favorites.length === 0) return;
@@ -1296,11 +1327,14 @@
     showScreen('screen-favorites-grid');
   }
 
-  // Shared by the favorites grid and the "someone shared a link with you" grid.
+  // Shared by the favorites grid, search results, and the "someone shared a
+  // link with you" grid.
   function renderMovieGrid(grid, movies){
     grid.innerHTML = '';
     movies.forEach(movie => {
-      const brick = document.createElement('button');
+      const brick = document.createElement('div');
+      brick.setAttribute('role', 'button');
+      brick.setAttribute('tabindex', '0');
       brick.className = 'favorite-brick';
 
       const poster = document.createElement('div');
@@ -1311,6 +1345,27 @@
         poster.style.background = movie.gradient || 'linear-gradient(160deg,#2a3040,#151a28)';
         poster.textContent = movie.emoji || '🎬';
       }
+
+      const heartBtn = document.createElement('button');
+      heartBtn.className = 'brick-heart';
+      const setHeartState = () => {
+        const saved = isFavorited(movie.title);
+        heartBtn.textContent = saved ? '♥' : '♡';
+        heartBtn.dataset.saved = saved ? 'true' : 'false';
+        heartBtn.setAttribute('aria-label', saved ? 'Remove from your picks' : 'Save to your picks');
+      };
+      setHeartState();
+      heartBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if(isFavorited(movie.title)){
+          removeFromFavorites(movie.title);
+        } else {
+          addToFavorites(movie);
+        }
+        setHeartState();
+      });
+      poster.appendChild(heartBtn);
+
       brick.appendChild(poster);
 
       const info = document.createElement('div');
@@ -1321,7 +1376,17 @@
       `;
       brick.appendChild(info);
 
-      brick.addEventListener('click', () => showFinalPick(movie));
+      brick.addEventListener('click', () => {
+        finalPickReturnScreen = getActiveScreenId();
+        showFinalPick(movie);
+      });
+      brick.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          finalPickReturnScreen = getActiveScreenId();
+          showFinalPick(movie);
+        }
+      });
       grid.appendChild(brick);
     });
   }
@@ -1375,6 +1440,22 @@
 
   document.getElementById('btnBackFromSearch').addEventListener('click', () => showScreen(searchReturnScreen));
 
+  // Shared by the search results screen and the final-pick screen — resumes
+  // the existing deck if one is in progress, or starts one if there isn't
+  // an active session yet (e.g. someone searched before ever swiping).
+  function continueSwiping(){
+    if(deck.length === 0){
+      buildDeck();
+    } else {
+      renderDeck();
+    }
+    showScreen('screen-deck');
+  }
+
+  document.getElementById('btnContinueSwipingFromSearch').addEventListener('click', continueSwiping);
+  document.getElementById('btnContinueSwiping').addEventListener('click', continueSwiping);
+  document.getElementById('btnContinueSwipingTop').addEventListener('click', continueSwiping);
+
   document.getElementById('btnClearFavorites').addEventListener('click', () => {
     if(state.favorites.length === 0) return;
     const confirmed = confirm(`Remove all ${state.favorites.length} saved picks? This can't be undone.`);
@@ -1383,7 +1464,7 @@
     persistFavorites();
     showScreen(favoritesReturnScreen);
   });
-  document.getElementById('btnBackToFavoritesGrid').addEventListener('click', () => showScreen('screen-favorites-grid'));
+  document.getElementById('btnBackToFavoritesGrid').addEventListener('click', () => showScreen(finalPickReturnScreen));
 
   /* ════════════════════════════════════════════════════════════
      SHARING — since there's no real multiplayer backend, sharing is
@@ -1529,6 +1610,15 @@
     document.getElementById('finalPickEyebrow').textContent = 'Selected';
     document.getElementById('finalPickHeading').textContent = "Tonight you're watching";
 
+    const backLabels = {
+      'screen-favorites-grid': '← Back to your picks',
+      'screen-search-results': '← Back to search results',
+      'screen-shared-picks': '← Back to shared picks',
+    };
+    const backLabel = backLabels[finalPickReturnScreen] || '← Back';
+    document.getElementById('btnBackToFavoritesGridTop').textContent = backLabel;
+    document.getElementById('btnBackToFavoritesGrid').textContent = backLabel;
+
     const el = document.getElementById('finalPickCard');
     const yearLabel = movie.endYear && movie.endYear !== movie.year
       ? `${movie.year}–${movie.endYear}`
@@ -1589,7 +1679,7 @@
     showScreen('screen-final-pick');
   }
 
-  document.getElementById('btnBackToFavoritesGridTop').addEventListener('click', () => showScreen('screen-favorites-grid'));
+  document.getElementById('btnBackToFavoritesGridTop').addEventListener('click', () => showScreen(finalPickReturnScreen));
   document.getElementById('btnFinalRestartTop').addEventListener('click', () => fullRestart());
 
   /* ════════════════════════════════════════════════════════════
