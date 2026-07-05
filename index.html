@@ -105,6 +105,22 @@
     margin-bottom:1.75rem;
   }
 
+  .global-search-bar{ width:100%; margin-bottom:1.75rem; }
+  .global-search-bar input{
+    width:100%;
+    background:var(--surface);
+    border:1.5px solid var(--border);
+    border-radius:999px;
+    padding:.7rem 1.15rem;
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:.9rem;
+    outline:none;
+    transition:border-color .15s;
+  }
+  .global-search-bar input:focus{ border-color:var(--teal); }
+  .global-search-bar input::placeholder{ color:var(--muted); }
+
   .screen{ width:100%; display:none; flex-direction:column; align-items:center; }
   .screen.active{ display:flex; animation:rise .5s cubic-bezier(.2,.9,.25,1); }
   @keyframes rise{ from{ opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
@@ -607,7 +623,11 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v3.1</div>
+    <div class="wordmark">Reel — build v3.2</div>
+
+    <div class="global-search-bar">
+      <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
+    </div>
 
     <!-- ═══════════════ SCREEN 1 — MOVIES OR SERIES (the new first screen) ═══════════════ -->
     <section class="screen active" id="screen-content-type">
@@ -675,6 +695,18 @@
       <button class="btn btn-primary btn-block" id="btnSharePicks" style="margin-top:1.5rem;">Share my picks →</button>
       <button class="btn btn-ghost" id="btnBackFromFavorites" style="margin-top:.6rem;">← Back to swiping</button>
       <button class="btn btn-ghost" id="btnClearFavorites" style="margin-top:.6rem; color:var(--muted); border-color:transparent;">Clear all picks</button>
+    </section>
+
+    <!-- ═══════════════ SEARCH RESULTS ═══════════════ -->
+    <section class="screen" id="screen-search-results">
+      <div class="section-head" style="text-align:center;">
+        <span class="eyebrow" id="searchResultsCount">Results</span>
+        <h2 id="searchResultsHeading">Search results</h2>
+      </div>
+
+      <div class="favorites-grid" id="searchResultsGrid"></div>
+
+      <button class="btn btn-ghost" id="btnBackFromSearch" style="margin-top:1.5rem;">← Back</button>
     </section>
 
     <!-- ═══════════════ SCREEN 4B-2 — SHARED PICKS (viewing someone else's link) ═══════════════ -->
@@ -1297,6 +1329,51 @@
   document.getElementById('btnGoToFavorites').addEventListener('click', () => showFavoritesGrid('screen-deck'));
   document.getElementById('btnGoToFavoritesFromDone').addEventListener('click', () => showFavoritesGrid('screen-done'));
   document.getElementById('btnBackFromFavorites').addEventListener('click', () => showScreen(favoritesReturnScreen));
+
+  /* ════════════════════════════════════════════════════════════
+     TEXT SEARCH — always available alongside swiping, for when
+     someone already knows what they want rather than browsing blind.
+     ════════════════════════════════════════════════════════════ */
+  function getActiveScreenId(){
+    const active = document.querySelector('.screen.active');
+    return active ? active.id : 'screen-content-type';
+  }
+
+  let searchReturnScreen = 'screen-content-type';
+
+  function performSearch(query){
+    searchReturnScreen = getActiveScreenId();
+    const grid = document.getElementById('searchResultsGrid');
+    grid.innerHTML = `<p class="providers-loading">Searching…</p>`;
+    document.getElementById('searchResultsHeading').textContent = `Results for "${query}"`;
+    document.getElementById('searchResultsCount').textContent = 'Results';
+    showScreen('screen-search-results');
+
+    fetch(`${BACKEND_URL}/api/search?query=${encodeURIComponent(query)}&content_type=${state.contentType}`)
+      .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
+      .then(data => {
+        const movies = mapApiResults(data.results || []);
+        document.getElementById('searchResultsCount').textContent =
+          `${movies.length} result${movies.length !== 1 ? 's' : ''}`;
+        if(movies.length === 0){
+          grid.innerHTML = `<p class="providers-empty">No matches found${state.contentType === 'tv_series' ? ' among series' : ' among movies'}. Try a different search, or switch Movies/Series.</p>`;
+          return;
+        }
+        renderMovieGrid(grid, movies);
+      })
+      .catch(() => {
+        grid.innerHTML = `<p class="providers-empty">Couldn't search right now. Try again in a moment.</p>`;
+      });
+  }
+
+  document.getElementById('globalSearchInput').addEventListener('keydown', (e) => {
+    if(e.key !== 'Enter') return;
+    const query = e.target.value.trim();
+    if(!query) return;
+    performSearch(query);
+  });
+
+  document.getElementById('btnBackFromSearch').addEventListener('click', () => showScreen(searchReturnScreen));
 
   document.getElementById('btnClearFavorites').addEventListener('click', () => {
     if(state.favorites.length === 0) return;
