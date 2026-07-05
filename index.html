@@ -638,10 +638,21 @@
     </div>
   </div>
 
+  <!-- ═══════════════ CATEGORY ADJUSTER DIALOG ═══════════════ -->
+  <div class="share-overlay" id="categoryOverlay">
+    <div class="share-dialog" style="max-width:460px;">
+      <h3>Adjust categories</h3>
+      <p>Changes apply going forward — nothing you've already swiped or saved is affected.</p>
+      <div class="chip-group" id="chipMoodsAdjust" style="margin-bottom:1rem;"></div>
+      <button class="btn btn-primary btn-block" id="btnApplyCategories">Apply →</button>
+      <button class="btn btn-ghost btn-block" id="btnCloseCategoryDialog" style="margin-top:.6rem;">Close</button>
+    </div>
+  </div>
+
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v3.4</div>
+    <div class="wordmark">Reel — build v3.5</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -698,7 +709,8 @@
         <button class="swipe-btn like" id="btnLike" aria-label="Like">♥</button>
       </div>
       <p class="demo-note" id="deckHint">Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.</p>
-      <button class="btn btn-ghost" id="btnGoToFavorites" style="margin-top:1rem; display:none;">See my picks so far →</button>
+      <button class="btn btn-ghost" id="btnAdjustCategories" style="margin-top:1rem;">🏷 Adjust categories</button>
+      <button class="btn btn-ghost" id="btnGoToFavorites" style="margin-top:.6rem; display:none;">See my picks so far →</button>
     </section>
 
     <!-- ═══════════════ SCREEN 4B — FAVORITES GRID (browse everything you liked) ═══════════════ -->
@@ -944,6 +956,7 @@
 
   buildChips(document.getElementById('chipPlatforms'), PLATFORMS, state.platforms);
   buildChips(document.getElementById('chipMoods'), MOODS, state.moods);
+  buildChips(document.getElementById('chipMoodsAdjust'), MOODS, state.moods);
 
   document.getElementById('btnCreateRoom').addEventListener('click', () => {
     buildDeck();
@@ -1276,21 +1289,22 @@
     return state.favorites.some(f => f.title === movieTitle);
   }
 
-  function showAddedToast(){
+  function showToast(message){
     const toast = document.createElement('div');
-    toast.textContent = '♥ Added to your picks';
+    toast.textContent = message;
     toast.style.cssText = `
       position:fixed; top:1.2rem; left:50%; transform:translateX(-50%);
       background:var(--amber); color:#1a1305; font-family:var(--font-mono);
       font-size:.78rem; font-weight:700; padding:.55rem 1.1rem; border-radius:999px;
       z-index:80; box-shadow:0 6px 18px rgba(0,0,0,.35); opacity:0; transition:opacity .2s;
+      max-width:90vw; text-align:center;
     `;
     document.body.appendChild(toast);
     requestAnimationFrame(() => { toast.style.opacity = '1'; });
     setTimeout(() => {
       toast.style.opacity = '0';
       setTimeout(() => toast.remove(), 250);
-    }, 1200);
+    }, 1600);
   }
 
   function resolveSwipe(movie, liked, cardEl){
@@ -1303,7 +1317,7 @@
       state.deckIndex++;
       if(liked){
         addToFavorites(movie);
-        showAddedToast();
+        showToast('♥ Added to your picks');
       }
       renderDeck();
     }, 260);
@@ -1414,6 +1428,40 @@
   document.getElementById('btnGoToFavorites').addEventListener('click', () => showFavoritesGrid('screen-deck'));
   document.getElementById('btnGoToFavoritesFromDone').addEventListener('click', () => showFavoritesGrid('screen-done'));
   document.getElementById('btnBackFromFavorites').addEventListener('click', () => showScreen(favoritesReturnScreen));
+
+  /* ════════════════════════════════════════════════════════════
+     MID-SWIPE CATEGORY ADJUSTER — add or remove mood filters without
+     resetting the deck. Changes apply to what gets fetched going
+     forward; anything already swiped or saved is untouched.
+     ════════════════════════════════════════════════════════════ */
+  function syncCategoryDialogChips(){
+    const chips = document.querySelectorAll('#chipMoodsAdjust .chip');
+    chips.forEach((chip, i) => {
+      const item = MOODS[i];
+      if(!item) return;
+      chip.dataset.active = item.id === 'all'
+        ? (state.moods.size === 0 ? 'true' : 'false')
+        : (state.moods.has(item.id) ? 'true' : 'false');
+    });
+  }
+
+  document.getElementById('btnAdjustCategories').addEventListener('click', () => {
+    syncCategoryDialogChips();
+    document.getElementById('categoryOverlay').classList.add('active');
+  });
+
+  document.getElementById('btnCloseCategoryDialog').addEventListener('click', () => {
+    document.getElementById('categoryOverlay').classList.remove('active');
+  });
+
+  document.getElementById('btnApplyCategories').addEventListener('click', () => {
+    document.getElementById('categoryOverlay').classList.remove('active');
+    // Reset the "ran out of results" streak, since the filter genuinely
+    // changed — worth trying again even if the old filter had recently failed.
+    state.noMoreResultsStreak = 0;
+    loadMoreIfNeeded(true); // eager fetch reflecting the updated categories
+    showToast('Categories updated — new picks coming up');
+  });
 
   /* ════════════════════════════════════════════════════════════
      TEXT SEARCH — always available alongside swiping, for when
