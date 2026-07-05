@@ -145,6 +145,28 @@
   }
   h1.hero .accent{ color:var(--amber); }
 
+  .brand-banner{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.85rem;
+    margin-bottom:2rem;
+  }
+  .brand-banner .brand-mark{
+    width:52px;
+    height:52px;
+    border-radius:13px;
+    display:block;
+  }
+  .brand-banner .brand-wordmark{
+    font-family:var(--font-display);
+    font-size:1.9rem;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    color:var(--ink);
+  }
+  .brand-banner .brand-wordmark .two{ color:var(--amber); }
+
   .hero-sub{
     font-size:1rem;
     color:var(--muted);
@@ -660,7 +682,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.11</div>
+    <div class="wordmark">Watch2Night — build v3.12</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -668,6 +690,10 @@
 
     <!-- ═══════════════ SCREEN 1 — MOVIES OR SERIES (the new first screen) ═══════════════ -->
     <section class="screen active" id="screen-content-type">
+      <div class="brand-banner">
+        <img src="icons/icon-192.png" alt="" class="brand-mark" />
+        <span class="brand-wordmark">watch<span class="two">2</span>night</span>
+      </div>
       <h1 class="hero">Tonight you're<br><span class="accent">watching.</span></h1>
       <p class="hero-sub">Swipe through what's actually available on your platforms. Save what you like, then share your picks with anyone.</p>
 
