@@ -641,7 +641,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Reel — build v3.3</div>
+    <div class="wordmark">Reel — build v3.4</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -725,6 +725,7 @@
       <div class="favorites-grid" id="searchResultsGrid"></div>
 
       <button class="btn btn-primary btn-block" id="btnContinueSwipingFromSearch" style="margin-top:1.5rem;">Continue swiping →</button>
+      <button class="btn btn-ghost" id="btnGoToFavoritesFromSearch" style="margin-top:.6rem; display:none;">See my picks →</button>
       <button class="btn btn-ghost" id="btnBackFromSearch" style="margin-top:.6rem;">← Back</button>
     </section>
 
@@ -1095,8 +1096,18 @@
     }
 
     document.getElementById('btnExploreAllCategories').style.display = hasMoodFilter ? 'inline-block' : 'none';
-    document.getElementById('btnGoToFavoritesFromDone').style.display = hasFavorites ? 'inline-block' : 'none';
+    updateFavoritesButtons();
     showScreen('screen-done');
+  }
+
+  // Keeps every "See my picks" button in sync wherever it appears — called
+  // whenever favorites change, including via the heart button on grids.
+  function updateFavoritesButtons(){
+    const has = state.favorites.length > 0;
+    ['btnGoToFavorites', 'btnGoToFavoritesFromDone', 'btnGoToFavoritesFromSearch'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.style.display = has ? 'inline-block' : 'none';
+    });
   }
 
   document.getElementById('btnExploreAllCategories').addEventListener('click', () => {
@@ -1111,7 +1122,7 @@
   function renderDeck(){
     const wrap = document.getElementById('deckWrap');
     updateDeckHeader();
-    document.getElementById('btnGoToFavorites').style.display = state.favorites.length > 0 ? 'inline-block' : 'none';
+    updateFavoritesButtons();
 
     if(state.deckIndex >= deck.length){
       if(state.loadingMore){
@@ -1324,6 +1335,14 @@
     renderMovieGrid(document.getElementById('favoritesGrid'), state.favorites);
     document.getElementById('favoritesCount').textContent =
       `${state.favorites.length} pick${state.favorites.length !== 1 ? 's' : ''}`;
+
+    const backLabels = {
+      'screen-deck': '← Back to swiping',
+      'screen-done': '← Back',
+      'screen-search-results': '← Back to search results',
+    };
+    document.getElementById('btnBackFromFavorites').textContent = backLabels[favoritesReturnScreen] || '← Back';
+
     showScreen('screen-favorites-grid');
   }
 
@@ -1363,6 +1382,7 @@
           addToFavorites(movie);
         }
         setHeartState();
+        updateFavoritesButtons();
       });
       poster.appendChild(heartBtn);
 
@@ -1425,6 +1445,7 @@
           return;
         }
         renderMovieGrid(grid, movies);
+        updateFavoritesButtons();
       })
       .catch(() => {
         grid.innerHTML = `<p class="providers-empty">Couldn't search right now. Try again in a moment.</p>`;
@@ -1439,6 +1460,7 @@
   });
 
   document.getElementById('btnBackFromSearch').addEventListener('click', () => showScreen(searchReturnScreen));
+  document.getElementById('btnGoToFavoritesFromSearch').addEventListener('click', () => showFavoritesGrid('screen-search-results'));
 
   // Shared by the search results screen and the final-pick screen — resumes
   // the existing deck if one is in progress, or starts one if there isn't
