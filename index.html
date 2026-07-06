@@ -762,8 +762,8 @@
 
   <!-- ═══════════════ SHARE DIALOG ═══════════════ -->
   <div class="share-overlay" id="shareOverlay">
-    <div class="share-dialog">
-      <h3>Share your picks</h3>
+    <div class="share-dialog" id="shareDialogCard" role="dialog" aria-modal="true" aria-labelledby="shareDialogTitle" tabindex="-1">
+      <h3 id="shareDialogTitle">Share your picks</h3>
       <p>Send this link to anyone — it opens straight to your list.</p>
       <div class="share-link-row">
         <input type="text" id="shareLinkInput" readonly />
@@ -775,8 +775,8 @@
 
   <!-- ═══════════════ CATEGORY ADJUSTER DIALOG ═══════════════ -->
   <div class="share-overlay" id="categoryOverlay">
-    <div class="share-dialog" style="max-width:460px;">
-      <h3>Adjust categories</h3>
+    <div class="share-dialog" id="categoryDialogCard" role="dialog" aria-modal="true" aria-labelledby="categoryDialogTitle" tabindex="-1" style="max-width:460px;">
+      <h3 id="categoryDialogTitle">Adjust categories</h3>
       <p>Changes apply going forward — nothing you've already swiped or saved is affected.</p>
       <div class="chip-group" id="chipMoodsAdjust" style="margin-bottom:1rem;"></div>
       <button class="btn btn-primary btn-block" id="btnApplyCategories">Apply →</button>
@@ -786,8 +786,8 @@
 
   <!-- ═══════════════ PLATFORM ADJUSTER DIALOG ═══════════════ -->
   <div class="share-overlay" id="platformOverlay">
-    <div class="share-dialog" style="max-width:460px;">
-      <h3>Add another platform</h3>
+    <div class="share-dialog" id="platformDialogCard" role="dialog" aria-modal="true" aria-labelledby="platformDialogTitle" tabindex="-1" style="max-width:460px;">
+      <h3 id="platformDialogTitle">Add another platform</h3>
       <p>More platforms means more titles to swipe through. This starts a fresh deck with your updated platforms.</p>
       <div class="chip-group" id="chipPlatformsAdjust" style="margin-bottom:1rem;"></div>
       <button class="btn btn-primary btn-block" id="btnApplyPlatforms">Apply →</button>
@@ -797,8 +797,8 @@
 
   <!-- ═══════════════ FIRST-TIME ONBOARDING HINT ═══════════════ -->
   <div class="onboarding-overlay" id="onboardingOverlay">
-    <div class="share-dialog" style="max-width:380px;">
-      <h3>How Watch2Night works</h3>
+    <div class="share-dialog" id="onboardingDialogCard" role="dialog" aria-modal="true" aria-labelledby="onboardingDialogTitle" tabindex="-1" style="max-width:380px;">
+      <h3 id="onboardingDialogTitle">How Watch2Night works</h3>
       <div class="onboarding-steps">
         <div class="onboarding-step">
           <span class="onboarding-icon">🎛️</span>
@@ -820,7 +820,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.24</div>
+    <div class="wordmark">Watch2Night — build v3.25</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -1115,7 +1115,7 @@
   // platforms are already selected, if any.
   function clearMoodFilterVisual(){
     document.querySelectorAll('#chipMoods .chip, #chipMoodsAdjust .chip').forEach(chip => {
-      chip.dataset.active = chip.textContent.includes('All categories') ? 'true' : 'false';
+      setChipActive(chip, chip.textContent.includes('All categories'));
     });
   }
 
@@ -1134,11 +1134,20 @@
   /* ════════════════════════════════════════════════════════════
      SETUP SCREEN — chips
      ════════════════════════════════════════════════════════════ */
+  // Single source of truth for chip toggle state — keeps the visual
+  // data-active flag and the aria-pressed state screen readers rely on
+  // from ever drifting apart.
+  function setChipActive(chip, isActive){
+    chip.dataset.active = isActive ? 'true' : 'false';
+    chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  }
+
   function buildChips(container, items, targetSet){
     items.forEach(item => {
       const chip = document.createElement('button');
       chip.className = 'chip';
       chip.type = 'button';
+      chip.setAttribute('aria-pressed', 'false');
       chip.dataset.active = 'false';
       chip.innerHTML = `<span class="dot"></span>${item.label}`;
       chip.addEventListener('click', () => {
@@ -1146,16 +1155,16 @@
         if(container.id === 'chipMoods' && item.id === 'all'){
           // "All categories" is exclusive with picking specific genres —
           // selecting it clears everything else, same as leaving nothing picked.
-          container.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
-          chip.dataset.active = 'true';
+          container.querySelectorAll('.chip').forEach(c => setChipActive(c, false));
+          setChipActive(chip, true);
           targetSet.clear();
         } else {
-          chip.dataset.active = active ? 'false' : 'true';
+          setChipActive(chip, !active);
           if(active) targetSet.delete(item.id); else targetSet.add(item.id);
           if(container.id === 'chipMoods' && !active){
             // Picking a specific genre after "All" was selected turns "All" back off.
             const allChip = [...container.querySelectorAll('.chip')].find(c => c.textContent.includes('All categories'));
-            if(allChip) allChip.dataset.active = 'false';
+            if(allChip) setChipActive(allChip, false);
           }
         }
       });
@@ -1373,7 +1382,7 @@
   document.getElementById('btnExploreAllCategories').addEventListener('click', () => {
     state.moods.clear();
     document.querySelectorAll('#chipMoods .chip').forEach(c => {
-      c.dataset.active = c.textContent.includes('All categories') ? 'true' : 'false';
+      setChipActive(c, c.textContent.includes('All categories'));
     });
     buildDeck(); // favorites always persist — see FAVORITES_STORAGE_KEY
     showScreen('screen-deck');
@@ -1429,6 +1438,8 @@
 
     const poster = document.createElement('div');
     poster.className = 'poster';
+    poster.setAttribute('role', 'group');
+    poster.setAttribute('aria-label', `Poster for ${movie.title}${movie.year ? ` (${movie.year})` : ''}`);
     if(movie.poster_url){
       poster.style.backgroundImage = `url('${movie.poster_url}')`;
       poster.style.backgroundSize = 'contain';
@@ -1539,6 +1550,8 @@
   function showToast(message){
     const toast = document.createElement('div');
     toast.textContent = message;
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
     toast.style.cssText = `
       position:fixed; top:1.2rem; left:50%; transform:translateX(-50%);
       background:var(--amber); color:#1a1305; font-family:var(--font-mono);
@@ -1686,6 +1699,41 @@
   document.getElementById('btnBackFromFavorites').addEventListener('click', () => showScreen(favoritesReturnScreen));
 
   /* ════════════════════════════════════════════════════════════
+     DIALOG ACCESSIBILITY — shared focus handling for all four overlay
+     dialogs (share, category, platform, onboarding). Moves focus into
+     the dialog on open, restores it to whatever triggered the dialog
+     on close, and lets Escape close whichever dialog is currently open.
+     ════════════════════════════════════════════════════════════ */
+  let lastDialogTrigger = null;
+
+  function openDialog(overlay, openClass){
+    lastDialogTrigger = document.activeElement;
+    overlay.classList.add(openClass);
+    const dialog = overlay.querySelector('.share-dialog');
+    if(dialog) dialog.focus();
+  }
+
+  function closeDialog(overlay, openClass){
+    overlay.classList.remove(openClass);
+    if(lastDialogTrigger && typeof lastDialogTrigger.focus === 'function'){
+      lastDialogTrigger.focus();
+    }
+    lastDialogTrigger = null;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key !== 'Escape') return;
+    const share = document.getElementById('shareOverlay');
+    const category = document.getElementById('categoryOverlay');
+    const platform = document.getElementById('platformOverlay');
+    const onboarding = document.getElementById('onboardingOverlay');
+    if(share.classList.contains('active')) closeDialog(share, 'active');
+    else if(category.classList.contains('active')) closeDialog(category, 'active');
+    else if(platform.classList.contains('active')) closeDialog(platform, 'active');
+    else if(onboarding.classList.contains('visible')) closeDialog(onboarding, 'visible');
+  });
+
+  /* ════════════════════════════════════════════════════════════
      MID-SWIPE CATEGORY ADJUSTER — add or remove mood filters without
      resetting the deck. Changes apply to what gets fetched going
      forward; anything already swiped or saved is untouched.
@@ -1695,19 +1743,17 @@
     chips.forEach((chip, i) => {
       const item = MOODS[i];
       if(!item) return;
-      chip.dataset.active = item.id === 'all'
-        ? (state.moods.size === 0 ? 'true' : 'false')
-        : (state.moods.has(item.id) ? 'true' : 'false');
+      setChipActive(chip, item.id === 'all' ? state.moods.size === 0 : state.moods.has(item.id));
     });
   }
 
   document.getElementById('btnAdjustCategories').addEventListener('click', () => {
     syncCategoryDialogChips();
-    document.getElementById('categoryOverlay').classList.add('active');
+    openDialog(document.getElementById('categoryOverlay'), 'active');
   });
 
   document.getElementById('btnCloseCategoryDialog').addEventListener('click', () => {
-    document.getElementById('categoryOverlay').classList.remove('active');
+    closeDialog(document.getElementById('categoryOverlay'), 'active');
   });
 
   function syncPlatformDialogChips(){
@@ -1715,28 +1761,28 @@
     chips.forEach((chip, i) => {
       const item = PLATFORMS[i];
       if(!item) return;
-      chip.dataset.active = state.platforms.has(item.id) ? 'true' : 'false';
+      setChipActive(chip, state.platforms.has(item.id));
     });
   }
 
   document.getElementById('btnAddPlatformFromDone').addEventListener('click', () => {
     syncPlatformDialogChips();
-    document.getElementById('platformOverlay').classList.add('active');
+    openDialog(document.getElementById('platformOverlay'), 'active');
   });
 
   document.getElementById('btnClosePlatformDialog').addEventListener('click', () => {
-    document.getElementById('platformOverlay').classList.remove('active');
+    closeDialog(document.getElementById('platformOverlay'), 'active');
   });
 
   document.getElementById('btnApplyPlatforms').addEventListener('click', () => {
-    document.getElementById('platformOverlay').classList.remove('active');
+    closeDialog(document.getElementById('platformOverlay'), 'active');
     buildDeck(); // fresh deck reflecting the newly added platform(s)
     showScreen('screen-deck');
     showToast('Platforms updated — new picks coming up');
   });
 
   document.getElementById('btnApplyCategories').addEventListener('click', () => {
-    document.getElementById('categoryOverlay').classList.remove('active');
+    closeDialog(document.getElementById('categoryOverlay'), 'active');
     // Reset the "ran out of results" streak, since the filter genuinely
     // changed — worth trying again even if the old filter had recently failed.
     state.noMoreResultsStreak = 0;
@@ -1832,11 +1878,11 @@
 
   document.getElementById('btnSharePicks').addEventListener('click', () => {
     document.getElementById('shareLinkInput').value = buildShareUrl();
-    document.getElementById('shareOverlay').classList.add('active');
+    openDialog(document.getElementById('shareOverlay'), 'active');
   });
 
   document.getElementById('btnCloseShareDialog').addEventListener('click', () => {
-    document.getElementById('shareOverlay').classList.remove('active');
+    closeDialog(document.getElementById('shareOverlay'), 'active');
   });
 
   document.getElementById('btnCopyShareLink').addEventListener('click', (e) => {
@@ -2046,7 +2092,7 @@
     state.backendPage = 1;
     state.loadingMore = false;
     state.noMoreResultsStreak = 0;
-    document.querySelectorAll('.chip').forEach(c => c.dataset.active = 'false');
+    document.querySelectorAll('.chip').forEach(c => setChipActive(c, false));
     showScreen('screen-content-type');
   }
 
@@ -2072,11 +2118,11 @@
       function dismiss(){
         if (dismissed) return;
         dismissed = true;
-        overlay.classList.remove('visible');
+        closeDialog(overlay, 'visible');
         overlay.removeEventListener('click', dismiss);
       }
 
-      overlay.classList.add('visible');
+      openDialog(overlay, 'visible');
       overlay.addEventListener('click', dismiss);
     }
 
