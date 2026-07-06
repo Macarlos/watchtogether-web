@@ -821,7 +821,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.29</div>
+    <div class="wordmark">Watch2Night — build v3.30</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -1267,7 +1267,11 @@
     const tracks = trackIds.map(id => document.getElementById(id));
     if(tracks.some(t => !t)) return;
 
-    const page = Math.floor(Math.random() * 5) + 1;
+    // Always page 1 (not randomized) so this matches the backend's new
+    // cache key exactly — repeat visitors within the cache window get this
+    // for free instead of each paying ~25 Watchmode credits. The client-side
+    // shuffle just below still gives each visit a different arrangement.
+    const page = 1;
     fetchWithRetries(() => fetchDiscoverPage(page, 30), 2, 1500)
       .then(results => {
         const posters = results.map(m => m.poster_url).filter(Boolean);
