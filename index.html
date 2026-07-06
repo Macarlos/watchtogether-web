@@ -820,7 +820,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.26</div>
+    <div class="wordmark">Watch2Night — build v3.27</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -977,6 +977,7 @@
         <h3 id="doneTitle">That's the stack</h3>
         <p id="doneText">Everyone's swiped. Whatever matched is above — no match yet? Widen the mood or add another platform.</p>
         <button class="btn btn-primary" id="btnExploreAllCategories" style="display:none; margin-bottom:.6rem;">Explore all categories →</button>
+        <button class="btn btn-primary" id="btnAddCategoryFromDone" style="display:none; margin-bottom:.6rem;">+ Add another category</button>
         <button class="btn btn-primary" id="btnAddPlatformFromDone" style="display:none; margin-bottom:.6rem;">+ Add another platform</button>
         <button class="btn btn-primary" id="btnGoToFavoritesFromDone" style="display:none; margin-bottom:.6rem;">See my picks →</button>
         <button class="btn btn-ghost" id="btnRestart">Start a new session</button>
@@ -1365,6 +1366,7 @@
     }
 
     document.getElementById('btnExploreAllCategories').style.display = hasMoodFilter ? 'inline-block' : 'none';
+    document.getElementById('btnAddCategoryFromDone').style.display = hasMoodFilter ? 'inline-block' : 'none';
     document.getElementById('btnAddPlatformFromDone').style.display =
       (state.platforms.size < PLATFORMS.length) ? 'inline-block' : 'none';
     updateFavoritesButtons();
@@ -1749,7 +1751,21 @@
     });
   }
 
+  // The category dialog is opened from two different places with two
+  // different expectations: mid-swipe ("🏷 Adjust categories") shouldn't
+  // reset the deck (an established, accepted simplification), while opening
+  // it from the exhausted "done" screen needs a genuinely fresh deck. This
+  // flag lets the shared Apply button do the right thing for each.
+  let categoryDialogOrigin = 'deck';
+
   document.getElementById('btnAdjustCategories').addEventListener('click', () => {
+    categoryDialogOrigin = 'deck';
+    syncCategoryDialogChips();
+    openDialog(document.getElementById('categoryOverlay'), 'active');
+  });
+
+  document.getElementById('btnAddCategoryFromDone').addEventListener('click', () => {
+    categoryDialogOrigin = 'done';
     syncCategoryDialogChips();
     openDialog(document.getElementById('categoryOverlay'), 'active');
   });
@@ -1785,10 +1801,15 @@
 
   document.getElementById('btnApplyCategories').addEventListener('click', () => {
     closeDialog(document.getElementById('categoryOverlay'), 'active');
-    // Reset the "ran out of results" streak, since the filter genuinely
-    // changed — worth trying again even if the old filter had recently failed.
-    state.noMoreResultsStreak = 0;
-    loadMoreIfNeeded(true); // eager fetch reflecting the updated categories
+    if(categoryDialogOrigin === 'done'){
+      buildDeck(); // deck was already exhausted — a genuinely fresh one is needed
+      showScreen('screen-deck');
+    } else {
+      // Reset the "ran out of results" streak, since the filter genuinely
+      // changed — worth trying again even if the old filter had recently failed.
+      state.noMoreResultsStreak = 0;
+      loadMoreIfNeeded(true); // eager fetch reflecting the updated categories
+    }
     showToast('Categories updated — new picks coming up');
   });
 
