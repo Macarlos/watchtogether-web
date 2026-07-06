@@ -766,7 +766,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.21</div>
+    <div class="wordmark">Watch2Night — build v3.22</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -794,7 +794,8 @@
         </button>
       </div>
 
-      <button class="btn btn-ghost" id="btnShowOnboarding" style="margin-top:1.4rem;">ℹ️ How to use W2N</button>
+      <button class="btn btn-ghost" id="btnSurpriseMeFirst" style="margin-top:1rem;">🎲 Surprise me</button>
+      <button class="btn btn-ghost" id="btnShowOnboarding" style="margin-top:.6rem;">ℹ️ How to use W2N</button>
     </section>
 
     <!-- ═══════════════ SCREEN 2 — SETUP ═══════════════ -->
@@ -810,6 +811,7 @@
         <h2>What's the mood?</h2>
       </div>
       <div class="chip-group" id="chipMoods"></div>
+      <button class="btn btn-ghost" id="btnSurpriseMeSetup" style="margin-top:.8rem;">🎲 Surprise me — any mood</button>
 
       <div class="setup-actions">
         <button class="btn btn-primary" id="btnCreateRoom">Start swiping →</button>
@@ -1054,6 +1056,27 @@
     showScreen('screen-setup');
   });
 
+  // "Surprise me" — ignores mood (and, from the very first screen, content
+  // type too, since nothing's been chosen yet). Still respects whatever
+  // platforms are already selected, if any.
+  function clearMoodFilterVisual(){
+    document.querySelectorAll('#chipMoods .chip, #chipMoodsAdjust .chip').forEach(chip => {
+      chip.dataset.active = chip.textContent.includes('All categories') ? 'true' : 'false';
+    });
+  }
+
+  function goSurpriseMe(randomizeContentType){
+    if(randomizeContentType){
+      state.contentType = Math.random() < 0.5 ? 'movie' : 'tv_series';
+    }
+    state.moods.clear();
+    clearMoodFilterVisual();
+    buildDeck();
+    showScreen('screen-deck');
+  }
+
+  document.getElementById('btnSurpriseMeFirst').addEventListener('click', () => goSurpriseMe(true));
+
   /* ════════════════════════════════════════════════════════════
      SETUP SCREEN — chips
      ════════════════════════════════════════════════════════════ */
@@ -1095,6 +1118,8 @@
     buildDeck();
     showScreen('screen-deck');
   });
+
+  document.getElementById('btnSurpriseMeSetup').addEventListener('click', () => goSurpriseMe(false));
 
   function flashButton(btn, text){
     const original = btn.textContent;
