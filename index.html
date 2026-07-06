@@ -518,6 +518,55 @@
     margin-bottom:1.1rem;
     line-height:1.5;
   }
+
+  .onboarding-overlay{
+    position:fixed; inset:0;
+    background:rgba(5,7,14,.85);
+    backdrop-filter:blur(4px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:96;
+    padding:1.5rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .4s ease;
+    cursor:pointer;
+  }
+  .onboarding-overlay.visible{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .onboarding-steps{
+    display:flex;
+    flex-direction:column;
+    gap:1.1rem;
+    text-align:left;
+    margin-bottom:1rem;
+  }
+  .onboarding-step{
+    display:flex;
+    align-items:center;
+    gap:.9rem;
+  }
+  .onboarding-step .onboarding-icon{
+    font-size:1.6rem;
+    flex-shrink:0;
+    width:2rem;
+    text-align:center;
+  }
+  .onboarding-step p{
+    margin:0;
+    font-size:.92rem;
+    line-height:1.4;
+    color:var(--ink);
+  }
+  .onboarding-dismiss-hint{
+    text-align:center;
+    color:var(--muted);
+    font-size:.78rem;
+    line-height:1.4;
+  }
   .share-link-row{ display:flex; gap:.5rem; }
   .share-link-row input{
     flex:1;
@@ -681,10 +730,32 @@
     </div>
   </div>
 
+  <!-- ═══════════════ FIRST-TIME ONBOARDING HINT ═══════════════ -->
+  <div class="onboarding-overlay" id="onboardingOverlay">
+    <div class="share-dialog" style="max-width:380px;">
+      <h3>How Watch2Night works</h3>
+      <div class="onboarding-steps">
+        <div class="onboarding-step">
+          <span class="onboarding-icon">🎛️</span>
+          <p>Pick your streaming platforms and a mood</p>
+        </div>
+        <div class="onboarding-step">
+          <span class="onboarding-icon">👉</span>
+          <p>Swipe through real movies and shows</p>
+        </div>
+        <div class="onboarding-step">
+          <span class="onboarding-icon">❤️</span>
+          <p>Save your favorites, then share them with anyone</p>
+        </div>
+      </div>
+      <div class="onboarding-dismiss-hint">Tap anywhere to dismiss</div>
+    </div>
+  </div>
+
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.16</div>
+    <div class="wordmark">Watch2Night — build v3.19</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -711,6 +782,8 @@
           <p>Something to binge over multiple episodes.</p>
         </button>
       </div>
+
+      <button class="btn btn-ghost" id="btnShowOnboarding" style="margin-top:1.4rem;">ℹ️ How to use W2N</button>
     </section>
 
     <!-- ═══════════════ SCREEN 2 — SETUP ═══════════════ -->
@@ -1835,6 +1908,37 @@
       navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
     });
   }
+
+  // First-time onboarding hint — shown once per device automatically, and
+  // re-showable any time via the "How to use W2N" button. Stays until the
+  // user taps anywhere to dismiss it (no auto-fade).
+  (function initOnboardingHint(){
+    const ONBOARDING_KEY = 'w2n_onboarding_seen_v1';
+    const overlay = document.getElementById('onboardingOverlay');
+    if (!overlay) return;
+
+    function showOnboardingHint(){
+      let dismissed = false;
+      function dismiss(){
+        if (dismissed) return;
+        dismissed = true;
+        overlay.classList.remove('visible');
+        overlay.removeEventListener('click', dismiss);
+      }
+
+      overlay.classList.add('visible');
+      overlay.addEventListener('click', dismiss);
+    }
+
+    if (!localStorage.getItem(ONBOARDING_KEY)) {
+      localStorage.setItem(ONBOARDING_KEY, 'true'); // mark as seen right away —
+      // even if the tab closes mid-hint, it won't reappear and nag on next visit.
+      showOnboardingHint();
+    }
+
+    const btn = document.getElementById('btnShowOnboarding');
+    if (btn) btn.addEventListener('click', showOnboardingHint);
+  })();
 </script>
 </body>
 </html>
