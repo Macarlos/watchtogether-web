@@ -730,6 +730,17 @@
     </div>
   </div>
 
+  <!-- ═══════════════ PLATFORM ADJUSTER DIALOG ═══════════════ -->
+  <div class="share-overlay" id="platformOverlay">
+    <div class="share-dialog" style="max-width:460px;">
+      <h3>Add another platform</h3>
+      <p>More platforms means more titles to swipe through. This starts a fresh deck with your updated platforms.</p>
+      <div class="chip-group" id="chipPlatformsAdjust" style="margin-bottom:1rem;"></div>
+      <button class="btn btn-primary btn-block" id="btnApplyPlatforms">Apply →</button>
+      <button class="btn btn-ghost btn-block" id="btnClosePlatformDialog" style="margin-top:.6rem;">Close</button>
+    </div>
+  </div>
+
   <!-- ═══════════════ FIRST-TIME ONBOARDING HINT ═══════════════ -->
   <div class="onboarding-overlay" id="onboardingOverlay">
     <div class="share-dialog" style="max-width:380px;">
@@ -755,7 +766,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.20</div>
+    <div class="wordmark">Watch2Night — build v3.21</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -908,6 +919,7 @@
         <h3 id="doneTitle">That's the stack</h3>
         <p id="doneText">Everyone's swiped. Whatever matched is above — no match yet? Widen the mood or add another platform.</p>
         <button class="btn btn-primary" id="btnExploreAllCategories" style="display:none; margin-bottom:.6rem;">Explore all categories →</button>
+        <button class="btn btn-primary" id="btnAddPlatformFromDone" style="display:none; margin-bottom:.6rem;">+ Add another platform</button>
         <button class="btn btn-primary" id="btnGoToFavoritesFromDone" style="display:none; margin-bottom:.6rem;">See my picks →</button>
         <button class="btn btn-ghost" id="btnRestart">Start a new session</button>
       </div>
@@ -1077,6 +1089,7 @@
   buildChips(document.getElementById('chipPlatforms'), PLATFORMS, state.platforms);
   buildChips(document.getElementById('chipMoods'), MOODS, state.moods);
   buildChips(document.getElementById('chipMoodsAdjust'), MOODS, state.moods);
+  buildChips(document.getElementById('chipPlatformsAdjust'), PLATFORMS, state.platforms);
 
   document.getElementById('btnCreateRoom').addEventListener('click', () => {
     buildDeck();
@@ -1229,6 +1242,8 @@
     }
 
     document.getElementById('btnExploreAllCategories').style.display = hasMoodFilter ? 'inline-block' : 'none';
+    document.getElementById('btnAddPlatformFromDone').style.display =
+      (state.platforms.size < PLATFORMS.length) ? 'inline-block' : 'none';
     updateFavoritesButtons();
     showScreen('screen-done');
   }
@@ -1581,6 +1596,31 @@
 
   document.getElementById('btnCloseCategoryDialog').addEventListener('click', () => {
     document.getElementById('categoryOverlay').classList.remove('active');
+  });
+
+  function syncPlatformDialogChips(){
+    const chips = document.querySelectorAll('#chipPlatformsAdjust .chip');
+    chips.forEach((chip, i) => {
+      const item = PLATFORMS[i];
+      if(!item) return;
+      chip.dataset.active = state.platforms.has(item.id) ? 'true' : 'false';
+    });
+  }
+
+  document.getElementById('btnAddPlatformFromDone').addEventListener('click', () => {
+    syncPlatformDialogChips();
+    document.getElementById('platformOverlay').classList.add('active');
+  });
+
+  document.getElementById('btnClosePlatformDialog').addEventListener('click', () => {
+    document.getElementById('platformOverlay').classList.remove('active');
+  });
+
+  document.getElementById('btnApplyPlatforms').addEventListener('click', () => {
+    document.getElementById('platformOverlay').classList.remove('active');
+    buildDeck(); // fresh deck reflecting the newly added platform(s)
+    showScreen('screen-deck');
+    showToast('Platforms updated — new picks coming up');
   });
 
   document.getElementById('btnApplyCategories').addEventListener('click', () => {
