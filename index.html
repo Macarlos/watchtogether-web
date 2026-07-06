@@ -820,7 +820,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.27</div>
+    <div class="wordmark">Watch2Night — build v3.28</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -1505,6 +1505,21 @@
       infoRow.appendChild(trailerLink);
     }
 
+    const fullDetailsBtn = document.createElement('button');
+    fullDetailsBtn.className = 'info-toggle';
+    fullDetailsBtn.setAttribute('aria-label', `See full details for ${movie.title}`);
+    fullDetailsBtn.innerHTML = '📄 Full description';
+    fullDetailsBtn.addEventListener('pointerdown', e => e.stopPropagation());
+    fullDetailsBtn.addEventListener('pointerup', e => e.stopPropagation());
+    fullDetailsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Doesn't resolve the swipe (no pass/like) — the card stays exactly
+      // where it is in the deck, so "Continue swiping" picks up right here.
+      finalPickReturnScreen = 'screen-deck';
+      showFinalPick(movie);
+    });
+    infoRow.appendChild(fullDetailsBtn);
+
     card.appendChild(infoRow);
 
     if(isTop){ attachDrag(card, movie, resolveFn); }
@@ -2034,6 +2049,7 @@
       'screen-favorites-grid': '← Back to your picks',
       'screen-search-results': '← Back to search results',
       'screen-shared-picks': '← Back to shared picks',
+      'screen-deck': '← Back to swiping',
     };
     const backLabel = backLabels[finalPickReturnScreen] || '← Back';
     document.getElementById('btnBackToFavoritesGridTop').textContent = backLabel;
