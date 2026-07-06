@@ -247,6 +247,7 @@
   .path-card:hover{ border-color:var(--amber); transform:translateY(-2px); }
   .path-card .icon{ font-size:1.5rem; }
   .path-card h3{ font-family:var(--font-display); font-size:1.5rem; letter-spacing:.02em; text-transform:uppercase; }
+  .path-card.surprise-card{ flex:0 1 220px; max-width:220px; }
   .path-card p{ color:var(--muted); font-size:.87rem; line-height:1.5; }
 
   /* ───────────────────────── Buttons ───────────────────────── */
@@ -820,7 +821,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.28</div>
+    <div class="wordmark">Watch2Night — build v3.29</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -848,8 +849,15 @@
         </button>
       </div>
 
-      <button class="btn btn-ghost" id="btnSurpriseMeFirst" style="margin-top:1rem;">🎲 Surprise me</button>
-      <button class="btn btn-ghost" id="btnShowOnboarding" style="margin-top:.6rem;">ℹ️ How to use W2N</button>
+      <div class="path-row" style="margin-top:.85rem;">
+        <button class="path-card surprise-card" id="btnSurpriseMeFirst">
+          <span class="icon">🎲</span>
+          <h3>Surprise me</h3>
+          <p>Skip the choices — get a random pick instantly.</p>
+        </button>
+      </div>
+
+      <button class="btn btn-ghost" id="btnShowOnboarding" style="margin-top:1.2rem;">ℹ️ How to use W2N</button>
     </section>
 
     <!-- ═══════════════ SCREEN 2 — SETUP ═══════════════ -->
