@@ -71,6 +71,51 @@
     *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
   }
 
+  /* ───────────────────────── Scrolling poster wallpaper ───────────────────────── */
+  .poster-bg{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    display:flex;
+    gap:6px;
+    padding:0 4px;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .poster-bg-col{
+    flex:1;
+    overflow:hidden;
+    position:relative;
+    min-width:0;
+  }
+  .poster-bg-col .track{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    width:100%;
+    animation-name:posterScrollUp;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+  }
+  .poster-bg-col img{
+    width:100%;
+    aspect-ratio:2/3;
+    object-fit:cover;
+    border-radius:8px;
+    opacity:.32;
+    filter:saturate(.6) brightness(.85);
+    display:block;
+  }
+  .poster-bg-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(5,6,10,.55) 0%, rgba(5,6,10,.8) 55%, rgba(5,6,10,.95) 100%);
+  }
+  @keyframes posterScrollUp{
+    from{ transform:translateY(0); }
+    to{ transform:translateY(-50%); }
+  }
+
   button{ font-family:inherit; cursor:pointer; }
   :focus-visible{ outline:2px solid var(--teal); outline-offset:3px; }
 
@@ -698,6 +743,15 @@
 </head>
 <body>
 
+  <div class="poster-bg" id="posterBg" aria-hidden="true">
+    <div class="poster-bg-col"><div class="track" id="posterTrack0"></div></div>
+    <div class="poster-bg-col"><div class="track" id="posterTrack1"></div></div>
+    <div class="poster-bg-col"><div class="track" id="posterTrack2"></div></div>
+    <div class="poster-bg-col"><div class="track" id="posterTrack3"></div></div>
+    <div class="poster-bg-col"><div class="track" id="posterTrack4"></div></div>
+    <div class="poster-bg-overlay"></div>
+  </div>
+
   <button id="btnNewSearchPersistent" style="
     position:fixed; top:14px; right:14px; z-index:90;
     background:rgba(11,14,20,.7); border:1px solid var(--border);
@@ -766,7 +820,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.22</div>
+    <div class="wordmark">Watch2Night — build v3.24</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -1182,6 +1236,39 @@
       return new Promise(resolve => setTimeout(resolve, delayMs)).then(() => fetchWithRetries(fn, retries - 1, delayMs));
     });
   }
+
+  // Ambient scrolling poster wallpaper — a one-time fetch of real posters
+  // (broad, unfiltered — this runs before the user picks anything) split
+  // across 5 columns that drift upward continuously. Purely decorative:
+  // if the fetch fails, the existing plain gradient background is a fine
+  // fallback, so failures are silent.
+  function initPosterBackground(){
+    const trackIds = ['posterTrack0','posterTrack1','posterTrack2','posterTrack3','posterTrack4'];
+    const tracks = trackIds.map(id => document.getElementById(id));
+    if(tracks.some(t => !t)) return;
+
+    const page = Math.floor(Math.random() * 5) + 1;
+    fetchWithRetries(() => fetchDiscoverPage(page, 30), 2, 1500)
+      .then(results => {
+        const posters = results.map(m => m.poster_url).filter(Boolean);
+        if(posters.length < 15) return; // too sparse to loop convincingly — skip rather than show a thin wallpaper
+
+        const shuffled = posters.slice().sort(() => Math.random() - 0.5);
+        const perColumn = Math.ceil(shuffled.length / tracks.length);
+
+        tracks.forEach((track, i) => {
+          const slice = shuffled.slice(i * perColumn, (i + 1) * perColumn);
+          if(slice.length < 3) return;
+          // Duplicate the list so the upward scroll loops seamlessly at -50%.
+          const doubled = slice.concat(slice);
+          track.innerHTML = doubled.map(src => `<img src="${escapeHtml(src)}" loading="lazy" alt="" />`).join('');
+          const duration = 110 + i * 20; // slow, calm drift — slight stagger per column for a parallax feel
+          track.style.animationDuration = `${duration}s`;
+        });
+      })
+      .catch(() => {});
+  }
+  initPosterBackground();
 
   function buildDeck(){
     state.deckIndex = 0;
