@@ -828,7 +828,7 @@
           </span>
           <span class="share-icon-label">Telegram</span>
         </button>
-        <button class="share-icon-btn" id="btnShareMore" aria-label="More sharing options" style="display:none;">
+        <button class="share-icon-btn" id="btnShareMore" aria-label="More sharing options">
           <span class="share-icon-emoji" style="background:var(--surface-2);">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#f4f1e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><line x1="8.2" y1="10.8" x2="15.8" y2="6.2"/><line x1="8.2" y1="13.2" x2="15.8" y2="17.8"/></svg>
           </span>
@@ -891,7 +891,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.31</div>
+    <div class="wordmark">Watch2Night — build v3.32</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -2054,21 +2054,29 @@
     window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(SHARE_TEXT)}`, '_blank', 'noopener,noreferrer');
   });
 
-  // Native share sheet — only shown on devices/browsers that support it
-  // (mostly mobile). This is where Instagram/TikTok can realistically show
-  // up, alongside Messages, Mail, Telegram, etc. — whatever's installed.
+  // "More" — native share sheet where supported (mostly mobile; this is
+  // where Instagram/TikTok can realistically show up, alongside Messages,
+  // Mail, etc. — whatever's installed). On browsers without that API
+  // (mostly desktop), falls back to copying the link so the button always
+  // does something useful rather than sitting there dead.
   const shareMoreBtn = document.getElementById('btnShareMore');
-  if(navigator.share){
-    shareMoreBtn.style.display = '';
-    shareMoreBtn.addEventListener('click', async () => {
-      const url = document.getElementById('shareLinkInput').value;
+  shareMoreBtn.addEventListener('click', async () => {
+    const url = document.getElementById('shareLinkInput').value;
+    if(navigator.share){
       try{
         await navigator.share({ title: 'My Watch2Night picks', text: SHARE_TEXT, url });
       } catch(err){
         // User backed out of the share sheet — not an error, nothing to do.
       }
-    });
-  }
+      return;
+    }
+    const done = () => showToast('Link copied — paste it anywhere');
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(done).catch(() => showToast("Couldn't copy — use the link field below"));
+    } else {
+      showToast("Couldn't copy — use the link field below");
+    }
+  });
 
   function loadSharedPicks(idsParam){
     const grid = document.getElementById('sharedGrid');
