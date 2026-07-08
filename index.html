@@ -891,7 +891,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.34</div>
+    <div class="wordmark">Watch2Night — build v3.35</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -1348,10 +1348,17 @@
         if(posters.length < 15) return; // too sparse to loop convincingly — skip rather than show a thin wallpaper
 
         const shuffled = posters.slice().sort(() => Math.random() - 0.5);
-        const perColumn = Math.ceil(shuffled.length / tracks.length);
+
+        // Deal posters round-robin across columns (like dealing cards) —
+        // guarantees the most even split possible. The previous consecutive-
+        // slice approach could starve the last column entirely (e.g. 21
+        // posters -> 5,5,5,5,1 -> last column skipped as too thin) which
+        // showed up as a visible empty stripe on wide screens.
+        const columns = tracks.map(() => []);
+        shuffled.forEach((src, i) => columns[i % tracks.length].push(src));
 
         tracks.forEach((track, i) => {
-          const slice = shuffled.slice(i * perColumn, (i + 1) * perColumn);
+          const slice = columns[i];
           if(slice.length < 3) return;
           // Duplicate the list so the upward scroll loops seamlessly at -50%.
           const doubled = slice.concat(slice);
