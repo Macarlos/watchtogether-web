@@ -2,7 +2,7 @@
 // Bump CACHE_NAME whenever you want to force clients to pick up new
 // cached shell files (rare — most of the app's content comes live from
 // the API and is never cached here).
-const CACHE_NAME = "w2n-shell-v1";
+const CACHE_NAME = "w2n-shell-v2";
 
 const SHELL_FILES = [
   "./",
