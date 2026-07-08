@@ -321,8 +321,58 @@
   .btn:active{ transform:scale(.97); }
   .btn-primary{ background:var(--amber); color:#1a1305; }
   .btn-primary:hover{ filter:brightness(1.08); }
-  .btn-ghost{ background:transparent; border:1.5px solid var(--border); color:var(--ink); }
-  .btn-ghost:hover{ border-color:var(--muted); }
+  .btn-ghost{
+    background:var(--surface);
+    border:1.5px solid var(--border);
+    color:var(--ink);
+    position:relative;
+    overflow:hidden;
+    isolation:isolate;
+    transition:border-color .5s, box-shadow .5s, color .5s;
+  }
+  .btn-ghost::before{
+    content:'';
+    position:absolute;
+    width:28px; height:28px;
+    left:2px; top:2px;
+    background:#3b5bdb;
+    border-radius:50%;
+    filter:blur(12px);
+    opacity:.55;
+    transition:all .5s ease;
+    pointer-events:none;
+    z-index:-1;
+  }
+  .btn-ghost::after{
+    content:'';
+    position:absolute;
+    width:44px; height:44px;
+    left:18px; top:6px;
+    background:#1c2f6e;
+    border-radius:50%;
+    filter:blur(18px);
+    opacity:.45;
+    transition:all .5s ease;
+    pointer-events:none;
+    z-index:-1;
+  }
+  .btn-ghost:hover{
+    border-color:#3b5bdb;
+    box-shadow:0 0 24px rgba(59,91,219,.22);
+    color:#7b9aff;
+  }
+  .btn-ghost:hover::before{
+    left:28px; top:auto; bottom:-10px;
+    opacity:.75;
+  }
+  .btn-ghost:hover::after{
+    left:-14px;
+    width:54px; height:54px;
+    opacity:.55;
+  }
+  /* Deliberately quiet buttons (e.g. destructive "Clear all picks") opt out */
+  .btn-quiet{ background:transparent !important; box-shadow:none !important; }
+  .btn-quiet::before, .btn-quiet::after{ display:none; }
   .btn-block{ width:100%; padding:.85rem; font-size:.95rem; }
 
   /* ───────────────────────── Section heads ───────────────────────── */
@@ -949,7 +999,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.38</div>
+    <div class="wordmark">Watch2Night — build v3.39</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -1044,7 +1094,7 @@
 
       <button class="btn btn-primary btn-block" id="btnSharePicks" style="margin-top:1.5rem;">Share my picks →</button>
       <button class="btn btn-ghost" id="btnBackFromFavorites" style="margin-top:.6rem;">← Back to swiping</button>
-      <button class="btn btn-ghost" id="btnClearFavorites" style="margin-top:.6rem; color:var(--muted); border-color:transparent;">Clear all picks</button>
+      <button class="btn btn-ghost btn-quiet" id="btnClearFavorites" style="margin-top:.6rem; color:var(--muted); border-color:transparent;">Clear all picks</button>
     </section>
 
     <!-- ═══════════════ SEARCH RESULTS ═══════════════ -->
