@@ -239,15 +239,73 @@
     padding:1.5rem 1.35rem;
     text-align:left;
     color:var(--ink);
-    transition:border-color .18s, transform .18s;
+    transition:border-color .5s, transform .18s, box-shadow .5s;
     display:flex;
     flex-direction:column;
     gap:.5rem;
+    position:relative;
+    overflow:hidden;
+    /* Per-card orb colors, overridden below for each card */
+    --orb1:var(--amber);
+    --orb2:#ff8c42;
+    --glow:rgba(255,176,32,.18);
   }
-  .path-card:hover{ border-color:var(--amber); transform:translateY(-2px); }
+  .path-card::before{
+    content:'';
+    position:absolute;
+    width:48px; height:48px;
+    right:4px; top:4px;
+    background:var(--orb1);
+    border-radius:50%;
+    filter:blur(18px);
+    opacity:.55;
+    transition:all .5s ease;
+    pointer-events:none;
+  }
+  .path-card::after{
+    content:'';
+    position:absolute;
+    width:80px; height:80px;
+    right:32px; top:12px;
+    background:var(--orb2);
+    border-radius:50%;
+    filter:blur(26px);
+    opacity:.35;
+    transition:all .5s ease;
+    pointer-events:none;
+  }
+  .path-card > *{ position:relative; z-index:1; }
+  .path-card:hover{
+    border-color:var(--orb1);
+    transform:translateY(-2px);
+    box-shadow:0 0 32px var(--glow);
+  }
+  .path-card:hover::before{
+    right:48px; top:auto; bottom:-16px;
+    opacity:.7;
+  }
+  .path-card:hover::after{
+    right:-24px;
+    width:96px; height:96px;
+    opacity:.45;
+  }
+  .path-card:hover h3{ color:var(--orb1); }
   .path-card .icon{ font-size:1.5rem; }
-  .path-card h3{ font-family:var(--font-display); font-size:1.5rem; letter-spacing:.02em; text-transform:uppercase; }
-  .path-card.surprise-card{ flex:0 1 220px; max-width:220px; }
+  .path-card h3{ font-family:var(--font-display); font-size:1.5rem; letter-spacing:.02em; text-transform:uppercase; transition:color .5s; }
+
+  /* Similar but not the same: each card gets its own orb palette */
+  #btnPickSeries{
+    --orb1:var(--teal);
+    --orb2:#2a8fd4;
+    --glow:rgba(52,217,192,.16);
+  }
+  .path-card.surprise-card{
+    flex:0 1 220px;
+    max-width:220px;
+    --orb1:#fda4af; /* rose, from the reference design */
+    --orb2:#8b5cf6; /* violet */
+    --glow:rgba(162,28,175,.22);
+  }
   .path-card p{ color:var(--muted); font-size:.87rem; line-height:1.5; }
 
   /* ───────────────────────── Buttons ───────────────────────── */
@@ -891,7 +949,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.35</div>
+    <div class="wordmark">Watch2Night — build v3.36</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
