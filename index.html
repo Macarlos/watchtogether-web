@@ -999,7 +999,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.39</div>
+    <div class="wordmark">Watch2Night — build v3.40</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -1045,7 +1045,7 @@
         <h2>What can you watch on?</h2>
       </div>
       <div class="chip-group" id="chipPlatforms"></div>
-      <p style="color:var(--muted); font-size:.78rem; margin:.6rem 0 0; line-height:1.5;">Availability and prices reflect the US catalog, regardless of where you are.</p>
+      <p class="region-disclosure" style="color:var(--muted); font-size:.78rem; margin:.6rem 0 0; line-height:1.5;">Availability and prices reflect the US catalog, regardless of where you are.</p>
 
       <div class="section-head">
         <span class="eyebrow">Step 2 of 2</span>
@@ -1148,7 +1148,7 @@
         <div class="providers-panel" id="finalPickProviders">
           <p class="providers-loading">Checking where to watch…</p>
         </div>
-        <p style="color:var(--muted); font-size:.72rem; margin-top:.9rem; line-height:1.5;">Prices and availability shown reflect the US catalog, regardless of where you are.</p>
+        <p class="region-disclosure" style="color:var(--muted); font-size:.72rem; margin-top:.9rem; line-height:1.5;">Prices and availability shown reflect the US catalog, regardless of where you are.</p>
       </div>
 
       <button class="btn btn-primary btn-block" id="btnContinueSwiping" style="margin-bottom:.6rem;">Continue swiping →</button>
@@ -1262,7 +1262,29 @@
     backendPage: 1,        // Watchmode page currently loaded — used for "load more"
     loadingMore: false,
     noMoreResultsStreak: 0, // consecutive load-more attempts that added nothing
+    region: 'US', // auto-detected from IP shortly after load; US until then/on failure
   };
+
+  // Best-effort country auto-detection — updates state.region once resolved.
+  // Deliberately non-blocking: the app works immediately with the US default
+  // regardless of how long (or whether) this ever resolves.
+  fetch(`${BACKEND_URL}/api/detect-region`)
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (data && data.region) {
+        state.region = data.region;
+        updateRegionDisclosure();
+      }
+    })
+    .catch(() => {}); // silent — US default is a perfectly fine fallback
+
+  function updateRegionDisclosure(){
+    const REGION_NAMES = { US: 'US', CA: 'Canadian', IN: 'Indian' };
+    const name = REGION_NAMES[state.region] || 'US';
+    document.querySelectorAll('.region-disclosure').forEach(el => {
+      el.textContent = `Availability and prices reflect the ${name} catalog, regardless of where you are.`;
+    });
+  }
 
   /* ════════════════════════════════════════════════════════════
      BULB RAIL
@@ -1419,7 +1441,7 @@
   function fetchDiscoverPage(page, limit){
     const platformParam = [...state.platforms].join(',');
     const moodParam = [...state.moods].join(',');
-    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=US&limit=${limit}&page=${page}&content_type=${state.contentType}`;
+    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}`;
     return fetch(url)
       .then(r => { if(!r.ok) throw new Error('bad response'); return r.json(); })
       .then(data => mapApiResults(data.results || []));
@@ -2251,7 +2273,7 @@
     containerEl.innerHTML = `<p class="providers-loading">Checking where to watch…</p>`;
 
     const attempt = (retriesLeft) => {
-      fetch(`${BACKEND_URL}/api/movie/${watchmodeId}/providers?region=US`)
+      fetch(`${BACKEND_URL}/api/movie/${watchmodeId}/providers?region=${state.region}`)
         .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
         .then(data => {
           const html = [
