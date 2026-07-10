@@ -1003,7 +1003,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.44</div>
+    <div class="wordmark">Watch2Night — build v3.45</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -1155,6 +1155,7 @@
         <p class="region-disclosure" style="color:var(--muted); font-size:.72rem; margin-top:.9rem; line-height:1.5;">Prices and availability shown reflect the US catalog, regardless of where you are.</p>
       </div>
 
+      <button class="btn btn-primary btn-block" id="btnShareThisPick" style="margin-bottom:.6rem;">Share this pick →</button>
       <button class="btn btn-primary btn-block" id="btnContinueSwiping" style="margin-bottom:.6rem;">Continue swiping →</button>
       <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid">← Back to your picks</button>
       <button class="btn btn-ghost btn-block" id="btnFinalRestart" style="margin-top:.6rem;">Start a new session</button>
@@ -2157,8 +2158,18 @@
     return `https://watch2night.com/?shared=${ids.join(',')}`;
   }
 
+  function buildShareUrlForMovie(movie){
+    return `https://watch2night.com/?shared=${movie.watchmodeId}`;
+  }
+
   document.getElementById('btnSharePicks').addEventListener('click', () => {
     document.getElementById('shareLinkInput').value = buildShareUrl();
+    openDialog(document.getElementById('shareOverlay'), 'active');
+  });
+
+  document.getElementById('btnShareThisPick').addEventListener('click', () => {
+    if(!currentFinalPickMovie || !currentFinalPickMovie.watchmodeId) return;
+    document.getElementById('shareLinkInput').value = buildShareUrlForMovie(currentFinalPickMovie);
     openDialog(document.getElementById('shareOverlay'), 'active');
   });
 
@@ -2339,7 +2350,10 @@
     attempt(1);
   }
 
+  let currentFinalPickMovie = null;
+
   function showFinalPick(movie){
+    currentFinalPickMovie = movie;
     document.getElementById('finalPickEyebrow').textContent = 'Selected';
     document.getElementById('finalPickHeading').textContent = "Tonight you're watching";
 
