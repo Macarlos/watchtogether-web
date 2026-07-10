@@ -857,7 +857,11 @@
     border-radius:8px;
     padding:.4rem .7rem .4rem .4rem;
     font-size:.82rem;
+    color:inherit;
+    text-decoration:none;
+    transition:border-color .15s;
   }
+  a.provider-chip:hover{ border-color:var(--amber); }
   .provider-chip img{
     width:22px; height:22px; border-radius:5px; object-fit:cover; flex-shrink:0;
   }
@@ -999,7 +1003,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.43</div>
+    <div class="wordmark">Watch2Night — build v3.44</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -2275,12 +2279,15 @@
      ════════════════════════════════════════════════════════════ */
   function providersSectionHtml(label, items, showPrice){
     if(!items || items.length === 0) return '';
-    const chips = items.map(p => `
-      <div class="provider-chip">
+    const chips = items.map(p => {
+      const inner = `
         ${p.logo_url ? `<img src="${p.logo_url}" alt="${p.name}" />` : ''}
-        <span>${p.name}${showPrice && p.price ? `<span class="price"> · $${p.price}</span>` : ''}</span>
-      </div>
-    `).join('');
+        <span>${p.name}${showPrice && p.price ? `<span class="price"> · ${p.price}</span>` : ''}</span>
+      `;
+      return p.web_url
+        ? `<a class="provider-chip" href="${p.web_url}" target="_blank" rel="noopener">${inner}</a>`
+        : `<div class="provider-chip">${inner}</div>`;
+    }).join('');
     return `<div class="provider-section"><div class="provider-section-label">${label}</div><div class="provider-chips">${chips}</div></div>`;
   }
 
