@@ -1030,7 +1030,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.54</div>
+    <div class="wordmark">Watch2Night — build v3.55</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -1225,7 +1225,11 @@
      (see the SHARING section below) rather than building real-time multiplayer.
      ════════════════════════════════════════════════════════════ */
 
-  const PLATFORMS = [
+  // Used for the very first paint (before region detection resolves) and as
+  // a safety net if the dynamic per-region fetch ever fails. Real platform
+  // chips come from /api/platforms once the region is known — see
+  // loadPlatformsForRegion() below.
+  const FALLBACK_PLATFORMS = [
     { id:'netflix',  label:'Netflix' },
     { id:'hbo',      label:'HBO Max' },
     { id:'disney',   label:'Disney+' },
@@ -1300,6 +1304,7 @@
     region: 'US', // auto-detected from IP shortly after load; US until then/on failure
     orderBy: 'popularity_1year', // randomized fresh per new deck — see buildDeck()
     skipMoodStep: false, // true for "Watch with your Family" — mood is pre-set to 'family', step hidden
+    availablePlatforms: FALLBACK_PLATFORMS, // replaced with the real per-region list once it loads
   };
 
   // Must match main.py's MOTN_ORDER_BY_CHOICES exactly.
@@ -1311,20 +1316,52 @@
   fetch(`${BACKEND_URL}/api/detect-region`)
     .then(r => r.ok ? r.json() : null)
     .then(data => {
-      if (data && data.region) {
+      if (data && data.region && data.region !== state.region) {
         state.region = data.region;
         updateRegionDisclosure();
+        loadPlatformsForRegion(state.region);
       }
     })
     .catch(() => {}); // silent — US default is a perfectly fine fallback
 
   function updateRegionDisclosure(){
-    const REGION_NAMES = { US: 'US', CA: 'Canadian', IN: 'Indian' };
+    const REGION_NAMES = {
+      US: 'US', CA: 'Canadian', IN: 'Indian', GB: 'UK', AU: 'Australian',
+      MX: 'Mexican', ES: 'Spanish', BR: 'Brazilian', FR: 'French', DE: 'German', PL: 'Polish',
+    };
     const name = REGION_NAMES[state.region] || 'US';
     document.querySelectorAll('.region-disclosure').forEach(el => {
       el.textContent = `Availability and prices reflect the ${name} catalog, regardless of where you are.`;
     });
   }
+
+  // Real per-country platform list — Hulu is US-only, the UK has iPlayer/
+  // ITVX, Australia has Stan, etc. (confirmed via live checks against MOTN's
+  // own data before building this). Falls back to FALLBACK_PLATFORMS and
+  // stops silently if the fetch fails — this should never block swiping.
+  function loadPlatformsForRegion(region){
+    fetch(`${BACKEND_URL}/api/platforms?region=${region}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data && Array.isArray(data.platforms) && data.platforms.length > 0){
+          state.availablePlatforms = data.platforms;
+          rebuildPlatformChips();
+        }
+      })
+      .catch(() => {}); // silent — FALLBACK_PLATFORMS is already in place
+  }
+
+  function rebuildPlatformChips(){
+    state.platforms.clear();
+    ['chipPlatforms', 'chipPlatformsAdjust'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '';
+    });
+    buildChips(document.getElementById('chipPlatforms'), state.availablePlatforms, state.platforms);
+    buildChips(document.getElementById('chipPlatformsAdjust'), state.availablePlatforms, state.platforms);
+  }
+
+  loadPlatformsForRegion(state.region); // initial load for the US default, refined once detection resolves
 
   /* ════════════════════════════════════════════════════════════
      BULB RAIL
@@ -1471,10 +1508,8 @@
     });
   }
 
-  buildChips(document.getElementById('chipPlatforms'), PLATFORMS, state.platforms);
   buildChips(document.getElementById('chipMoods'), MOODS, state.moods);
   buildChips(document.getElementById('chipMoodsAdjust'), MOODS, state.moods);
-  buildChips(document.getElementById('chipPlatformsAdjust'), PLATFORMS, state.platforms);
 
   document.getElementById('btnCreateRoom').addEventListener('click', () => {
     buildDeck();
@@ -1514,7 +1549,7 @@
       genre: (m.genres || []).slice(0,2).join(' · ') || 'Movie',
       allGenres: (m.genres || []).join(', '),
       runtime: m.runtime_minutes || null,
-      platform: PLATFORMS.filter(p => state.platforms.has(p.id)).map(p => p.label).join(', ') || 'Streaming',
+      platform: state.availablePlatforms.filter(p => state.platforms.has(p.id)).map(p => p.label).join(', ') || 'Streaming',
       poster_url: m.poster_url,
       backdrop_url: m.backdrop_url,
       rating: m.rating,
@@ -1691,7 +1726,7 @@
     document.getElementById('btnExploreAllCategories').style.display = hasMoodFilter ? 'inline-block' : 'none';
     document.getElementById('btnAddCategoryFromDone').style.display = hasMoodFilter ? 'inline-block' : 'none';
     document.getElementById('btnAddPlatformFromDone').style.display =
-      (state.platforms.size < PLATFORMS.length) ? 'inline-block' : 'none';
+      (state.platforms.size < state.availablePlatforms.length) ? 'inline-block' : 'none';
     updateFavoritesButtons();
     showScreen('screen-done');
   }
@@ -2115,7 +2150,7 @@
   function syncPlatformDialogChips(){
     const chips = document.querySelectorAll('#chipPlatformsAdjust .chip');
     chips.forEach((chip, i) => {
-      const item = PLATFORMS[i];
+      const item = state.availablePlatforms[i];
       if(!item) return;
       setChipActive(chip, state.platforms.has(item.id));
     });
