@@ -863,9 +863,9 @@
   }
   a.provider-chip:hover{ border-color:var(--amber); }
   .provider-chip img{
-    width:22px; height:22px; border-radius:5px; object-fit:cover; flex-shrink:0;
+    height:22px; width:auto; max-width:90px; object-fit:contain; flex-shrink:0;
   }
-  .provider-chip .price{ color:var(--teal); font-family:var(--font-mono); font-size:.75rem; margin-left:.15rem; }
+  .provider-chip .price{ color:var(--teal); font-family:var(--font-mono); font-size:.75rem; }
   .providers-loading, .providers-empty{
     color:var(--muted); font-size:.85rem; font-style:italic;
   }
@@ -1003,7 +1003,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.45</div>
+    <div class="wordmark">Watch2Night — build v3.46</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -2291,13 +2291,15 @@
   function providersSectionHtml(label, items, showPrice){
     if(!items || items.length === 0) return '';
     const chips = items.map(p => {
-      const inner = `
-        ${p.logo_url ? `<img src="${p.logo_url}" alt="${p.name}" />` : ''}
-        <span>${p.name}${showPrice && p.price ? `<span class="price"> · ${p.price}</span>` : ''}</span>
-      `;
+      const priceSpan = showPrice && p.price ? `<span class="price">${p.price}</span>` : '';
+      // Logo alone is the norm — it already identifies the service. Text
+      // name is only a fallback for the rare case a logo fails to load.
+      const inner = p.logo_url
+        ? `<img src="${p.logo_url}" alt="${p.name}" />${priceSpan}`
+        : `<span>${p.name}</span>${priceSpan}`;
       return p.web_url
-        ? `<a class="provider-chip" href="${p.web_url}" target="_blank" rel="noopener">${inner}</a>`
-        : `<div class="provider-chip">${inner}</div>`;
+        ? `<a class="provider-chip" href="${p.web_url}" target="_blank" rel="noopener" aria-label="${p.name}${showPrice && p.price ? ' — ' + p.price : ''}">${inner}</a>`
+        : `<div class="provider-chip" aria-label="${p.name}${showPrice && p.price ? ' — ' + p.price : ''}">${inner}</div>`;
     }).join('');
     return `<div class="provider-section"><div class="provider-section-label">${label}</div><div class="provider-chips">${chips}</div></div>`;
   }
