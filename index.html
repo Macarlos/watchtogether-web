@@ -903,6 +903,7 @@
     font-size:.72rem;
     font-family:var(--font-mono);
     letter-spacing:.05em;
+    text-transform:uppercase;
   }
 </style>
 </head>
@@ -928,8 +929,8 @@
   <!-- ═══════════════ SHARE DIALOG ═══════════════ -->
   <div class="share-overlay" id="shareOverlay">
     <div class="share-dialog" id="shareDialogCard" role="dialog" aria-modal="true" aria-labelledby="shareDialogTitle" tabindex="-1">
-      <h3 id="shareDialogTitle">Share your picks</h3>
-      <p>Send this link to anyone — it opens straight to your list.</p>
+      <h3 id="shareDialogTitle" data-i18n="share_dialog_title">Share your picks</h3>
+      <p data-i18n="share_dialog_body">Send this link to anyone — it opens straight to your list.</p>
 
       <div class="share-icons-row" id="shareIconsRow">
         <button class="share-icon-btn" id="btnShareWhatsapp" aria-label="Share via WhatsApp">
@@ -966,74 +967,74 @@
 
       <div class="share-link-row">
         <input type="text" id="shareLinkInput" readonly />
-        <button class="btn btn-primary" id="btnCopyShareLink">Copy</button>
+        <button class="btn btn-primary" id="btnCopyShareLink" data-i18n="btn_copy">Copy</button>
       </div>
-      <button class="btn btn-ghost btn-block" id="btnCloseShareDialog" style="margin-top:1rem;">Close</button>
+      <button class="btn btn-ghost btn-block" id="btnCloseShareDialog" data-i18n="btn_close" style="margin-top:1rem;">Close</button>
     </div>
   </div>
 
   <!-- ═══════════════ CATEGORY ADJUSTER DIALOG ═══════════════ -->
   <div class="share-overlay" id="categoryOverlay">
     <div class="share-dialog" id="categoryDialogCard" role="dialog" aria-modal="true" aria-labelledby="categoryDialogTitle" tabindex="-1" style="max-width:460px;">
-      <h3 id="categoryDialogTitle">Adjust categories</h3>
-      <p>Changes apply going forward — nothing you've already swiped or saved is affected.</p>
+      <h3 id="categoryDialogTitle" data-i18n="category_dialog_title">Adjust categories</h3>
+      <p data-i18n="category_dialog_body">Changes apply going forward — nothing you've already swiped or saved is affected.</p>
       <div class="chip-group" id="chipMoodsAdjust" style="margin-bottom:1rem;"></div>
-      <button class="btn btn-primary btn-block" id="btnApplyCategories">Apply →</button>
-      <button class="btn btn-ghost btn-block" id="btnCloseCategoryDialog" style="margin-top:.6rem;">Close</button>
+      <button class="btn btn-primary btn-block" id="btnApplyCategories" data-i18n="btn_apply">Apply →</button>
+      <button class="btn btn-ghost btn-block" id="btnCloseCategoryDialog" data-i18n="btn_close" style="margin-top:.6rem;">Close</button>
     </div>
   </div>
 
   <!-- ═══════════════ PLATFORM ADJUSTER DIALOG ═══════════════ -->
   <div class="share-overlay" id="platformOverlay">
     <div class="share-dialog" id="platformDialogCard" role="dialog" aria-modal="true" aria-labelledby="platformDialogTitle" tabindex="-1" style="max-width:460px;">
-      <h3 id="platformDialogTitle">Add another platform</h3>
-      <p>More platforms means more titles to swipe through. This starts a fresh deck with your updated platforms.</p>
+      <h3 id="platformDialogTitle" data-i18n="platform_dialog_title">Add another platform</h3>
+      <p data-i18n="platform_dialog_body">More platforms means more titles to swipe through. This starts a fresh deck with your updated platforms.</p>
       <div class="chip-group" id="chipPlatformsAdjust" style="margin-bottom:1rem;"></div>
-      <button class="btn btn-primary btn-block" id="btnApplyPlatforms">Apply →</button>
-      <button class="btn btn-ghost btn-block" id="btnClosePlatformDialog" style="margin-top:.6rem;">Close</button>
+      <button class="btn btn-primary btn-block" id="btnApplyPlatforms" data-i18n="btn_apply">Apply →</button>
+      <button class="btn btn-ghost btn-block" id="btnClosePlatformDialog" data-i18n="btn_close" style="margin-top:.6rem;">Close</button>
     </div>
   </div>
 
   <!-- ═══════════════ FAMILY MODE — MOVIES OR SERIES ═══════════════ -->
   <div class="share-overlay" id="familyTypeOverlay">
     <div class="share-dialog" id="familyTypeDialogCard" role="dialog" aria-modal="true" aria-labelledby="familyTypeDialogTitle" tabindex="-1" style="max-width:380px;">
-      <h3 id="familyTypeDialogTitle">Watch with your Family</h3>
-      <p>Movies or series?</p>
-      <button class="btn btn-primary btn-block" id="btnFamilyMovies" style="margin-bottom:.6rem;">Movies</button>
-      <button class="btn btn-primary btn-block" id="btnFamilySeries" style="margin-bottom:.6rem;">Series</button>
-      <button class="btn btn-ghost btn-block" id="btnCloseFamilyTypeDialog">Close</button>
+      <h3 id="familyTypeDialogTitle" data-i18n="card_family_title">Watch with your Family</h3>
+      <p data-i18n="family_dialog_question">Movies or series?</p>
+      <button class="btn btn-primary btn-block" id="btnFamilyMovies" data-i18n="card_movies_title" style="margin-bottom:.6rem;">Movies</button>
+      <button class="btn btn-primary btn-block" id="btnFamilySeries" data-i18n="card_series_title" style="margin-bottom:.6rem;">Series</button>
+      <button class="btn btn-ghost btn-block" id="btnCloseFamilyTypeDialog" data-i18n="btn_close">Close</button>
     </div>
   </div>
 
   <!-- ═══════════════ FIRST-TIME ONBOARDING HINT ═══════════════ -->
   <div class="onboarding-overlay" id="onboardingOverlay">
     <div class="share-dialog" id="onboardingDialogCard" role="dialog" aria-modal="true" aria-labelledby="onboardingDialogTitle" tabindex="-1" style="max-width:380px;">
-      <h3 id="onboardingDialogTitle">How Watch2Night works</h3>
+      <h3 id="onboardingDialogTitle" data-i18n="onboarding_title">How Watch2Night works</h3>
       <div class="onboarding-steps">
         <div class="onboarding-step">
           <span class="onboarding-icon">🎛️</span>
-          <p>Pick your streaming platforms and a mood</p>
+          <p data-i18n="onboarding_step1">Pick your streaming platforms and a mood</p>
         </div>
         <div class="onboarding-step">
           <span class="onboarding-icon">👉</span>
-          <p>Swipe through real movies and shows</p>
+          <p data-i18n="onboarding_step2">Swipe through real movies and shows</p>
         </div>
         <div class="onboarding-step">
           <span class="onboarding-icon">❤️</span>
-          <p>Save your favorites, then share them with anyone</p>
+          <p data-i18n="onboarding_step3">Save your favorites, then share them with anyone</p>
         </div>
       </div>
-      <div class="onboarding-dismiss-hint">Tap anywhere to dismiss</div>
+      <div class="onboarding-dismiss-hint" data-i18n="onboarding_dismiss">Tap anywhere to dismiss</div>
     </div>
   </div>
 
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.55</div>
+    <div class="wordmark">Watch2Night — build v3.56</div>
 
     <div class="global-search-bar">
-      <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
+      <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
     </div>
 
     <!-- ═══════════════ SCREEN 1 — MOVIES OR SERIES (the new first screen) ═══════════════ -->
@@ -1042,73 +1043,73 @@
         <span class="brand-wordmark">watch<span class="two">2</span>night</span>
         <img src="data:image/png;base64,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" alt="" class="brand-mark" />
       </div>
-      <h1 class="hero">Tonight you're<br><span class="accent">watching.</span></h1>
-      <p class="hero-sub">Swipe through what's actually available on your platforms. Save what you like, then share your picks with anyone.</p>
+      <h1 class="hero"><span data-i18n="hero_title_line1">Tonight you're</span><br><span class="accent" data-i18n="hero_title_accent">watching.</span></h1>
+      <p class="hero-sub" data-i18n="hero_subtitle">Swipe through what's actually available on your platforms. Save what you like, then share your picks with anyone.</p>
 
       <div class="path-row">
         <button class="path-card" id="btnPickMovies">
-          <h3>Movies</h3>
-          <p>A complete story in one sitting.</p>
+          <h3 data-i18n="card_movies_title">Movies</h3>
+          <p data-i18n="card_movies_desc">A complete story in one sitting.</p>
         </button>
         <button class="path-card" id="btnPickSeries">
-          <h3>Series</h3>
-          <p>Something to binge over multiple episodes.</p>
+          <h3 data-i18n="card_series_title">Series</h3>
+          <p data-i18n="card_series_desc">Something to binge over multiple episodes.</p>
         </button>
       </div>
 
       <div class="path-row" style="margin-top:.85rem;">
         <button class="path-card family-card" id="btnPickFamily">
-          <h3>Watch with your Family</h3>
-          <p>Family-friendly picks everyone can enjoy together.</p>
+          <h3 data-i18n="card_family_title">Watch with your Family</h3>
+          <p data-i18n="card_family_desc">Family-friendly picks everyone can enjoy together.</p>
         </button>
         <button class="path-card surprise-card" id="btnSurpriseMeFirst">
-          <h3>Surprise me</h3>
-          <p>Skip the choices — get a random pick instantly.</p>
+          <h3 data-i18n="card_surprise_title">Surprise me</h3>
+          <p data-i18n="card_surprise_desc">Skip the choices — get a random pick instantly.</p>
         </button>
       </div>
 
-      <button class="btn btn-ghost" id="btnShowOnboarding" style="margin-top:1.2rem;">How to use W2N</button>
+      <button class="btn btn-ghost" id="btnShowOnboarding" data-i18n="btn_how_to_use" style="margin-top:1.2rem;">How to use W2N</button>
     </section>
 
     <!-- ═══════════════ SCREEN 2 — SETUP ═══════════════ -->
     <section class="screen" id="screen-setup">
       <div class="section-head">
-        <span class="eyebrow" id="setupStep1Eyebrow">Step 1 of 2</span>
-        <h2>What can you watch on?</h2>
+        <span class="eyebrow" id="setupStep1Eyebrow" data-i18n="setup_step1_label">Step 1 of 2</span>
+        <h2 data-i18n="setup_step1_heading">What can you watch on?</h2>
       </div>
       <div class="chip-group" id="chipPlatforms"></div>
       <p class="region-disclosure" style="color:var(--muted); font-size:.78rem; margin:.6rem 0 0; line-height:1.5;">Availability and prices reflect the US catalog, regardless of where you are.</p>
 
       <div id="moodStepSection">
         <div class="section-head">
-          <span class="eyebrow">Step 2 of 2</span>
-          <h2>What's the mood?</h2>
+          <span class="eyebrow" data-i18n="setup_step2_label">Step 2 of 2</span>
+          <h2 data-i18n="setup_step2_heading">What's the mood?</h2>
         </div>
         <div class="chip-group" id="chipMoods"></div>
-        <button class="btn btn-ghost" id="btnSurpriseMeSetup" style="margin-top:.8rem;">🎲 Surprise me — any mood</button>
+        <button class="btn btn-ghost" id="btnSurpriseMeSetup" data-i18n="btn_surprise_setup" style="margin-top:.8rem;">🎲 Surprise me — any mood</button>
       </div>
 
       <div class="setup-actions">
-        <button class="btn btn-primary" id="btnCreateRoom">Start swiping →</button>
+        <button class="btn btn-primary" id="btnCreateRoom" data-i18n="btn_start_swiping">Start swiping →</button>
       </div>
     </section>
 
     <!-- ═══════════════ SCREEN 4 — SWIPE DECK ═══════════════ -->
     <section class="screen" id="screen-deck">
       <div class="section-head" style="text-align:center;">
-        <h2>Swipe to decide</h2>
+        <h2 data-i18n="deck_heading">Swipe to decide</h2>
       </div>
 
       <div class="deck-wrap" id="deckWrap"></div>
 
       <div class="swipe-controls">
-        <button class="swipe-btn pass" id="btnPass" aria-label="Pass">✕</button>
-        <button class="swipe-btn like" id="btnLike" aria-label="Like">♥</button>
+        <button class="swipe-btn pass" id="btnPass" data-i18n-aria="pass_label" aria-label="Pass">✕</button>
+        <button class="swipe-btn like" id="btnLike" data-i18n-aria="like_label" aria-label="Like">♥</button>
       </div>
-      <p class="demo-note" id="deckHint">Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.</p>
+      <p class="demo-note" id="deckHint" data-i18n="deck_hint">Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.</p>
       <div style="width:100%; max-width:230px; display:flex; flex-direction:column; gap:.6rem; margin-top:1rem;">
-        <button class="btn btn-ghost" id="btnAdjustCategories" style="width:100%;">🏷 Adjust categories</button>
-        <button class="btn btn-ghost" id="btnGoToFavorites" style="width:100%; display:none;">See my picks so far →</button>
+        <button class="btn btn-ghost" id="btnAdjustCategories" data-i18n="btn_adjust_categories" style="width:100%;">🏷 Adjust categories</button>
+        <button class="btn btn-ghost" id="btnGoToFavorites" data-i18n="btn_see_picks_so_far" style="width:100%; display:none;">See my picks so far →</button>
       </div>
     </section>
 
@@ -1116,58 +1117,58 @@
     <section class="screen" id="screen-favorites-grid">
       <div class="section-head" style="text-align:center;">
         <span class="eyebrow" id="favoritesCount">3 picks</span>
-        <h2>Everything you liked</h2>
+        <h2 data-i18n="favorites_heading">Everything you liked</h2>
       </div>
 
       <div class="empty-state" id="favoritesEmptyState" style="display:none;">
         <div class="icon">🎬</div>
-        <h3>There is nothing here yet.</h3>
+        <h3 data-i18n="favorites_empty">There is nothing here yet.</h3>
       </div>
 
       <div class="favorites-grid" id="favoritesGrid"></div>
 
-      <button class="btn btn-primary btn-block" id="btnSharePicks" style="margin-top:1.5rem;">Share my picks →</button>
-      <button class="btn btn-ghost" id="btnBackFromFavorites" style="margin-top:.6rem;">← Back to swiping</button>
-      <button class="btn btn-ghost btn-quiet" id="btnClearFavorites" style="margin-top:.6rem; color:var(--muted); border-color:transparent;">Clear all picks</button>
+      <button class="btn btn-primary btn-block" id="btnSharePicks" data-i18n="btn_share_my_picks" style="margin-top:1.5rem;">Share my picks →</button>
+      <button class="btn btn-ghost" id="btnBackFromFavorites" data-i18n="btn_back_to_swiping" style="margin-top:.6rem;">← Back to swiping</button>
+      <button class="btn btn-ghost btn-quiet" id="btnClearFavorites" data-i18n="btn_clear_all_picks" style="margin-top:.6rem; color:var(--muted); border-color:transparent;">Clear all picks</button>
     </section>
 
     <!-- ═══════════════ SEARCH RESULTS ═══════════════ -->
     <section class="screen" id="screen-search-results">
       <div class="section-head" style="text-align:center;">
-        <span class="eyebrow" id="searchResultsCount">Results</span>
-        <h2 id="searchResultsHeading">Search results</h2>
+        <span class="eyebrow" id="searchResultsCount" data-i18n="results_label">Results</span>
+        <h2 id="searchResultsHeading" data-i18n="search_results_heading">Search results</h2>
       </div>
 
       <div class="favorites-grid" id="searchResultsGrid"></div>
 
-      <button class="btn btn-primary btn-block" id="btnContinueSwipingFromSearch" style="margin-top:1.5rem;">Continue swiping →</button>
-      <button class="btn btn-ghost" id="btnGoToFavoritesFromSearch" style="margin-top:.6rem; display:none;">See my picks →</button>
-      <button class="btn btn-ghost" id="btnBackFromSearch" style="margin-top:.6rem;">← Back</button>
+      <button class="btn btn-primary btn-block" id="btnContinueSwipingFromSearch" data-i18n="btn_continue_swiping" style="margin-top:1.5rem;">Continue swiping →</button>
+      <button class="btn btn-ghost" id="btnGoToFavoritesFromSearch" data-i18n="btn_see_my_picks" style="margin-top:.6rem; display:none;">See my picks →</button>
+      <button class="btn btn-ghost" id="btnBackFromSearch" data-i18n="btn_back" style="margin-top:.6rem;">← Back</button>
     </section>
 
     <!-- ═══════════════ SCREEN 4B-2 — SHARED PICKS (viewing someone else's link) ═══════════════ -->
     <section class="screen" id="screen-shared-picks">
       <div class="section-head" style="text-align:center;">
-        <span class="eyebrow">Shared with you</span>
-        <h2>Their picks</h2>
+        <span class="eyebrow" data-i18n="shared_with_you_label">Shared with you</span>
+        <h2 data-i18n="their_picks_heading">Their picks</h2>
       </div>
 
       <div class="favorites-grid" id="sharedGrid"></div>
 
-      <button class="btn btn-primary btn-block" id="btnStartOwnSearch" style="margin-top:1.5rem;">Start my own search →</button>
+      <button class="btn btn-primary btn-block" id="btnStartOwnSearch" data-i18n="btn_start_own_search" style="margin-top:1.5rem;">Start my own search →</button>
     </section>
 
     <!-- ═══════════════ SCREEN 4C — FINAL PICK ═══════════════ -->
     <section class="screen" id="screen-final-pick">
       <div class="section-head" style="text-align:center;">
-        <span class="eyebrow" id="finalPickEyebrow">Selected</span>
-        <h2 id="finalPickHeading">Tonight you're watching</h2>
+        <span class="eyebrow" id="finalPickEyebrow" data-i18n="selected_label">Selected</span>
+        <h2 id="finalPickHeading" data-i18n="tonight_watching_heading">Tonight you're watching</h2>
       </div>
 
       <div class="final-pick-nav">
-        <button class="btn btn-primary" id="btnContinueSwipingTop">Continue swiping →</button>
-        <button class="btn btn-ghost" id="btnBackToFavoritesGridTop">← Back to your picks</button>
-        <button class="btn btn-ghost" id="btnFinalRestartTop">Start a new session</button>
+        <button class="btn btn-primary" id="btnContinueSwipingTop" data-i18n="btn_continue_swiping">Continue swiping →</button>
+        <button class="btn btn-ghost" id="btnBackToFavoritesGridTop" data-i18n="btn_back_to_your_picks">← Back to your picks</button>
+        <button class="btn btn-ghost" id="btnFinalRestartTop" data-i18n="btn_start_new_session">Start a new session</button>
       </div>
 
       <div class="ticket" id="finalPickCard" style="text-align:left; border-style:solid;">
@@ -1180,28 +1181,28 @@
 
       <div class="card" style="position:static; padding:1.4rem; margin-bottom:1rem;">
         <div class="providers-panel" id="finalPickProviders">
-          <p class="providers-loading">Checking where to watch…</p>
+          <p class="providers-loading" data-i18n="checking_where_to_watch">Checking where to watch…</p>
         </div>
-        <p class="region-disclosure" style="color:var(--muted); font-size:.72rem; margin-top:.9rem; line-height:1.5;">Prices and availability shown reflect the US catalog, regardless of where you are.</p>
+        <p class="region-disclosure" data-i18n-template="region_disclosure_prices_template" style="color:var(--muted); font-size:.72rem; margin-top:.9rem; line-height:1.5;">Prices and availability shown reflect the US catalog, regardless of where you are.</p>
       </div>
 
-      <button class="btn btn-primary btn-block" id="btnShareThisPick" style="margin-bottom:.6rem;">Share this pick →</button>
-      <button class="btn btn-primary btn-block" id="btnContinueSwiping" style="margin-bottom:.6rem;">Continue swiping →</button>
-      <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid">← Back to your picks</button>
-      <button class="btn btn-ghost btn-block" id="btnFinalRestart" style="margin-top:.6rem;">Start a new session</button>
+      <button class="btn btn-primary btn-block" id="btnShareThisPick" data-i18n="btn_share_this_pick" style="margin-bottom:.6rem;">Share this pick →</button>
+      <button class="btn btn-primary btn-block" id="btnContinueSwiping" data-i18n="btn_continue_swiping" style="margin-bottom:.6rem;">Continue swiping →</button>
+      <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid" data-i18n="btn_back_to_your_picks">← Back to your picks</button>
+      <button class="btn btn-ghost btn-block" id="btnFinalRestart" data-i18n="btn_start_new_session" style="margin-top:.6rem;">Start a new session</button>
     </section>
 
     <!-- ═══════════════ SCREEN 5 — EMPTY / DONE ═══════════════ -->
     <section class="screen" id="screen-done">
       <div class="empty-state">
         <div class="icon">🍿</div>
-        <h3 id="doneTitle">That's the stack</h3>
-        <p id="doneText">Everyone's swiped. Whatever matched is above — no match yet? Widen the mood or add another platform.</p>
-        <button class="btn btn-primary" id="btnExploreAllCategories" style="display:none; margin-bottom:.6rem;">Explore all categories →</button>
-        <button class="btn btn-primary" id="btnAddCategoryFromDone" style="display:none; margin-bottom:.6rem;">+ Add another category</button>
-        <button class="btn btn-primary" id="btnAddPlatformFromDone" style="display:none; margin-bottom:.6rem;">+ Add another platform</button>
-        <button class="btn btn-primary" id="btnGoToFavoritesFromDone" style="display:none; margin-bottom:.6rem;">See my picks →</button>
-        <button class="btn btn-ghost" id="btnRestart">Start a new session</button>
+        <h3 id="doneTitle" data-i18n="done_title_no_mood">That's the stack</h3>
+        <p id="doneText" data-i18n="done_text_no_mood_no_favorites">Everyone's swiped. Whatever matched is above — no match yet? Widen the mood or add another platform.</p>
+        <button class="btn btn-primary" id="btnExploreAllCategories" data-i18n="btn_explore_all_categories" style="display:none; margin-bottom:.6rem;">Explore all categories →</button>
+        <button class="btn btn-primary" id="btnAddCategoryFromDone" data-i18n="btn_add_another_category" style="display:none; margin-bottom:.6rem;">+ Add another category</button>
+        <button class="btn btn-primary" id="btnAddPlatformFromDone" data-i18n="btn_add_another_platform" style="display:none; margin-bottom:.6rem;">+ Add another platform</button>
+        <button class="btn btn-primary" id="btnGoToFavoritesFromDone" data-i18n="btn_see_my_picks" style="display:none; margin-bottom:.6rem;">See my picks →</button>
+        <button class="btn btn-ghost" id="btnRestart" data-i18n="btn_start_new_session">Start a new session</button>
       </div>
     </section>
 
@@ -1209,7 +1210,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>WATCH2NIGHT · STREAMING AVAILABILITY POWERED BY WATCHMODE · <a href="legal.html" style="color:inherit;">LEGAL & PRIVACY</a></footer>
+  <footer>Watch2Night · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
 
 <script>
   /* ════════════════════════════════════════════════════════════
@@ -1238,30 +1239,1086 @@
     { id:'hulu',     label:'Hulu' },
   ];
 
-  const MOODS = [
-    { id:'all',         label:'All categories' },
-    { id:'comedy',      label:'Comedy' },
-    { id:'drama',       label:'Drama' },
-    { id:'thriller',    label:'Thriller' },
-    { id:'romance',     label:'Romance' },
-    { id:'horror',      label:'Horror' },
-    { id:'action',      label:'Action' },
-    { id:'scifi',       label:'Sci-Fi' },
-    { id:'fantasy',     label:'Fantasy' },
-    { id:'animated',    label:'Animated' },
-    { id:'documentary', label:'Documentary' },
-    { id:'crime',       label:'Crime' },
-    { id:'mystery',     label:'Mystery' },
-    { id:'family',      label:'Family' },
-    { id:'history',     label:'History' },
-    { id:'war',         label:'War' },
-    { id:'western',     label:'Western' },
-    { id:'musical',     label:'Musical' },
-    { id:'feelgood',    label:'Feel-good' },
-    { id:'mindbend',    label:'Mind-bending' },
+  const MOOD_IDS = [
+    'all','comedy','drama','thriller','romance','horror','action','scifi',
+    'fantasy','animated','documentary','crime','mystery','family','history',
+    'war','western','musical','feelgood','mindbend',
   ];
 
+  // Built fresh each time (not a static array) since labels depend on the
+  // current language — called after state/t are ready, and again whenever
+  // the language changes.
+  function getTranslatedMoods(){
+    return MOOD_IDS.map(id => ({ id, label: t('mood_' + id) }));
+  }
+
   // Your deployed Watch2Night backend — swap this if you redeploy elsewhere.
+const TRANSLATIONS = {
+  en: {
+    footer_line: "Streaming availability powered by Movie of the Night",
+    legal_privacy_link: "Legal & Privacy",
+    search_placeholder: "🔍 Search for a title…",
+    hero_title_line1: "Tonight you're",
+    hero_title_accent: "watching.",
+    hero_subtitle: "Swipe through what's actually available on your platforms. Save what you like, then share your picks with anyone.",
+    card_movies_title: "Movies",
+    card_movies_desc: "A complete story in one sitting.",
+    card_series_title: "Series",
+    card_series_desc: "Something to binge over multiple episodes.",
+    card_family_title: "Watch with your Family",
+    card_family_desc: "Family-friendly picks everyone can enjoy together.",
+    card_surprise_title: "Surprise me",
+    card_surprise_desc: "Skip the choices — get a random pick instantly.",
+    btn_how_to_use: "How to use W2N",
+    onboarding_title: "How Watch2Night works",
+    onboarding_step1: "Pick your streaming platforms and a mood",
+    onboarding_step2: "Swipe through real movies and shows",
+    onboarding_step3: "Save your favorites, then share them with anyone",
+    onboarding_dismiss: "Tap anywhere to dismiss",
+    setup_step1_label: "Step 1 of 2",
+    setup_family_mode_label: "Family mode",
+    setup_step1_heading: "What can you watch on?",
+    setup_step2_label: "Step 2 of 2",
+    setup_step2_heading: "What's the mood?",
+    btn_surprise_setup: "🎲 Surprise me — any mood",
+    btn_start_swiping: "Start swiping →",
+    family_dialog_question: "Movies or series?",
+    btn_close: "Close",
+    mood_all: "All categories",
+    mood_comedy: "Comedy",
+    mood_drama: "Drama",
+    mood_thriller: "Thriller",
+    mood_romance: "Romance",
+    mood_horror: "Horror",
+    mood_action: "Action",
+    mood_scifi: "Sci-Fi",
+    mood_fantasy: "Fantasy",
+    mood_animated: "Animated",
+    mood_documentary: "Documentary",
+    mood_crime: "Crime",
+    mood_mystery: "Mystery",
+    mood_family: "Family",
+    mood_history: "History",
+    mood_war: "War",
+    mood_western: "Western",
+    mood_musical: "Musical",
+    mood_feelgood: "Feel-good",
+    mood_mindbend: "Mind-bending",
+    deck_heading: "Swipe to decide",
+    pass_label: "Pass",
+    like_label: "Like",
+    deck_hint: 'Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.',
+    btn_adjust_categories: "🏷 Adjust categories",
+    btn_see_picks_so_far: "See my picks so far →",
+    deck_loading: "Finding what you can watch…",
+    deck_loading_more: "Finding more titles…",
+    couldnt_load_title: "Couldn't load movies",
+    couldnt_load_body: "The server didn't respond in time — this can happen right after it wakes up from being idle.",
+    btn_try_again: "Try again",
+    breather_title: "Taking a quick breather",
+    breather_body: "We've hit our data limit for the moment — this resets soon. Thanks for your patience!",
+    category_dialog_title: "Adjust categories",
+    category_dialog_body: "Changes apply going forward — nothing you've already swiped or saved is affected.",
+    btn_apply: "Apply →",
+    platform_dialog_title: "Add another platform",
+    platform_dialog_body: "More platforms means more titles to swipe through. This starts a fresh deck with your updated platforms.",
+    favorites_heading: "Everything you liked",
+    favorites_empty: "There is nothing here yet.",
+    btn_share_my_picks: "Share my picks →",
+    btn_back_to_swiping: "← Back to swiping",
+    btn_clear_all_picks: "Clear all picks",
+    picks_count: "{n} picks",
+    search_results_heading: "Search results",
+    results_label: "Results",
+    btn_continue_swiping: "Continue swiping →",
+    btn_see_my_picks: "See my picks →",
+    btn_back: "← Back",
+    back_to_search_results: "← Back to search results",
+    back_to_shared_picks: "← Back to shared picks",
+    shared_with_you_label: "Shared with you",
+    their_picks_heading: "Their picks",
+    btn_start_own_search: "Start my own search →",
+    selected_label: "Selected",
+    tonight_watching_heading: "Tonight you're watching",
+    btn_back_to_your_picks: "← Back to your picks",
+    btn_start_new_session: "Start a new session",
+    checking_where_to_watch: "Checking where to watch…",
+    region_disclosure_template: "Availability and prices reflect the {region} catalog, regardless of where you are.",
+    region_disclosure_prices_template: "Prices and availability shown reflect the {region} catalog, regardless of where you are.",
+    btn_share_this_pick: "Share this pick →",
+    done_title_no_mood: "That's the stack",
+    done_title_mood: "That's everything in these categories",
+    done_title_has_favorites: "Nice pile of picks!",
+    done_text_no_mood_no_favorites: "Nothing landed — try widening your platforms or moods.",
+    done_text_has_favorites: "You liked {n} title{s} — ready to pick tonight's winner?",
+    done_text_mood: "You've swiped through everything matching your selected categories. Want to keep going with all categories, or wrap up here?",
+    btn_explore_all_categories: "Explore all categories →",
+    btn_add_another_category: "+ Add another category",
+    btn_add_another_platform: "+ Add another platform",
+    toast_categories_updated: "Categories updated — new picks coming up",
+    toast_platforms_updated: "Platforms updated — new picks coming up",
+    toast_link_copied: "Link copied — paste it anywhere",
+    toast_copy_failed: "Couldn't copy — use the link field below",
+    share_dialog_title: "Share your picks",
+    share_dialog_body: "Send this link to anyone — it opens straight to your list.",
+    btn_copy: "Copy",
+    btn_copied: "Copied!",
+    btn_select_manually: "Select & copy manually",
+    stream_subscription_label: "Stream with subscription",
+    rent_label: "Rent",
+    buy_label: "Buy",
+    free_ads_label: "Free with ads",
+    price_varies: "Price varies",
+    full_description_btn: "📄 Full description",
+    plot_summary_btn: "ⓘ Plot summary",
+    trailer_btn: "▶ Trailer",
+    show_plot_summary_aria: "Show plot summary",
+    see_full_details_aria: "See full details for {title}",
+    searching_label: "Searching…",
+    results_for_query_template: 'Results for "{query}"',
+    loading_their_picks: "Loading their picks…",
+    poster_aria_label: "Poster for {title} ({year})",
+    poster_aria_label_no_year: "Poster for {title}",
+    no_summary_available: "No summary available for this title.",
+    duration_min_template: "{n} min",
+    checking_ellipsis: "Checking…",
+    description_label: "Description",
+    is_it_for_you_label: "Is it for you?",
+    user_rating_template: "★ {rating}/10 user rating",
+    critic_score_template: "Critic score {score}%",
+    watch_trailer_link: "▶ Watch trailer",
+    no_extra_details: "No extra details available for this title.",
+    availability_unknown: "Availability unknown",
+    rent_or_buy_only: "Rent or buy only",
+    availability_varies: "Availability varies",
+    search_no_matches: "No matches found{scope}. Try a different search, or switch Movies/Series.",
+    search_no_matches_series: " among series",
+    search_no_matches_movies: " among movies",
+    search_failed: "Couldn't search right now. Try again in a moment.",
+    shared_list_broken: "Couldn't load this shared list — the link may be broken.",
+    shared_list_failed: "Couldn't load this shared list right now. Try refreshing.",
+    streaming_not_available_yet: "Streaming info isn't available for this title yet.",
+    no_streaming_found: "No streaming info found for this title.",
+    streaming_load_failed: "Couldn't load streaming info right now.",
+    try_justwatch: "Try JustWatch →",
+    region_us: "US", region_ca: "Canadian", region_in: "Indian", region_gb: "UK",
+    region_au: "Australian", region_mx: "Mexican", region_es: "Spanish",
+    region_br: "Brazilian", region_fr: "French", region_de: "German", region_pl: "Polish",
+  },
+
+  es: {
+    footer_line: "Disponibilidad en streaming ofrecida por Movie of the Night",
+    legal_privacy_link: "Legal y privacidad",
+    search_placeholder: "🔍 Busca un título…",
+    hero_title_line1: "Esta noche vas",
+    hero_title_accent: "a ver algo.",
+    hero_subtitle: "Desliza entre lo que realmente está disponible en tus plataformas. Guarda lo que te guste y comparte tus elecciones con quien quieras.",
+    card_movies_title: "Películas",
+    card_movies_desc: "Una historia completa en una sola sesión.",
+    card_series_title: "Series",
+    card_series_desc: "Algo para maratonear en varios episodios.",
+    card_family_title: "Ver en familia",
+    card_family_desc: "Selecciones aptas para toda la familia.",
+    card_surprise_title: "Sorpréndeme",
+    card_surprise_desc: "Sin elegir nada — obtén una recomendación al instante.",
+    btn_how_to_use: "Cómo usar W2N",
+    onboarding_title: "Cómo funciona Watch2Night",
+    onboarding_step1: "Elige tus plataformas de streaming y un estado de ánimo",
+    onboarding_step2: "Desliza entre películas y series reales",
+    onboarding_step3: "Guarda tus favoritos y compártelos con quien quieras",
+    onboarding_dismiss: "Toca en cualquier lugar para cerrar",
+    setup_step1_label: "Paso 1 de 2",
+    setup_family_mode_label: "Modo familiar",
+    setup_step1_heading: "¿Dónde puedes ver contenido?",
+    setup_step2_label: "Paso 2 de 2",
+    setup_step2_heading: "¿Qué estado de ánimo tienes?",
+    btn_surprise_setup: "🎲 Sorpréndeme — cualquier estado de ánimo",
+    btn_start_swiping: "Empezar a deslizar →",
+    family_dialog_question: "¿Películas o series?",
+    btn_close: "Cerrar",
+    mood_all: "Todas las categorías",
+    mood_comedy: "Comedia",
+    mood_drama: "Drama",
+    mood_thriller: "Suspenso",
+    mood_romance: "Romance",
+    mood_horror: "Terror",
+    mood_action: "Acción",
+    mood_scifi: "Ciencia ficción",
+    mood_fantasy: "Fantasía",
+    mood_animated: "Animación",
+    mood_documentary: "Documental",
+    mood_crime: "Crimen",
+    mood_mystery: "Misterio",
+    mood_family: "Familiar",
+    mood_history: "Historia",
+    mood_war: "Bélica",
+    mood_western: "Western",
+    mood_musical: "Musical",
+    mood_feelgood: "Para sentirse bien",
+    mood_mindbend: "Mentalmente intensa",
+    deck_heading: "Desliza para decidir",
+    pass_label: "Descartar",
+    like_label: "Me gusta",
+    deck_hint: 'Arrastra una tarjeta o usa los botones. Toca "Resumen" para saber más sobre un título.',
+    btn_adjust_categories: "🏷 Ajustar categorías",
+    btn_see_picks_so_far: "Ver mis elecciones hasta ahora →",
+    deck_loading: "Buscando qué puedes ver…",
+    deck_loading_more: "Buscando más títulos…",
+    couldnt_load_title: "No se pudieron cargar las películas",
+    couldnt_load_body: "El servidor no respondió a tiempo — esto puede pasar justo cuando se reactiva tras estar inactivo.",
+    btn_try_again: "Intentar de nuevo",
+    breather_title: "Tomando un respiro",
+    breather_body: "Hemos alcanzado nuestro límite de datos por ahora — esto se restablece pronto. ¡Gracias por tu paciencia!",
+    category_dialog_title: "Ajustar categorías",
+    category_dialog_body: "Los cambios se aplican de aquí en adelante — nada de lo que ya deslizaste o guardaste se ve afectado.",
+    btn_apply: "Aplicar →",
+    platform_dialog_title: "Añadir otra plataforma",
+    platform_dialog_body: "Más plataformas significan más títulos para deslizar. Esto empieza un mazo nuevo con tus plataformas actualizadas.",
+    favorites_heading: "Todo lo que te gustó",
+    favorites_empty: "Todavía no hay nada aquí.",
+    btn_share_my_picks: "Compartir mis elecciones →",
+    btn_back_to_swiping: "← Volver a deslizar",
+    btn_clear_all_picks: "Borrar todas las elecciones",
+    picks_count: "{n} elecciones",
+    search_results_heading: "Resultados de búsqueda",
+    results_label: "Resultados",
+    btn_continue_swiping: "Seguir deslizando →",
+    btn_see_my_picks: "Ver mis elecciones →",
+    btn_back: "← Volver",
+    back_to_search_results: "← Volver a los resultados",
+    back_to_shared_picks: "← Volver a lo compartido",
+    shared_with_you_label: "Compartido contigo",
+    their_picks_heading: "Sus elecciones",
+    btn_start_own_search: "Empezar mi propia búsqueda →",
+    selected_label: "Seleccionado",
+    tonight_watching_heading: "Esta noche vas a ver",
+    btn_back_to_your_picks: "← Volver a tus elecciones",
+    btn_start_new_session: "Empezar una nueva sesión",
+    checking_where_to_watch: "Buscando dónde verlo…",
+    region_disclosure_template: "La disponibilidad y los precios reflejan el catálogo de {region}, sin importar dónde estés.",
+    region_disclosure_prices_template: "Los precios y la disponibilidad mostrados reflejan el catálogo de {region}, sin importar dónde estés.",
+    btn_share_this_pick: "Compartir esta elección →",
+    done_title_no_mood: "Eso es todo",
+    done_title_mood: "Eso es todo en estas categorías",
+    done_title_has_favorites: "¡Buena colección de elecciones!",
+    done_text_no_mood_no_favorites: "No apareció nada — prueba ampliando tus plataformas o estados de ánimo.",
+    done_text_has_favorites: "Te gustaron {n} título{s} — ¿listo para elegir al ganador de esta noche?",
+    done_text_mood: "Ya deslizaste por todo lo que coincide con tus categorías elegidas. ¿Quieres seguir con todas las categorías, o terminar aquí?",
+    btn_explore_all_categories: "Explorar todas las categorías →",
+    btn_add_another_category: "+ Añadir otra categoría",
+    btn_add_another_platform: "+ Añadir otra plataforma",
+    toast_categories_updated: "Categorías actualizadas — llegan nuevas elecciones",
+    toast_platforms_updated: "Plataformas actualizadas — llegan nuevas elecciones",
+    toast_link_copied: "Enlace copiado — pégalo donde quieras",
+    toast_copy_failed: "No se pudo copiar — usa el campo de enlace de abajo",
+    share_dialog_title: "Comparte tus elecciones",
+    share_dialog_body: "Envía este enlace a quien quieras — lleva directo a tu lista.",
+    btn_copy: "Copiar",
+    btn_copied: "¡Copiado!",
+    btn_select_manually: "Selecciona y copia manualmente",
+    stream_subscription_label: "Ver con suscripción",
+    rent_label: "Alquilar",
+    buy_label: "Comprar",
+    free_ads_label: "Gratis con anuncios",
+    price_varies: "El precio varía",
+    full_description_btn: "📄 Descripción completa",
+    plot_summary_btn: "ⓘ Resumen",
+    trailer_btn: "▶ Tráiler",
+    show_plot_summary_aria: "Mostrar resumen",
+    see_full_details_aria: "Ver todos los detalles de {title}",
+    searching_label: "Buscando…",
+    results_for_query_template: 'Resultados para "{query}"',
+    loading_their_picks: "Cargando sus elecciones…",
+    poster_aria_label: "Póster de {title} ({year})",
+    poster_aria_label_no_year: "Póster de {title}",
+    no_summary_available: "No hay resumen disponible para este título.",
+    duration_min_template: "{n} min",
+    checking_ellipsis: "Comprobando…",
+    description_label: "Descripción",
+    is_it_for_you_label: "¿Es para ti?",
+    user_rating_template: "★ {rating}/10 valoración de usuarios",
+    critic_score_template: "Puntuación de la crítica {score}%",
+    watch_trailer_link: "▶ Ver tráiler",
+    no_extra_details: "No hay detalles adicionales disponibles para este título.",
+    availability_unknown: "Disponibilidad desconocida",
+    rent_or_buy_only: "Solo alquiler o compra",
+    availability_varies: "La disponibilidad varía",
+    search_no_matches: "No se encontraron resultados{scope}. Prueba otra búsqueda o cambia entre Películas/Series.",
+    search_no_matches_series: " entre las series",
+    search_no_matches_movies: " entre las películas",
+    search_failed: "No se pudo buscar en este momento. Inténtalo de nuevo en un momento.",
+    shared_list_broken: "No se pudo cargar esta lista compartida — puede que el enlace esté roto.",
+    shared_list_failed: "No se pudo cargar esta lista compartida ahora. Intenta actualizar la página.",
+    streaming_not_available_yet: "La información de streaming aún no está disponible para este título.",
+    no_streaming_found: "No se encontró información de streaming para este título.",
+    streaming_load_failed: "No se pudo cargar la información de streaming en este momento.",
+    try_justwatch: "Probar en JustWatch →",
+    region_us: "de EE. UU.", region_ca: "canadiense", region_in: "de la India", region_gb: "del Reino Unido",
+    region_au: "australiano", region_mx: "mexicano", region_es: "español",
+    region_br: "brasileño", region_fr: "francés", region_de: "alemán", region_pl: "polaco",
+  },
+
+  pt: {
+    footer_line: "Disponibilidade de streaming oferecida pela Movie of the Night",
+    legal_privacy_link: "Termos e privacidade",
+    search_placeholder: "🔍 Procure um título…",
+    hero_title_line1: "Hoje à noite você vai",
+    hero_title_accent: "assistir algo.",
+    hero_subtitle: "Deslize pelo que realmente está disponível nas suas plataformas. Salve o que gostar e compartilhe suas escolhas com qualquer pessoa.",
+    card_movies_title: "Filmes",
+    card_movies_desc: "Uma história completa em uma única sessão.",
+    card_series_title: "Séries",
+    card_series_desc: "Algo para maratonar em vários episódios.",
+    card_family_title: "Assista em família",
+    card_family_desc: "Escolhas para toda a família aproveitar junto.",
+    card_surprise_title: "Me surpreenda",
+    card_surprise_desc: "Sem escolher nada — receba uma sugestão na hora.",
+    btn_how_to_use: "Como usar o W2N",
+    onboarding_title: "Como o Watch2Night funciona",
+    onboarding_step1: "Escolha suas plataformas de streaming e um clima",
+    onboarding_step2: "Deslize por filmes e séries de verdade",
+    onboarding_step3: "Salve seus favoritos e compartilhe com qualquer pessoa",
+    onboarding_dismiss: "Toque em qualquer lugar para fechar",
+    setup_step1_label: "Passo 1 de 2",
+    setup_family_mode_label: "Modo família",
+    setup_step1_heading: "Onde você pode assistir?",
+    setup_step2_label: "Passo 2 de 2",
+    setup_step2_heading: "Qual é o clima?",
+    btn_surprise_setup: "🎲 Me surpreenda — qualquer clima",
+    btn_start_swiping: "Começar a deslizar →",
+    family_dialog_question: "Filmes ou séries?",
+    btn_close: "Fechar",
+    mood_all: "Todas as categorias",
+    mood_comedy: "Comédia",
+    mood_drama: "Drama",
+    mood_thriller: "Suspense",
+    mood_romance: "Romance",
+    mood_horror: "Terror",
+    mood_action: "Ação",
+    mood_scifi: "Ficção científica",
+    mood_fantasy: "Fantasia",
+    mood_animated: "Animação",
+    mood_documentary: "Documentário",
+    mood_crime: "Crime",
+    mood_mystery: "Mistério",
+    mood_family: "Família",
+    mood_history: "História",
+    mood_war: "Guerra",
+    mood_western: "Faroeste",
+    mood_musical: "Musical",
+    mood_feelgood: "Sente-se bem",
+    mood_mindbend: "Mentalmente intenso",
+    deck_heading: "Deslize para decidir",
+    pass_label: "Passar",
+    like_label: "Curtir",
+    deck_hint: 'Arraste um cartão ou use os botões. Toque em "Resumo" para saber mais sobre um título.',
+    btn_adjust_categories: "🏷 Ajustar categorias",
+    btn_see_picks_so_far: "Ver minhas escolhas até agora →",
+    deck_loading: "Procurando o que você pode assistir…",
+    deck_loading_more: "Procurando mais títulos…",
+    couldnt_load_title: "Não foi possível carregar os filmes",
+    couldnt_load_body: "O servidor não respondeu a tempo — isso pode acontecer logo após ele voltar do modo inativo.",
+    btn_try_again: "Tentar de novo",
+    breather_title: "Fazendo uma pausa rápida",
+    breather_body: "Atingimos nosso limite de dados por enquanto — isso se renova em breve. Obrigado pela paciência!",
+    category_dialog_title: "Ajustar categorias",
+    category_dialog_body: "As mudanças valem daqui para frente — nada do que você já deslizou ou salvou é afetado.",
+    btn_apply: "Aplicar →",
+    platform_dialog_title: "Adicionar outra plataforma",
+    platform_dialog_body: "Mais plataformas significam mais títulos para deslizar. Isso começa um baralho novo com suas plataformas atualizadas.",
+    favorites_heading: "Tudo que você curtiu",
+    favorites_empty: "Ainda não há nada aqui.",
+    btn_share_my_picks: "Compartilhar minhas escolhas →",
+    btn_back_to_swiping: "← Voltar a deslizar",
+    btn_clear_all_picks: "Limpar todas as escolhas",
+    picks_count: "{n} escolhas",
+    search_results_heading: "Resultados da busca",
+    results_label: "Resultados",
+    btn_continue_swiping: "Continuar deslizando →",
+    btn_see_my_picks: "Ver minhas escolhas →",
+    btn_back: "← Voltar",
+    back_to_search_results: "← Voltar aos resultados",
+    back_to_shared_picks: "← Voltar ao compartilhado",
+    shared_with_you_label: "Compartilhado com você",
+    their_picks_heading: "As escolhas dele(a)",
+    btn_start_own_search: "Começar minha própria busca →",
+    selected_label: "Selecionado",
+    tonight_watching_heading: "Hoje à noite você vai assistir",
+    btn_back_to_your_picks: "← Voltar às suas escolhas",
+    btn_start_new_session: "Começar uma nova sessão",
+    checking_where_to_watch: "Verificando onde assistir…",
+    region_disclosure_template: "A disponibilidade e os preços refletem o catálogo {region}, não importa onde você esteja.",
+    region_disclosure_prices_template: "Os preços e a disponibilidade mostrados refletem o catálogo {region}, não importa onde você esteja.",
+    btn_share_this_pick: "Compartilhar esta escolha →",
+    done_title_no_mood: "É isso por aqui",
+    done_title_mood: "Isso é tudo nessas categorias",
+    done_title_has_favorites: "Boa pilha de escolhas!",
+    done_text_no_mood_no_favorites: "Nada apareceu — tente ampliar suas plataformas ou climas.",
+    done_text_has_favorites: "Você curtiu {n} título{s} — pronto para escolher o vencedor de hoje à noite?",
+    done_text_mood: "Você já deslizou por tudo que combina com as categorias escolhidas. Quer continuar com todas as categorias, ou parar por aqui?",
+    btn_explore_all_categories: "Explorar todas as categorias →",
+    btn_add_another_category: "+ Adicionar outra categoria",
+    btn_add_another_platform: "+ Adicionar outra plataforma",
+    toast_categories_updated: "Categorias atualizadas — novas escolhas a caminho",
+    toast_platforms_updated: "Plataformas atualizadas — novas escolhas a caminho",
+    toast_link_copied: "Link copiado — cole onde quiser",
+    toast_copy_failed: "Não foi possível copiar — use o campo de link abaixo",
+    share_dialog_title: "Compartilhe suas escolhas",
+    share_dialog_body: "Envie este link para qualquer pessoa — ele abre direto na sua lista.",
+    btn_copy: "Copiar",
+    btn_copied: "Copiado!",
+    btn_select_manually: "Selecione e copie manualmente",
+    stream_subscription_label: "Assista com assinatura",
+    rent_label: "Alugar",
+    buy_label: "Comprar",
+    free_ads_label: "Grátis com anúncios",
+    price_varies: "Preço variável",
+    full_description_btn: "📄 Descrição completa",
+    plot_summary_btn: "ⓘ Resumo",
+    trailer_btn: "▶ Trailer",
+    show_plot_summary_aria: "Mostrar resumo",
+    see_full_details_aria: "Ver todos os detalhes de {title}",
+    searching_label: "Buscando…",
+    results_for_query_template: 'Resultados para "{query}"',
+    loading_their_picks: "Carregando as escolhas dele(a)…",
+    poster_aria_label: "Pôster de {title} ({year})",
+    poster_aria_label_no_year: "Pôster de {title}",
+    no_summary_available: "Nenhum resumo disponível para este título.",
+    duration_min_template: "{n} min",
+    checking_ellipsis: "Verificando…",
+    description_label: "Descrição",
+    is_it_for_you_label: "É para você?",
+    user_rating_template: "★ {rating}/10 avaliação dos usuários",
+    critic_score_template: "Nota da crítica {score}%",
+    watch_trailer_link: "▶ Assistir trailer",
+    no_extra_details: "Nenhum detalhe extra disponível para este título.",
+    availability_unknown: "Disponibilidade desconhecida",
+    rent_or_buy_only: "Apenas aluguel ou compra",
+    availability_varies: "A disponibilidade varia",
+    search_no_matches: "Nenhum resultado encontrado{scope}. Tente outra busca ou alterne entre Filmes/Séries.",
+    search_no_matches_series: " entre as séries",
+    search_no_matches_movies: " entre os filmes",
+    search_failed: "Não foi possível buscar agora. Tente de novo em instantes.",
+    shared_list_broken: "Não foi possível carregar esta lista compartilhada — o link pode estar quebrado.",
+    shared_list_failed: "Não foi possível carregar esta lista compartilhada agora. Tente atualizar a página.",
+    streaming_not_available_yet: "As informações de streaming ainda não estão disponíveis para este título.",
+    no_streaming_found: "Nenhuma informação de streaming encontrada para este título.",
+    streaming_load_failed: "Não foi possível carregar as informações de streaming agora.",
+    try_justwatch: "Tentar no JustWatch →",
+    region_us: "dos EUA", region_ca: "canadense", region_in: "da Índia", region_gb: "do Reino Unido",
+    region_au: "australiano", region_mx: "mexicano", region_es: "espanhol",
+    region_br: "brasileiro", region_fr: "francês", region_de: "alemão", region_pl: "polonês",
+  },
+
+  fr: {
+    footer_line: "Disponibilité en streaming fournie par Movie of the Night",
+    legal_privacy_link: "Mentions légales",
+    search_placeholder: "🔍 Rechercher un titre…",
+    hero_title_line1: "Ce soir, vous allez",
+    hero_title_accent: "regarder quelque chose.",
+    hero_subtitle: "Parcourez ce qui est réellement disponible sur vos plateformes. Enregistrez ce que vous aimez, puis partagez vos choix avec qui vous voulez.",
+    card_movies_title: "Films",
+    card_movies_desc: "Une histoire complète en une seule séance.",
+    card_series_title: "Séries",
+    card_series_desc: "De quoi enchaîner plusieurs épisodes.",
+    card_family_title: "Regarder en famille",
+    card_family_desc: "Des choix adaptés à toute la famille.",
+    card_surprise_title: "Surprenez-moi",
+    card_surprise_desc: "Sans rien choisir — obtenez une suggestion immédiate.",
+    btn_how_to_use: "Comment utiliser W2N",
+    onboarding_title: "Comment fonctionne Watch2Night",
+    onboarding_step1: "Choisissez vos plateformes de streaming et une ambiance",
+    onboarding_step2: "Parcourez de vrais films et séries",
+    onboarding_step3: "Enregistrez vos favoris, puis partagez-les avec qui vous voulez",
+    onboarding_dismiss: "Touchez n'importe où pour fermer",
+    setup_step1_label: "Étape 1 sur 2",
+    setup_family_mode_label: "Mode famille",
+    setup_step1_heading: "Sur quoi pouvez-vous regarder ?",
+    setup_step2_label: "Étape 2 sur 2",
+    setup_step2_heading: "Quelle est l'ambiance ?",
+    btn_surprise_setup: "🎲 Surprenez-moi — n'importe quelle ambiance",
+    btn_start_swiping: "Commencer à parcourir →",
+    family_dialog_question: "Films ou séries ?",
+    btn_close: "Fermer",
+    mood_all: "Toutes les catégories",
+    mood_comedy: "Comédie",
+    mood_drama: "Drame",
+    mood_thriller: "Thriller",
+    mood_romance: "Romance",
+    mood_horror: "Horreur",
+    mood_action: "Action",
+    mood_scifi: "Science-fiction",
+    mood_fantasy: "Fantastique",
+    mood_animated: "Animation",
+    mood_documentary: "Documentaire",
+    mood_crime: "Crime",
+    mood_mystery: "Mystère",
+    mood_family: "Famille",
+    mood_history: "Histoire",
+    mood_war: "Guerre",
+    mood_western: "Western",
+    mood_musical: "Comédie musicale",
+    mood_feelgood: "Feel-good",
+    mood_mindbend: "Qui fait réfléchir",
+    deck_heading: "Glissez pour décider",
+    pass_label: "Passer",
+    like_label: "J'aime",
+    deck_hint: 'Faites glisser une carte ou utilisez les boutons. Touchez « Résumé » pour en savoir plus sur un titre.',
+    btn_adjust_categories: "🏷 Ajuster les catégories",
+    btn_see_picks_so_far: "Voir mes choix jusqu'ici →",
+    deck_loading: "Recherche de ce que vous pouvez regarder…",
+    deck_loading_more: "Recherche d'autres titres…",
+    couldnt_load_title: "Impossible de charger les films",
+    couldnt_load_body: "Le serveur n'a pas répondu à temps — cela peut arriver juste après sa remise en route.",
+    btn_try_again: "Réessayer",
+    breather_title: "Petite pause",
+    breather_body: "Nous avons atteint notre limite de données pour le moment — cela se réinitialise bientôt. Merci de votre patience !",
+    category_dialog_title: "Ajuster les catégories",
+    category_dialog_body: "Les changements s'appliquent à partir de maintenant — rien de ce que vous avez déjà parcouru ou enregistré n'est affecté.",
+    btn_apply: "Appliquer →",
+    platform_dialog_title: "Ajouter une autre plateforme",
+    platform_dialog_body: "Plus de plateformes veut dire plus de titres à parcourir. Cela démarre un nouveau paquet avec vos plateformes mises à jour.",
+    favorites_heading: "Tout ce que vous avez aimé",
+    favorites_empty: "Il n'y a encore rien ici.",
+    btn_share_my_picks: "Partager mes choix →",
+    btn_back_to_swiping: "← Retour au défilement",
+    btn_clear_all_picks: "Effacer tous les choix",
+    picks_count: "{n} choix",
+    search_results_heading: "Résultats de recherche",
+    results_label: "Résultats",
+    btn_continue_swiping: "Continuer à parcourir →",
+    btn_see_my_picks: "Voir mes choix →",
+    btn_back: "← Retour",
+    back_to_search_results: "← Retour aux résultats",
+    back_to_shared_picks: "← Retour au partage",
+    shared_with_you_label: "Partagé avec vous",
+    their_picks_heading: "Leurs choix",
+    btn_start_own_search: "Lancer ma propre recherche →",
+    selected_label: "Sélectionné",
+    tonight_watching_heading: "Ce soir, vous allez regarder",
+    btn_back_to_your_picks: "← Retour à vos choix",
+    btn_start_new_session: "Démarrer une nouvelle session",
+    checking_where_to_watch: "Vérification d'où regarder…",
+    region_disclosure_template: "La disponibilité et les prix reflètent le catalogue {region}, quel que soit l'endroit où vous êtes.",
+    region_disclosure_prices_template: "Les prix et la disponibilité affichés reflètent le catalogue {region}, quel que soit l'endroit où vous êtes.",
+    btn_share_this_pick: "Partager ce choix →",
+    done_title_no_mood: "C'est tout pour l'instant",
+    done_title_mood: "C'est tout dans ces catégories",
+    done_title_has_favorites: "Belle pile de choix !",
+    done_text_no_mood_no_favorites: "Rien n'est ressorti — essayez d'élargir vos plateformes ou vos ambiances.",
+    done_text_has_favorites: "Vous avez aimé {n} titre{s} — prêt à choisir le gagnant de ce soir ?",
+    done_text_mood: "Vous avez parcouru tout ce qui correspond à vos catégories choisies. Voulez-vous continuer avec toutes les catégories, ou vous arrêter ici ?",
+    btn_explore_all_categories: "Explorer toutes les catégories →",
+    btn_add_another_category: "+ Ajouter une autre catégorie",
+    btn_add_another_platform: "+ Ajouter une autre plateforme",
+    toast_categories_updated: "Catégories mises à jour — de nouveaux choix arrivent",
+    toast_platforms_updated: "Plateformes mises à jour — de nouveaux choix arrivent",
+    toast_link_copied: "Lien copié — collez-le où vous voulez",
+    toast_copy_failed: "Impossible de copier — utilisez le champ de lien ci-dessous",
+    share_dialog_title: "Partagez vos choix",
+    share_dialog_body: "Envoyez ce lien à qui vous voulez — il ouvre directement votre liste.",
+    btn_copy: "Copier",
+    btn_copied: "Copié !",
+    btn_select_manually: "Sélectionnez et copiez manuellement",
+    stream_subscription_label: "Regarder avec un abonnement",
+    rent_label: "Louer",
+    buy_label: "Acheter",
+    free_ads_label: "Gratuit avec publicité",
+    price_varies: "Le prix varie",
+    full_description_btn: "📄 Description complète",
+    plot_summary_btn: "ⓘ Résumé",
+    trailer_btn: "▶ Bande-annonce",
+    show_plot_summary_aria: "Afficher le résumé",
+    see_full_details_aria: "Voir tous les détails de {title}",
+    searching_label: "Recherche…",
+    results_for_query_template: 'Résultats pour « {query} »',
+    loading_their_picks: "Chargement de leurs choix…",
+    poster_aria_label: "Affiche de {title} ({year})",
+    poster_aria_label_no_year: "Affiche de {title}",
+    no_summary_available: "Aucun résumé disponible pour ce titre.",
+    duration_min_template: "{n} min",
+    checking_ellipsis: "Vérification…",
+    description_label: "Description",
+    is_it_for_you_label: "Est-ce fait pour vous ?",
+    user_rating_template: "★ {rating}/10 note des utilisateurs",
+    critic_score_template: "Note de la critique {score} %",
+    watch_trailer_link: "▶ Voir la bande-annonce",
+    no_extra_details: "Aucun détail supplémentaire disponible pour ce titre.",
+    availability_unknown: "Disponibilité inconnue",
+    rent_or_buy_only: "Location ou achat uniquement",
+    availability_varies: "La disponibilité varie",
+    search_no_matches: "Aucun résultat trouvé{scope}. Essayez une autre recherche, ou basculez entre Films/Séries.",
+    search_no_matches_series: " parmi les séries",
+    search_no_matches_movies: " parmi les films",
+    search_failed: "Impossible de rechercher pour le moment. Réessayez dans un instant.",
+    shared_list_broken: "Impossible de charger cette liste partagée — le lien est peut-être cassé.",
+    shared_list_failed: "Impossible de charger cette liste partagée pour le moment. Essayez d'actualiser.",
+    streaming_not_available_yet: "Les informations de streaming ne sont pas encore disponibles pour ce titre.",
+    no_streaming_found: "Aucune information de streaming trouvée pour ce titre.",
+    streaming_load_failed: "Impossible de charger les informations de streaming pour le moment.",
+    try_justwatch: "Essayer JustWatch →",
+    region_us: "américain", region_ca: "canadien", region_in: "indien", region_gb: "britannique",
+    region_au: "australien", region_mx: "mexicain", region_es: "espagnol",
+    region_br: "brésilien", region_fr: "français", region_de: "allemand", region_pl: "polonais",
+  },
+
+  de: {
+    footer_line: "Streaming-Verfügbarkeit bereitgestellt von Movie of the Night",
+    legal_privacy_link: "Rechtliches & Datenschutz",
+    search_placeholder: "🔍 Titel suchen…",
+    hero_title_line1: "Heute Abend siehst du",
+    hero_title_accent: "etwas.",
+    hero_subtitle: "Wische durch das, was auf deinen Plattformen wirklich verfügbar ist. Speichere, was dir gefällt, und teile deine Auswahl mit jedem.",
+    card_movies_title: "Filme",
+    card_movies_desc: "Eine komplette Geschichte an einem Abend.",
+    card_series_title: "Serien",
+    card_series_desc: "Zum Bingen über mehrere Folgen.",
+    card_family_title: "Mit der Familie schauen",
+    card_family_desc: "Familienfreundliche Auswahl für alle.",
+    card_surprise_title: "Überrasch mich",
+    card_surprise_desc: "Ohne Auswahl — sofort einen Vorschlag bekommen.",
+    btn_how_to_use: "So funktioniert W2N",
+    onboarding_title: "So funktioniert Watch2Night",
+    onboarding_step1: "Wähle deine Streaming-Plattformen und eine Stimmung",
+    onboarding_step2: "Wische durch echte Filme und Serien",
+    onboarding_step3: "Speichere deine Favoriten und teile sie mit jedem",
+    onboarding_dismiss: "Zum Schließen irgendwo tippen",
+    setup_step1_label: "Schritt 1 von 2",
+    setup_family_mode_label: "Familienmodus",
+    setup_step1_heading: "Wo kannst du schauen?",
+    setup_step2_label: "Schritt 2 von 2",
+    setup_step2_heading: "Welche Stimmung?",
+    btn_surprise_setup: "🎲 Überrasch mich — egal welche Stimmung",
+    btn_start_swiping: "Los geht's →",
+    family_dialog_question: "Filme oder Serien?",
+    btn_close: "Schließen",
+    mood_all: "Alle Kategorien",
+    mood_comedy: "Komödie",
+    mood_drama: "Drama",
+    mood_thriller: "Thriller",
+    mood_romance: "Romantik",
+    mood_horror: "Horror",
+    mood_action: "Action",
+    mood_scifi: "Science-Fiction",
+    mood_fantasy: "Fantasy",
+    mood_animated: "Animation",
+    mood_documentary: "Dokumentation",
+    mood_crime: "Krimi",
+    mood_mystery: "Mystery",
+    mood_family: "Familie",
+    mood_history: "Historie",
+    mood_war: "Krieg",
+    mood_western: "Western",
+    mood_musical: "Musical",
+    mood_feelgood: "Feel-good",
+    mood_mindbend: "Zum Nachdenken",
+    deck_heading: "Wische, um zu entscheiden",
+    pass_label: "Ablehnen",
+    like_label: "Gefällt mir",
+    deck_hint: 'Ziehe eine Karte oder nutze die Buttons. Tippe auf „Zusammenfassung", um mehr über einen Titel zu erfahren.',
+    btn_adjust_categories: "🏷 Kategorien anpassen",
+    btn_see_picks_so_far: "Meine bisherige Auswahl ansehen →",
+    deck_loading: "Suche, was du schauen kannst…",
+    deck_loading_more: "Suche nach weiteren Titeln…",
+    couldnt_load_title: "Filme konnten nicht geladen werden",
+    couldnt_load_body: "Der Server hat nicht rechtzeitig geantwortet — das kann passieren, kurz nachdem er aus dem Ruhezustand aufwacht.",
+    btn_try_again: "Erneut versuchen",
+    breather_title: "Kurze Verschnaufpause",
+    breather_body: "Wir haben unser Datenlimit für den Moment erreicht — das setzt sich bald zurück. Danke für deine Geduld!",
+    category_dialog_title: "Kategorien anpassen",
+    category_dialog_body: "Änderungen gelten ab jetzt — nichts, was du schon gewischt oder gespeichert hast, wird beeinflusst.",
+    btn_apply: "Anwenden →",
+    platform_dialog_title: "Weitere Plattform hinzufügen",
+    platform_dialog_body: "Mehr Plattformen bedeuten mehr Titel zum Wischen. Das startet einen neuen Stapel mit deinen aktualisierten Plattformen.",
+    favorites_heading: "Alles, was dir gefallen hat",
+    favorites_empty: "Hier ist noch nichts.",
+    btn_share_my_picks: "Meine Auswahl teilen →",
+    btn_back_to_swiping: "← Zurück zum Wischen",
+    btn_clear_all_picks: "Alle Auswahlen löschen",
+    picks_count: "{n} Auswahlen",
+    search_results_heading: "Suchergebnisse",
+    results_label: "Ergebnisse",
+    btn_continue_swiping: "Weiter wischen →",
+    btn_see_my_picks: "Meine Auswahl ansehen →",
+    btn_back: "← Zurück",
+    back_to_search_results: "← Zurück zu den Suchergebnissen",
+    back_to_shared_picks: "← Zurück zur geteilten Auswahl",
+    shared_with_you_label: "Mit dir geteilt",
+    their_picks_heading: "Ihre Auswahl",
+    btn_start_own_search: "Eigene Suche starten →",
+    selected_label: "Ausgewählt",
+    tonight_watching_heading: "Heute Abend siehst du",
+    btn_back_to_your_picks: "← Zurück zu deiner Auswahl",
+    btn_start_new_session: "Neue Sitzung starten",
+    checking_where_to_watch: "Prüfe, wo du schauen kannst…",
+    region_disclosure_template: "Verfügbarkeit und Preise entsprechen dem {region} Katalog, unabhängig davon, wo du dich befindest.",
+    region_disclosure_prices_template: "Angezeigte Preise und Verfügbarkeit entsprechen dem {region} Katalog, unabhängig davon, wo du dich befindest.",
+    btn_share_this_pick: "Diese Auswahl teilen →",
+    done_title_no_mood: "Das war's fürs Erste",
+    done_title_mood: "Das ist alles in diesen Kategorien",
+    done_title_has_favorites: "Schöner Stapel Auswahlen!",
+    done_text_no_mood_no_favorites: "Nichts gefunden — versuch, deine Plattformen oder Stimmungen zu erweitern.",
+    done_text_has_favorites: "Dir haben {n} Titel gefallen — bereit, den heutigen Gewinner zu küren?",
+    done_text_mood: "Du hast alles durchgewischt, was zu deinen gewählten Kategorien passt. Möchtest du mit allen Kategorien weitermachen oder hier aufhören?",
+    btn_explore_all_categories: "Alle Kategorien erkunden →",
+    btn_add_another_category: "+ Weitere Kategorie hinzufügen",
+    btn_add_another_platform: "+ Weitere Plattform hinzufügen",
+    toast_categories_updated: "Kategorien aktualisiert — neue Auswahl kommt gleich",
+    toast_platforms_updated: "Plattformen aktualisiert — neue Auswahl kommt gleich",
+    toast_link_copied: "Link kopiert — füge ihn überall ein",
+    toast_copy_failed: "Kopieren fehlgeschlagen — nutze das Linkfeld unten",
+    share_dialog_title: "Teile deine Auswahl",
+    share_dialog_body: "Sende diesen Link an jeden — er öffnet direkt deine Liste.",
+    btn_copy: "Kopieren",
+    btn_copied: "Kopiert!",
+    btn_select_manually: "Manuell auswählen und kopieren",
+    stream_subscription_label: "Mit Abo streamen",
+    rent_label: "Leihen",
+    buy_label: "Kaufen",
+    free_ads_label: "Kostenlos mit Werbung",
+    price_varies: "Preis variiert",
+    full_description_btn: "📄 Vollständige Beschreibung",
+    plot_summary_btn: "ⓘ Zusammenfassung",
+    trailer_btn: "▶ Trailer",
+    show_plot_summary_aria: "Zusammenfassung anzeigen",
+    see_full_details_aria: "Alle Details zu {title} ansehen",
+    searching_label: "Suche läuft…",
+    results_for_query_template: 'Ergebnisse für „{query}"',
+    loading_their_picks: "Ihre Auswahl wird geladen…",
+    poster_aria_label: "Poster für {title} ({year})",
+    poster_aria_label_no_year: "Poster für {title}",
+    no_summary_available: "Keine Zusammenfassung für diesen Titel verfügbar.",
+    duration_min_template: "{n} Min.",
+    checking_ellipsis: "Wird geprüft…",
+    description_label: "Beschreibung",
+    is_it_for_you_label: "Ist das etwas für dich?",
+    user_rating_template: "★ {rating}/10 Nutzerbewertung",
+    critic_score_template: "Kritikerwertung {score}%",
+    watch_trailer_link: "▶ Trailer ansehen",
+    no_extra_details: "Keine weiteren Details für diesen Titel verfügbar.",
+    availability_unknown: "Verfügbarkeit unbekannt",
+    rent_or_buy_only: "Nur leihen oder kaufen",
+    availability_varies: "Verfügbarkeit variiert",
+    search_no_matches: "Keine Treffer gefunden{scope}. Versuch eine andere Suche oder wechsle zwischen Filme/Serien.",
+    search_no_matches_series: " unter den Serien",
+    search_no_matches_movies: " unter den Filmen",
+    search_failed: "Suche gerade nicht möglich. Versuch es gleich noch einmal.",
+    shared_list_broken: "Diese geteilte Liste konnte nicht geladen werden — der Link ist möglicherweise defekt.",
+    shared_list_failed: "Diese geteilte Liste konnte gerade nicht geladen werden. Versuch es mit Neuladen.",
+    streaming_not_available_yet: "Streaming-Infos für diesen Titel sind noch nicht verfügbar.",
+    no_streaming_found: "Keine Streaming-Infos für diesen Titel gefunden.",
+    streaming_load_failed: "Streaming-Infos konnten gerade nicht geladen werden.",
+    try_justwatch: "Bei JustWatch versuchen →",
+    region_us: "US-", region_ca: "kanadischen", region_in: "indischen", region_gb: "britischen",
+    region_au: "australischen", region_mx: "mexikanischen", region_es: "spanischen",
+    region_br: "brasilianischen", region_fr: "französischen", region_de: "deutschen", region_pl: "polnischen",
+  },
+
+  hi: {
+    footer_line: "स्ट्रीमिंग उपलब्धता Movie of the Night द्वारा प्रदान की गई",
+    legal_privacy_link: "कानूनी और गोपनीयता",
+    search_placeholder: "🔍 कोई टाइटल खोजें…",
+    hero_title_line1: "आज रात आप",
+    hero_title_accent: "कुछ देखने वाले हैं।",
+    hero_subtitle: "अपने प्लेटफ़ॉर्म पर जो वाकई उपलब्ध है उसे स्वाइप करें। जो पसंद आए उसे सेव करें, फिर अपनी पसंद किसी के साथ भी शेयर करें।",
+    card_movies_title: "फ़िल्में",
+    card_movies_desc: "एक ही बैठक में पूरी कहानी।",
+    card_series_title: "सीरीज़",
+    card_series_desc: "कई एपिसोड में देखने के लिए कुछ।",
+    card_family_title: "परिवार के साथ देखें",
+    card_family_desc: "पूरे परिवार के लिए पसंद आने वाली चीज़ें।",
+    card_surprise_title: "मुझे सरप्राइज़ करें",
+    card_surprise_desc: "कुछ भी चुने बिना — तुरंत एक सुझाव पाएं।",
+    btn_how_to_use: "W2N कैसे उपयोग करें",
+    onboarding_title: "Watch2Night कैसे काम करता है",
+    onboarding_step1: "अपने स्ट्रीमिंग प्लेटफ़ॉर्म और एक मूड चुनें",
+    onboarding_step2: "असली फ़िल्मों और शो में स्वाइप करें",
+    onboarding_step3: "अपने पसंदीदा सेव करें, फिर किसी के साथ भी शेयर करें",
+    onboarding_dismiss: "बंद करने के लिए कहीं भी टैप करें",
+    setup_step1_label: "चरण 1 का 2",
+    setup_family_mode_label: "फ़ैमिली मोड",
+    setup_step1_heading: "आप कहाँ देख सकते हैं?",
+    setup_step2_label: "चरण 2 का 2",
+    setup_step2_heading: "मूड क्या है?",
+    btn_surprise_setup: "🎲 मुझे सरप्राइज़ करें — कोई भी मूड",
+    btn_start_swiping: "स्वाइप करना शुरू करें →",
+    family_dialog_question: "फ़िल्में या सीरीज़?",
+    btn_close: "बंद करें",
+    mood_all: "सभी श्रेणियाँ",
+    mood_comedy: "कॉमेडी",
+    mood_drama: "ड्रामा",
+    mood_thriller: "थ्रिलर",
+    mood_romance: "रोमांस",
+    mood_horror: "हॉरर",
+    mood_action: "एक्शन",
+    mood_scifi: "साइंस फ़िक्शन",
+    mood_fantasy: "फ़ैंटेसी",
+    mood_animated: "एनिमेटेड",
+    mood_documentary: "डॉक्यूमेंट्री",
+    mood_crime: "क्राइम",
+    mood_mystery: "मिस्ट्री",
+    mood_family: "फ़ैमिली",
+    mood_history: "हिस्ट्री",
+    mood_war: "वॉर",
+    mood_western: "वेस्टर्न",
+    mood_musical: "म्यूज़िकल",
+    mood_feelgood: "फ़ील-गुड",
+    mood_mindbend: "माइंड-बेंडिंग",
+    deck_heading: "तय करने के लिए स्वाइप करें",
+    pass_label: "छोड़ें",
+    like_label: "पसंद",
+    deck_hint: 'कार्ड को खींचें, या बटन का उपयोग करें। किसी टाइटल के बारे में और पढ़ने के लिए "प्लॉट सारांश" पर टैप करें।',
+    btn_adjust_categories: "🏷 श्रेणियाँ समायोजित करें",
+    btn_see_picks_so_far: "अब तक की मेरी पसंद देखें →",
+    deck_loading: "आप क्या देख सकते हैं यह ढूंढा जा रहा है…",
+    deck_loading_more: "और टाइटल ढूंढे जा रहे हैं…",
+    couldnt_load_title: "फ़िल्में लोड नहीं हो सकीं",
+    couldnt_load_body: "सर्वर ने समय पर जवाब नहीं दिया — यह निष्क्रिय अवस्था से जागने के तुरंत बाद हो सकता है।",
+    btn_try_again: "फिर से कोशिश करें",
+    breather_title: "थोड़ा विराम ले रहे हैं",
+    breather_body: "हम फ़िलहाल अपनी डेटा सीमा तक पहुँच गए हैं — यह जल्द ही रीसेट हो जाएगी। आपके धैर्य के लिए धन्यवाद!",
+    category_dialog_title: "श्रेणियाँ समायोजित करें",
+    category_dialog_body: "बदलाव आगे से लागू होंगे — जो आप पहले ही स्वाइप या सेव कर चुके हैं उस पर कोई असर नहीं पड़ेगा।",
+    btn_apply: "लागू करें →",
+    platform_dialog_title: "एक और प्लेटफ़ॉर्म जोड़ें",
+    platform_dialog_body: "ज़्यादा प्लेटफ़ॉर्म का मतलब है स्वाइप करने के लिए ज़्यादा टाइटल। इससे आपके अपडेट किए गए प्लेटफ़ॉर्म के साथ एक नया डेक शुरू होता है।",
+    favorites_heading: "आपको जो कुछ पसंद आया",
+    favorites_empty: "यहाँ अभी कुछ नहीं है।",
+    btn_share_my_picks: "मेरी पसंद शेयर करें →",
+    btn_back_to_swiping: "← स्वाइपिंग पर वापस जाएं",
+    btn_clear_all_picks: "सभी पसंद साफ़ करें",
+    picks_count: "{n} पसंद",
+    search_results_heading: "खोज परिणाम",
+    results_label: "परिणाम",
+    btn_continue_swiping: "स्वाइप करना जारी रखें →",
+    btn_see_my_picks: "मेरी पसंद देखें →",
+    btn_back: "← वापस",
+    back_to_search_results: "← खोज परिणामों पर वापस जाएं",
+    back_to_shared_picks: "← शेयर की गई पसंद पर वापस जाएं",
+    shared_with_you_label: "आपके साथ शेयर किया गया",
+    their_picks_heading: "उनकी पसंद",
+    btn_start_own_search: "अपनी खोज शुरू करें →",
+    selected_label: "चयनित",
+    tonight_watching_heading: "आज रात आप देख रहे हैं",
+    btn_back_to_your_picks: "← अपनी पसंद पर वापस जाएं",
+    btn_start_new_session: "नया सेशन शुरू करें",
+    checking_where_to_watch: "कहाँ देखें यह जाँचा जा रहा है…",
+    region_disclosure_template: "उपलब्धता और कीमतें {region} कैटलॉग के अनुसार दिखाई गई हैं, चाहे आप कहीं भी हों।",
+    region_disclosure_prices_template: "दिखाई गई कीमतें और उपलब्धता {region} कैटलॉग के अनुसार हैं, चाहे आप कहीं भी हों।",
+    btn_share_this_pick: "यह पसंद शेयर करें →",
+    done_title_no_mood: "बस इतना ही था",
+    done_title_mood: "इन श्रेणियों में बस इतना ही था",
+    done_title_has_favorites: "पसंद का अच्छा ढेर!",
+    done_text_no_mood_no_favorites: "कुछ नहीं मिला — अपने प्लेटफ़ॉर्म या मूड को और बढ़ाकर देखें।",
+    done_text_has_favorites: "आपको {n} टाइटल पसंद आए — आज रात का विजेता चुनने के लिए तैयार हैं?",
+    done_text_mood: "आपने अपनी चुनी गई श्रेणियों से मेल खाने वाली हर चीज़ स्वाइप कर ली है। क्या आप सभी श्रेणियों के साथ आगे बढ़ना चाहेंगे, या यहीं समाप्त करेंगे?",
+    btn_explore_all_categories: "सभी श्रेणियाँ देखें →",
+    btn_add_another_category: "+ एक और श्रेणी जोड़ें",
+    btn_add_another_platform: "+ एक और प्लेटफ़ॉर्म जोड़ें",
+    toast_categories_updated: "श्रेणियाँ अपडेट हुईं — नई पसंद आ रही हैं",
+    toast_platforms_updated: "प्लेटफ़ॉर्म अपडेट हुए — नई पसंद आ रही हैं",
+    toast_link_copied: "लिंक कॉपी हुआ — इसे कहीं भी पेस्ट करें",
+    toast_copy_failed: "कॉपी नहीं हो सका — नीचे दिए लिंक फ़ील्ड का उपयोग करें",
+    share_dialog_title: "अपनी पसंद शेयर करें",
+    share_dialog_body: "यह लिंक किसी को भी भेजें — यह सीधे आपकी लिस्ट खोलता है।",
+    btn_copy: "कॉपी करें",
+    btn_copied: "कॉपी हो गया!",
+    btn_select_manually: "मैन्युअल रूप से चुनें और कॉपी करें",
+    stream_subscription_label: "सब्सक्रिप्शन के साथ स्ट्रीम करें",
+    rent_label: "किराए पर लें",
+    buy_label: "खरीदें",
+    free_ads_label: "विज्ञापनों के साथ मुफ़्त",
+    price_varies: "कीमत अलग-अलग हो सकती है",
+    full_description_btn: "📄 पूरा विवरण",
+    plot_summary_btn: "ⓘ प्लॉट सारांश",
+    trailer_btn: "▶ ट्रेलर",
+    show_plot_summary_aria: "प्लॉट सारांश दिखाएं",
+    see_full_details_aria: "{title} का पूरा विवरण देखें",
+    searching_label: "खोजा जा रहा है…",
+    results_for_query_template: '"{query}" के लिए परिणाम',
+    loading_their_picks: "उनकी पसंद लोड हो रही है…",
+    poster_aria_label: "{title} ({year}) का पोस्टर",
+    poster_aria_label_no_year: "{title} का पोस्टर",
+    no_summary_available: "इस टाइटल के लिए कोई सारांश उपलब्ध नहीं है।",
+    duration_min_template: "{n} मिनट",
+    checking_ellipsis: "जाँच हो रही है…",
+    description_label: "विवरण",
+    is_it_for_you_label: "क्या यह आपके लिए है?",
+    user_rating_template: "★ {rating}/10 यूज़र रेटिंग",
+    critic_score_template: "क्रिटिक स्कोर {score}%",
+    watch_trailer_link: "▶ ट्रेलर देखें",
+    no_extra_details: "इस टाइटल के लिए कोई अतिरिक्त विवरण उपलब्ध नहीं है।",
+    availability_unknown: "उपलब्धता अज्ञात",
+    rent_or_buy_only: "केवल किराए पर या खरीदें",
+    availability_varies: "उपलब्धता अलग-अलग हो सकती है",
+    search_no_matches: "कोई परिणाम नहीं मिला{scope}। कोई और खोज करें, या फ़िल्में/सीरीज़ के बीच स्विच करें।",
+    search_no_matches_series: " सीरीज़ में",
+    search_no_matches_movies: " फ़िल्मों में",
+    search_failed: "अभी खोज नहीं हो सकी। थोड़ी देर में फिर कोशिश करें।",
+    shared_list_broken: "यह शेयर की गई लिस्ट लोड नहीं हो सकी — लिंक टूटा हो सकता है।",
+    shared_list_failed: "यह शेयर की गई लिस्ट अभी लोड नहीं हो सकी। पेज को रीफ़्रेश करके देखें।",
+    streaming_not_available_yet: "इस टाइटल के लिए स्ट्रीमिंग जानकारी अभी उपलब्ध नहीं है।",
+    no_streaming_found: "इस टाइटल के लिए कोई स्ट्रीमिंग जानकारी नहीं मिली।",
+    streaming_load_failed: "स्ट्रीमिंग जानकारी अभी लोड नहीं हो सकी।",
+    try_justwatch: "JustWatch पर देखें →",
+    region_us: "अमेरिकी", region_ca: "कैनेडियन", region_in: "भारतीय", region_gb: "यूके",
+    region_au: "ऑस्ट्रेलियाई", region_mx: "मेक्सिकन", region_es: "स्पेनिश",
+    region_br: "ब्राज़ीलियाई", region_fr: "फ़्रेंच", region_de: "जर्मन", region_pl: "पोलिश",
+  },
+
+  pl: {
+    footer_line: "Dostępność w serwisach streamingowych dzięki Movie of the Night",
+    legal_privacy_link: "Regulamin i prywatność",
+    search_placeholder: "🔍 Szukaj tytułu…",
+    hero_title_line1: "Dziś wieczorem",
+    hero_title_accent: "coś obejrzysz.",
+    hero_subtitle: "Przesuwaj po tym, co naprawdę jest dostępne na Twoich platformach. Zapisuj to, co Ci się podoba, i udostępniaj swoje wybory każdemu.",
+    card_movies_title: "Filmy",
+    card_movies_desc: "Cała historia w jednym seansie.",
+    card_series_title: "Seriale",
+    card_series_desc: "Coś do obejrzenia w wielu odcinkach.",
+    card_family_title: "Oglądaj z rodziną",
+    card_family_desc: "Propozycje, które spodobają się całej rodzinie.",
+    card_surprise_title: "Zaskocz mnie",
+    card_surprise_desc: "Bez wybierania niczego — od razu otrzymaj propozycję.",
+    btn_how_to_use: "Jak korzystać z W2N",
+    onboarding_title: "Jak działa Watch2Night",
+    onboarding_step1: "Wybierz swoje platformy streamingowe i nastrój",
+    onboarding_step2: "Przesuwaj po prawdziwych filmach i serialach",
+    onboarding_step3: "Zapisuj ulubione, a potem udostępniaj je komukolwiek",
+    onboarding_dismiss: "Dotknij w dowolnym miejscu, aby zamknąć",
+    setup_step1_label: "Krok 1 z 2",
+    setup_family_mode_label: "Tryb rodzinny",
+    setup_step1_heading: "Na czym możesz oglądać?",
+    setup_step2_label: "Krok 2 z 2",
+    setup_step2_heading: "Jaki masz nastrój?",
+    btn_surprise_setup: "🎲 Zaskocz mnie — dowolny nastrój",
+    btn_start_swiping: "Zacznij przesuwać →",
+    family_dialog_question: "Filmy czy seriale?",
+    btn_close: "Zamknij",
+    mood_all: "Wszystkie kategorie",
+    mood_comedy: "Komedia",
+    mood_drama: "Dramat",
+    mood_thriller: "Thriller",
+    mood_romance: "Romans",
+    mood_horror: "Horror",
+    mood_action: "Akcja",
+    mood_scifi: "Science-fiction",
+    mood_fantasy: "Fantasy",
+    mood_animated: "Animacja",
+    mood_documentary: "Dokument",
+    mood_crime: "Kryminał",
+    mood_mystery: "Mystery",
+    mood_family: "Familijny",
+    mood_history: "Historyczny",
+    mood_war: "Wojenny",
+    mood_western: "Western",
+    mood_musical: "Musical",
+    mood_feelgood: "Poprawiający humor",
+    mood_mindbend: "Wymagający myślenia",
+    deck_heading: "Przesuwaj, aby zdecydować",
+    pass_label: "Pomiń",
+    like_label: "Podoba mi się",
+    deck_hint: 'Przeciągnij kartę lub użyj przycisków. Dotknij „Streszczenie fabuły", aby dowiedzieć się więcej o tytule.',
+    btn_adjust_categories: "🏷 Dostosuj kategorie",
+    btn_see_picks_so_far: "Zobacz moje dotychczasowe wybory →",
+    deck_loading: "Szukamy, co możesz obejrzeć…",
+    deck_loading_more: "Szukamy kolejnych tytułów…",
+    couldnt_load_title: "Nie udało się wczytać filmów",
+    couldnt_load_body: "Serwer nie odpowiedział na czas — może się to zdarzyć zaraz po wybudzeniu z uśpienia.",
+    btn_try_again: "Spróbuj ponownie",
+    breather_title: "Chwila przerwy",
+    breather_body: "Osiągnęliśmy chwilowy limit danych — wkrótce zostanie zresetowany. Dziękujemy za cierpliwość!",
+    category_dialog_title: "Dostosuj kategorie",
+    category_dialog_body: "Zmiany obowiązują od teraz — nic z tego, co już przesunąłeś lub zapisałeś, nie zostanie zmienione.",
+    btn_apply: "Zastosuj →",
+    platform_dialog_title: "Dodaj kolejną platformę",
+    platform_dialog_body: "Więcej platform oznacza więcej tytułów do przesuwania. To rozpoczyna nową talię z Twoimi zaktualizowanymi platformami.",
+    favorites_heading: "Wszystko, co Ci się spodobało",
+    favorites_empty: "Nic tu jeszcze nie ma.",
+    btn_share_my_picks: "Udostępnij moje wybory →",
+    btn_back_to_swiping: "← Wróć do przesuwania",
+    btn_clear_all_picks: "Wyczyść wszystkie wybory",
+    picks_count: "{n} wybory",
+    search_results_heading: "Wyniki wyszukiwania",
+    results_label: "Wyniki",
+    btn_continue_swiping: "Kontynuuj przesuwanie →",
+    btn_see_my_picks: "Zobacz moje wybory →",
+    btn_back: "← Wstecz",
+    back_to_search_results: "← Wróć do wyników wyszukiwania",
+    back_to_shared_picks: "← Wróć do udostępnionych wyborów",
+    shared_with_you_label: "Udostępnione Tobie",
+    their_picks_heading: "Ich wybory",
+    btn_start_own_search: "Zacznij własne wyszukiwanie →",
+    selected_label: "Wybrano",
+    tonight_watching_heading: "Dziś wieczorem oglądasz",
+    btn_back_to_your_picks: "← Wróć do swoich wyborów",
+    btn_start_new_session: "Rozpocznij nową sesję",
+    checking_where_to_watch: "Sprawdzamy, gdzie obejrzeć…",
+    region_disclosure_template: "Dostępność i ceny odzwierciedlają katalog {region}, niezależnie od tego, gdzie jesteś.",
+    region_disclosure_prices_template: "Wyświetlone ceny i dostępność odzwierciedlają katalog {region}, niezależnie od tego, gdzie jesteś.",
+    btn_share_this_pick: "Udostępnij ten wybór →",
+    done_title_no_mood: "To wszystko na teraz",
+    done_title_mood: "To wszystko w tych kategoriach",
+    done_title_has_favorites: "Niezły stos wyborów!",
+    done_text_no_mood_no_favorites: "Nic nie znaleziono — spróbuj rozszerzyć swoje platformy lub nastroje.",
+    done_text_has_favorites: "Spodobało Ci się {n} tytułów — gotowy, by wybrać dzisiejszego zwycięzcę?",
+    done_text_mood: "Przesunąłeś już wszystko, co pasuje do wybranych kategorii. Chcesz kontynuować ze wszystkimi kategoriami, czy zakończyć tutaj?",
+    btn_explore_all_categories: "Przeglądaj wszystkie kategorie →",
+    btn_add_another_category: "+ Dodaj kolejną kategorię",
+    btn_add_another_platform: "+ Dodaj kolejną platformę",
+    toast_categories_updated: "Kategorie zaktualizowane — nowe propozycje w drodze",
+    toast_platforms_updated: "Platformy zaktualizowane — nowe propozycje w drodze",
+    toast_link_copied: "Link skopiowany — wklej go, gdzie chcesz",
+    toast_copy_failed: "Nie udało się skopiować — użyj pola z linkiem poniżej",
+    share_dialog_title: "Udostępnij swoje wybory",
+    share_dialog_body: "Wyślij ten link komukolwiek — otwiera się od razu na Twojej liście.",
+    btn_copy: "Kopiuj",
+    btn_copied: "Skopiowano!",
+    btn_select_manually: "Zaznacz i skopiuj ręcznie",
+    stream_subscription_label: "Oglądaj w ramach subskrypcji",
+    rent_label: "Wypożycz",
+    buy_label: "Kup",
+    free_ads_label: "Za darmo z reklamami",
+    price_varies: "Cena zmienna",
+    full_description_btn: "📄 Pełny opis",
+    plot_summary_btn: "ⓘ Streszczenie fabuły",
+    trailer_btn: "▶ Zwiastun",
+    show_plot_summary_aria: "Pokaż streszczenie fabuły",
+    see_full_details_aria: "Zobacz pełne informacje o {title}",
+    searching_label: "Szukanie…",
+    results_for_query_template: 'Wyniki dla „{query}"',
+    loading_their_picks: "Wczytywanie ich wyborów…",
+    poster_aria_label: "Plakat filmu {title} ({year})",
+    poster_aria_label_no_year: "Plakat filmu {title}",
+    no_summary_available: "Brak streszczenia dla tego tytułu.",
+    duration_min_template: "{n} min",
+    checking_ellipsis: "Sprawdzanie…",
+    description_label: "Opis",
+    is_it_for_you_label: "Czy to dla Ciebie?",
+    user_rating_template: "★ {rating}/10 ocena użytkowników",
+    critic_score_template: "Ocena krytyków {score}%",
+    watch_trailer_link: "▶ Obejrzyj zwiastun",
+    no_extra_details: "Brak dodatkowych informacji dla tego tytułu.",
+    availability_unknown: "Dostępność nieznana",
+    rent_or_buy_only: "Tylko wypożyczenie lub zakup",
+    availability_varies: "Dostępność zmienna",
+    search_no_matches: "Nie znaleziono wyników{scope}. Spróbuj innego wyszukiwania lub przełącz między Filmy/Seriale.",
+    search_no_matches_series: " wśród seriali",
+    search_no_matches_movies: " wśród filmów",
+    search_failed: "Nie udało się teraz wyszukać. Spróbuj ponownie za chwilę.",
+    shared_list_broken: "Nie udało się wczytać tej udostępnionej listy — link może być uszkodzony.",
+    shared_list_failed: "Nie udało się teraz wczytać tej udostępnionej listy. Spróbuj odświeżyć.",
+    streaming_not_available_yet: "Informacje o streamingu nie są jeszcze dostępne dla tego tytułu.",
+    no_streaming_found: "Nie znaleziono informacji o streamingu dla tego tytułu.",
+    streaming_load_failed: "Nie udało się teraz wczytać informacji o streamingu.",
+    try_justwatch: "Sprawdź na JustWatch →",
+    region_us: "amerykański", region_ca: "kanadyjski", region_in: "indyjski", region_gb: "brytyjski",
+    region_au: "australijski", region_mx: "meksykański", region_es: "hiszpański",
+    region_br: "brazylijski", region_fr: "francuski", region_de: "niemiecki", region_pl: "polski",
+  },
+};
+
   const BACKEND_URL = 'https://watchtogether-backend-zxwy.onrender.com';
 
   // Anonymous session counter — one silent ping per page load, no cookie or
@@ -1305,33 +2362,90 @@
     orderBy: 'popularity_1year', // randomized fresh per new deck — see buildDeck()
     skipMoodStep: false, // true for "Watch with your Family" — mood is pre-set to 'family', step hidden
     availablePlatforms: FALLBACK_PLATFORMS, // replaced with the real per-region list once it loads
+    language: 'en', // auto-detected from region; see REGION_TO_LANGUAGE below
   };
 
   // Must match main.py's MOTN_ORDER_BY_CHOICES exactly.
   const ORDER_BY_CHOICES = ['popularity_1year', 'rating'];
 
+  // Must match main.py's REGION_TO_LANGUAGE exactly.
+  const REGION_TO_LANGUAGE = {
+    US: 'en', CA: 'en', IN: 'en', GB: 'en', AU: 'en',
+    MX: 'es', ES: 'es',
+    BR: 'pt',
+    FR: 'fr',
+    DE: 'de',
+    PL: 'pl',
+  };
+
+  // Translation lookup — falls back to English, then to the raw key itself,
+  // so a missing translation is visible/debuggable rather than silently
+  // blank. {placeholders} are replaced from the vars object.
+  function t(key, vars){
+    let str = (TRANSLATIONS[state.language] && TRANSLATIONS[state.language][key])
+      || TRANSLATIONS.en[key] || key;
+    if (vars) {
+      Object.keys(vars).forEach(k => {
+        str = str.replaceAll(`{${k}}`, vars[k]);
+      });
+    }
+    return str;
+  }
+
+  // Walks every element tagged with data-i18n / data-i18n-aria / data-i18n-placeholder
+  // and fills in the current language's text. Called once language is known,
+  // and again any time it changes.
+  function applyStaticTranslations(){
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = t(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+      el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      el.setAttribute('placeholder', t(el.getAttribute('data-i18n-placeholder')));
+    });
+    updateRegionDisclosure();
+    rebuildMoodChips();
+  }
+
+  // Rebuilds mood chip elements with freshly translated labels — unlike
+  // platforms, the available moods never change per region, so this
+  // preserves any selections already made rather than clearing them.
+  function rebuildMoodChips(){
+    ['chipMoods', 'chipMoodsAdjust'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '';
+    });
+    buildChips(document.getElementById('chipMoods'), getTranslatedMoods(), state.moods);
+    buildChips(document.getElementById('chipMoodsAdjust'), getTranslatedMoods(), state.moods);
+    document.querySelectorAll('#chipMoods .chip, #chipMoodsAdjust .chip').forEach(chip => {
+      const id = chip.dataset.moodId;
+      setChipActive(chip, id === 'all' ? state.moods.size === 0 : state.moods.has(id));
+    });
+  }
+
   // Best-effort country auto-detection — updates state.region once resolved.
-  // Deliberately non-blocking: the app works immediately with the US default
-  // regardless of how long (or whether) this ever resolves.
+  // Deliberately non-blocking: the app works immediately with English/US
+  // defaults regardless of how long (or whether) this ever resolves.
   fetch(`${BACKEND_URL}/api/detect-region`)
     .then(r => r.ok ? r.json() : null)
     .then(data => {
       if (data && data.region && data.region !== state.region) {
         state.region = data.region;
-        updateRegionDisclosure();
+        state.language = REGION_TO_LANGUAGE[state.region] || 'en';
+        applyStaticTranslations();
         loadPlatformsForRegion(state.region);
       }
     })
-    .catch(() => {}); // silent — US default is a perfectly fine fallback
+    .catch(() => {}); // silent — English/US defaults are perfectly fine fallbacks
 
   function updateRegionDisclosure(){
-    const REGION_NAMES = {
-      US: 'US', CA: 'Canadian', IN: 'Indian', GB: 'UK', AU: 'Australian',
-      MX: 'Mexican', ES: 'Spanish', BR: 'Brazilian', FR: 'French', DE: 'German', PL: 'Polish',
-    };
-    const name = REGION_NAMES[state.region] || 'US';
+    const regionKey = 'region_' + state.region.toLowerCase();
+    const name = TRANSLATIONS[state.language][regionKey] ? t(regionKey) : t('region_us');
     document.querySelectorAll('.region-disclosure').forEach(el => {
-      el.textContent = `Availability and prices reflect the ${name} catalog, regardless of where you are.`;
+      const templateKey = el.dataset.i18nTemplate || 'region_disclosure_template';
+      el.textContent = t(templateKey, { region: name });
     });
   }
 
@@ -1362,6 +2476,7 @@
   }
 
   loadPlatformsForRegion(state.region); // initial load for the US default, refined once detection resolves
+  applyStaticTranslations(); // initial English pass — re-run once real language is known
 
   /* ════════════════════════════════════════════════════════════
      BULB RAIL
@@ -1395,10 +2510,10 @@
     const eyebrow = document.getElementById('setupStep1Eyebrow');
     if(state.skipMoodStep){
       moodSection.style.display = 'none';
-      eyebrow.textContent = 'Family mode';
+      eyebrow.textContent = t('setup_family_mode_label');
     } else {
       moodSection.style.display = '';
-      eyebrow.textContent = 'Step 1 of 2';
+      eyebrow.textContent = t('setup_step1_label');
     }
   }
 
@@ -1433,7 +2548,7 @@
     // opens "Adjust categories" mid-swipe — they should see "Family" active,
     // not look like nothing is selected.
     document.querySelectorAll('#chipMoods .chip, #chipMoodsAdjust .chip').forEach(chip => {
-      setChipActive(chip, chip.textContent.trim() === 'Family');
+      setChipActive(chip, chip.dataset.moodId === 'family');
     });
     updateSetupStepVisibility();
     showScreen('screen-setup');
@@ -1450,7 +2565,7 @@
   // platforms are already selected, if any.
   function clearMoodFilterVisual(){
     document.querySelectorAll('#chipMoods .chip, #chipMoodsAdjust .chip').forEach(chip => {
-      setChipActive(chip, chip.textContent.includes('All categories'));
+      setChipActive(chip, chip.dataset.moodId === 'all');
     });
   }
 
@@ -1483,6 +2598,7 @@
       const chip = document.createElement('button');
       chip.className = 'chip';
       chip.type = 'button';
+      chip.dataset.moodId = item.id; // language-independent lookup, e.g. for finding the "all" chip
       chip.setAttribute('aria-pressed', 'false');
       chip.dataset.active = 'false';
       chip.innerHTML = `<span class="dot"></span>${item.label}`;
@@ -1499,7 +2615,7 @@
           if(active) targetSet.delete(item.id); else targetSet.add(item.id);
           if(container.id === 'chipMoods' && !active){
             // Picking a specific genre after "All" was selected turns "All" back off.
-            const allChip = [...container.querySelectorAll('.chip')].find(c => c.textContent.includes('All categories'));
+            const allChip = [...container.querySelectorAll('.chip')].find(c => c.dataset.moodId === 'all');
             if(allChip) setChipActive(allChip, false);
           }
         }
@@ -1507,9 +2623,6 @@
       container.appendChild(chip);
     });
   }
-
-  buildChips(document.getElementById('chipMoods'), MOODS, state.moods);
-  buildChips(document.getElementById('chipMoodsAdjust'), MOODS, state.moods);
 
   document.getElementById('btnCreateRoom').addEventListener('click', () => {
     buildDeck();
@@ -1536,8 +2649,8 @@
   }
 
   function formatDuration(movie){
-    if(movie.runtime){ return `${movie.runtime} min`; }
-    return 'Series';
+    if(movie.runtime){ return t('duration_min_template', { n: movie.runtime }); }
+    return t('card_series_title');
   }
 
   function mapApiResults(results){
@@ -1638,7 +2751,7 @@
     state.loadingMore = false;
     state.noMoreResultsStreak = 0;
     const wrap = document.getElementById('deckWrap');
-    wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>Finding what you can watch…</p></div>`;
+    wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>${t('deck_loading')}</p></div>`;
 
     // A smaller first batch enriches faster, so the first card appears sooner.
     // We immediately start pulling more in the background right after, rather
@@ -1655,9 +2768,9 @@
           wrap.innerHTML = `
             <div class="empty-state" style="padding-top:5rem;">
               <div class="icon">⏸️</div>
-              <h3 style="font-size:1.3rem;">Taking a quick breather</h3>
-              <p>We've hit our data limit for the moment — this resets soon. Thanks for your patience!</p>
-              <button class="btn btn-primary" id="btnRetryDeck">Try again</button>
+              <h3 style="font-size:1.3rem;">${t('breather_title')}</h3>
+              <p>${t('breather_body')}</p>
+              <button class="btn btn-primary" id="btnRetryDeck">${t('btn_try_again')}</button>
             </div>`;
           document.getElementById('btnRetryDeck').addEventListener('click', buildDeck);
           return;
@@ -1667,9 +2780,9 @@
         wrap.innerHTML = `
           <div class="empty-state" style="padding-top:5rem;">
             <div class="icon">⚠️</div>
-            <h3 style="font-size:1.3rem;">Couldn't load movies</h3>
-            <p>The server didn't respond in time — this can happen right after it wakes up from being idle.</p>
-            <button class="btn btn-primary" id="btnRetryDeck">Try again</button>
+            <h3 style="font-size:1.3rem;">${t('couldnt_load_title')}</h3>
+            <p>${t('couldnt_load_body')}</p>
+            <button class="btn btn-primary" id="btnRetryDeck">${t('btn_try_again')}</button>
           </div>`;
         document.getElementById('btnRetryDeck').addEventListener('click', buildDeck);
       });
@@ -1705,7 +2818,7 @@
   }
 
   function updateDeckHeader(){
-    document.getElementById('deckHint').textContent = 'Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.';
+    document.getElementById('deckHint').textContent = t('deck_hint');
   }
 
 
@@ -1714,13 +2827,13 @@
     const hasMoodFilter = state.moods.size > 0;
 
     if(hasMoodFilter){
-      document.getElementById('doneTitle').textContent = 'That\'s everything in these categories';
-      document.getElementById('doneText').textContent = 'You\'ve swiped through everything matching your selected categories. Want to keep going with all categories, or wrap up here?';
+      document.getElementById('doneTitle').textContent = t('done_title_mood');
+      document.getElementById('doneText').textContent = t('done_text_mood');
     } else {
-      document.getElementById('doneTitle').textContent = hasFavorites ? 'Nice pile of picks!' : "That's the stack";
+      document.getElementById('doneTitle').textContent = hasFavorites ? t('done_title_has_favorites') : t('done_title_no_mood');
       document.getElementById('doneText').textContent = hasFavorites
-        ? `You liked ${state.favorites.length} title${state.favorites.length > 1 ? 's' : ''} — ready to pick tonight's winner?`
-        : 'Nothing landed — try widening your platforms or moods.';
+        ? t('done_text_has_favorites', { n: state.favorites.length, s: state.favorites.length > 1 ? 's' : '' })
+        : t('done_text_no_mood_no_favorites');
     }
 
     document.getElementById('btnExploreAllCategories').style.display = hasMoodFilter ? 'inline-block' : 'none';
@@ -1744,7 +2857,7 @@
   document.getElementById('btnExploreAllCategories').addEventListener('click', () => {
     state.moods.clear();
     document.querySelectorAll('#chipMoods .chip').forEach(c => {
-      setChipActive(c, c.textContent.includes('All categories'));
+      setChipActive(c, c.dataset.moodId === 'all');
     });
     buildDeck(); // favorites always persist — see FAVORITES_STORAGE_KEY
     showScreen('screen-deck');
@@ -1757,7 +2870,7 @@
 
     if(state.deckIndex >= deck.length){
       if(state.loadingMore){
-        wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>Finding more titles…</p></div>`;
+        wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>${t('deck_loading_more')}</p></div>`;
         return;
       }
       // Don't trust a possibly-stale "not currently loading" state at face value —
@@ -1765,7 +2878,7 @@
       // nothing left. This is what was silently capping decks at the first
       // batch size whenever the one background prefetch attempt had failed.
       if(state.noMoreResultsStreak < 3){
-        wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>Finding more titles…</p></div>`;
+        wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>${t('deck_loading_more')}</p></div>`;
         loadMoreIfNeeded(true);
         return;
       }
@@ -1801,7 +2914,7 @@
     const poster = document.createElement('div');
     poster.className = 'poster';
     poster.setAttribute('role', 'group');
-    poster.setAttribute('aria-label', `Poster for ${movie.title}${movie.year ? ` (${movie.year})` : ''}`);
+    poster.setAttribute('aria-label', movie.year ? t('poster_aria_label', { title: movie.title, year: movie.year }) : t('poster_aria_label_no_year', { title: movie.title }));
     if(movie.poster_url){
       poster.style.backgroundImage = `url('${movie.poster_url}')`;
       poster.style.backgroundSize = 'contain';
@@ -1816,7 +2929,7 @@
     overviewOverlay.className = 'overview-overlay';
     const summaryText = movie.overview && movie.overview.trim()
       ? escapeHtml(movie.overview)
-      : 'No summary available for this title.';
+      : t('no_summary_available');
     overviewOverlay.innerHTML = `<p>${summaryText}</p>`;
     poster.appendChild(overviewOverlay);
 
@@ -1837,8 +2950,8 @@
 
     const infoBtn = document.createElement('button');
     infoBtn.className = 'info-toggle';
-    infoBtn.setAttribute('aria-label','Show plot summary');
-    infoBtn.innerHTML = 'ⓘ Plot summary';
+    infoBtn.setAttribute('aria-label', t('show_plot_summary_aria'));
+    infoBtn.innerHTML = t('plot_summary_btn');
     // The card listens for pointerdown/pointerup to power dragging — without
     // stopping propagation here too, a tap on this button gets briefly caught
     // by that drag logic as well, which caused the summary to flash and close.
@@ -1856,7 +2969,7 @@
       trailerLink.href = movie.trailerUrl;
       trailerLink.target = '_blank';
       trailerLink.rel = 'noopener';
-      trailerLink.innerHTML = '▶ Trailer';
+      trailerLink.innerHTML = t('trailer_btn');
       trailerLink.addEventListener('pointerdown', e => e.stopPropagation());
       trailerLink.addEventListener('pointerup', e => e.stopPropagation());
       trailerLink.addEventListener('click', e => e.stopPropagation());
@@ -1865,8 +2978,8 @@
 
     const fullDetailsBtn = document.createElement('button');
     fullDetailsBtn.className = 'info-toggle';
-    fullDetailsBtn.setAttribute('aria-label', `See full details for ${movie.title}`);
-    fullDetailsBtn.innerHTML = '📄 Full description';
+    fullDetailsBtn.setAttribute('aria-label', t('see_full_details_aria', { title: movie.title }));
+    fullDetailsBtn.innerHTML = t('full_description_btn');
     fullDetailsBtn.addEventListener('pointerdown', e => e.stopPropagation());
     fullDetailsBtn.addEventListener('pointerup', e => e.stopPropagation());
     fullDetailsBtn.addEventListener('click', (e) => {
@@ -1992,16 +3105,15 @@
 
     if(hasFavorites){
       renderMovieGrid(document.getElementById('favoritesGrid'), state.favorites);
-      document.getElementById('favoritesCount').textContent =
-        `${state.favorites.length} pick${state.favorites.length !== 1 ? 's' : ''}`;
+      document.getElementById('favoritesCount').textContent = t('picks_count', { n: state.favorites.length });
     }
 
     const backLabels = {
-      'screen-deck': '← Back to swiping',
-      'screen-done': '← Back',
-      'screen-search-results': '← Back to search results',
+      'screen-deck': t('btn_back_to_swiping'),
+      'screen-done': t('btn_back'),
+      'screen-search-results': t('back_to_search_results'),
     };
-    document.getElementById('btnBackFromFavorites').textContent = backLabels[favoritesReturnScreen] || '← Back';
+    document.getElementById('btnBackFromFavorites').textContent = backLabels[favoritesReturnScreen] || t('btn_back');
 
     showScreen('screen-favorites-grid');
   }
@@ -2118,9 +3230,9 @@
   function syncCategoryDialogChips(){
     const chips = document.querySelectorAll('#chipMoodsAdjust .chip');
     chips.forEach((chip, i) => {
-      const item = MOODS[i];
-      if(!item) return;
-      setChipActive(chip, item.id === 'all' ? state.moods.size === 0 : state.moods.has(item.id));
+      const id = MOOD_IDS[i];
+      if(!id) return;
+      setChipActive(chip, id === 'all' ? state.moods.size === 0 : state.moods.has(id));
     });
   }
 
@@ -2169,7 +3281,7 @@
     closeDialog(document.getElementById('platformOverlay'), 'active');
     buildDeck(); // fresh deck reflecting the newly added platform(s)
     showScreen('screen-deck');
-    showToast('Platforms updated — new picks coming up');
+    showToast(t('toast_platforms_updated'));
   });
 
   document.getElementById('btnApplyCategories').addEventListener('click', () => {
@@ -2183,7 +3295,7 @@
       state.noMoreResultsStreak = 0;
       loadMoreIfNeeded(true); // eager fetch reflecting the updated categories
     }
-    showToast('Categories updated — new picks coming up');
+    showToast(t('toast_categories_updated'));
   });
 
   /* ════════════════════════════════════════════════════════════
@@ -2200,9 +3312,9 @@
   function performSearch(query){
     searchReturnScreen = getActiveScreenId();
     const grid = document.getElementById('searchResultsGrid');
-    grid.innerHTML = `<p class="providers-loading">Searching…</p>`;
-    document.getElementById('searchResultsHeading').textContent = `Results for "${query}"`;
-    document.getElementById('searchResultsCount').textContent = 'Results';
+    grid.innerHTML = `<p class="providers-loading">${t('searching_label')}</p>`;
+    document.getElementById('searchResultsHeading').textContent = t('results_for_query_template', { query });
+    document.getElementById('searchResultsCount').textContent = t('results_label');
     showScreen('screen-search-results');
 
     fetch(`${BACKEND_URL}/api/search?query=${encodeURIComponent(query)}&content_type=${state.contentType}`)
@@ -2212,14 +3324,14 @@
         document.getElementById('searchResultsCount').textContent =
           `${movies.length} result${movies.length !== 1 ? 's' : ''}`;
         if(movies.length === 0){
-          grid.innerHTML = `<p class="providers-empty">No matches found${state.contentType === 'tv_series' ? ' among series' : ' among movies'}. Try a different search, or switch Movies/Series.</p>`;
+          grid.innerHTML = `<p class="providers-empty">${t('search_no_matches', { scope: state.contentType === 'tv_series' ? t('search_no_matches_series') : t('search_no_matches_movies') })}</p>`;
           return;
         }
         renderMovieGrid(grid, movies);
         updateFavoritesButtons();
       })
       .catch(() => {
-        grid.innerHTML = `<p class="providers-empty">Couldn't search right now. Try again in a moment.</p>`;
+        grid.innerHTML = `<p class="providers-empty">${t('search_failed')}</p>`;
       });
   }
 
@@ -2297,8 +3409,8 @@
     input.select();
     input.setSelectionRange(0, 99999); // needed for some mobile browsers
 
-    const done = () => flashButton(e.currentTarget, 'Copied!');
-    const manual = () => flashButton(e.currentTarget, 'Select & copy manually');
+    const done = () => flashButton(e.currentTarget, t('btn_copied'));
+    const manual = () => flashButton(e.currentTarget, t('btn_select_manually'));
 
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(input.value).then(done).catch(() => {
@@ -2356,17 +3468,17 @@
       }
       return;
     }
-    const done = () => showToast('Link copied — paste it anywhere');
+    const done = () => showToast(t('toast_link_copied'));
     if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(url).then(done).catch(() => showToast("Couldn't copy — use the link field below"));
+      navigator.clipboard.writeText(url).then(done).catch(() => showToast(t('toast_copy_failed')));
     } else {
-      showToast("Couldn't copy — use the link field below");
+      showToast(t('toast_copy_failed'));
     }
   });
 
   function loadSharedPicks(idsParam){
     const grid = document.getElementById('sharedGrid');
-    grid.innerHTML = `<p class="providers-loading">Loading their picks…</p>`;
+    grid.innerHTML = `<p class="providers-loading">${t('loading_their_picks')}</p>`;
     showScreen('screen-shared-picks');
 
     fetch(`${BACKEND_URL}/api/titles?ids=${encodeURIComponent(idsParam)}`)
@@ -2374,13 +3486,13 @@
       .then(data => {
         const movies = mapApiResults(data.results || []);
         if(movies.length === 0){
-          grid.innerHTML = `<p class="providers-empty">Couldn't load this shared list — the link may be broken.</p>`;
+          grid.innerHTML = `<p class="providers-empty">${t('shared_list_broken')}</p>`;
           return;
         }
         renderMovieGrid(grid, movies);
       })
       .catch(() => {
-        grid.innerHTML = `<p class="providers-empty">Couldn't load this shared list right now. Try refreshing.</p>`;
+        grid.innerHTML = `<p class="providers-empty">${t('shared_list_failed')}</p>`;
       });
   }
 
@@ -2409,7 +3521,7 @@
       // normally expected — if the source data doesn't have one for this
       // particular listing, say so plainly rather than silently showing
       // nothing (which read as broken rather than "data unavailable").
-      const priceText = p.price || (showPrice ? 'Price varies' : '');
+      const priceText = p.price || (showPrice ? t('price_varies') : '');
       const priceSpan = priceText ? `<span class="price">${priceText}</span>` : '';
       // Logo alone is the norm — it already identifies the service. Text
       // name is only a fallback for the rare case a logo fails to load.
@@ -2426,23 +3538,23 @@
 
   function renderProvidersPanel(containerEl, watchmodeId, movieTitle, badgeEl){
     if(!watchmodeId){
-      containerEl.innerHTML = `<p class="providers-empty">Streaming info isn't available for this title yet. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
-      if(badgeEl){ badgeEl.textContent = 'Availability unknown'; }
+      containerEl.innerHTML = `<p class="providers-empty">${t('streaming_not_available_yet')} <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">${t('try_justwatch')}</a></p>`;
+      if(badgeEl){ badgeEl.textContent = t('availability_unknown'); }
       return;
     }
-    containerEl.innerHTML = `<p class="providers-loading">Checking where to watch…</p>`;
+    containerEl.innerHTML = `<p class="providers-loading">${t("checking_where_to_watch")}</p>`;
 
     const attempt = (retriesLeft) => {
       fetch(`${BACKEND_URL}/api/movie/${watchmodeId}/providers?region=${state.region}`)
         .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
         .then(data => {
           const html = [
-            providersSectionHtml('Stream with subscription', data.subscription, false),
-            providersSectionHtml('Rent', data.rent, true),
-            providersSectionHtml('Buy', data.buy, true),
-            providersSectionHtml('Free with ads', data.free, false),
+            providersSectionHtml(t('stream_subscription_label'), data.subscription, false),
+            providersSectionHtml(t('rent_label'), data.rent, true),
+            providersSectionHtml(t('buy_label'), data.buy, true),
+            providersSectionHtml(t('free_ads_label'), data.free, false),
           ].join('');
-          containerEl.innerHTML = html || `<p class="providers-empty">No US streaming info found for this title. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
+          containerEl.innerHTML = html || `<p class="providers-empty">${t('no_streaming_found')} <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">${t('try_justwatch')}</a></p>`;
 
           // The badge above was only ever a placeholder echoing whichever platforms
           // were selected as filters — now that we have the real answer, replace it.
@@ -2451,9 +3563,9 @@
             if(subNames.length > 0){
               badgeEl.textContent = subNames.join(', ');
             } else if((data.rent || []).length > 0 || (data.buy || []).length > 0){
-              badgeEl.textContent = 'Rent or buy only';
+              badgeEl.textContent = t('rent_or_buy_only');
             } else {
-              badgeEl.textContent = 'Availability varies';
+              badgeEl.textContent = t('availability_varies');
             }
           }
         })
@@ -2464,8 +3576,8 @@
             setTimeout(() => attempt(retriesLeft - 1), 900);
             return;
           }
-          containerEl.innerHTML = `<p class="providers-empty">Couldn't load streaming info right now. <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">Try JustWatch →</a></p>`;
-          if(badgeEl){ badgeEl.textContent = 'Availability unknown'; }
+          containerEl.innerHTML = `<p class="providers-empty">${t('streaming_load_failed')} <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" target="_blank" rel="noopener">${t('try_justwatch')}</a></p>`;
+          if(badgeEl){ badgeEl.textContent = t('availability_unknown'); }
         });
     };
 
@@ -2476,16 +3588,16 @@
 
   function showFinalPick(movie){
     currentFinalPickMovie = movie;
-    document.getElementById('finalPickEyebrow').textContent = 'Selected';
-    document.getElementById('finalPickHeading').textContent = "Tonight you're watching";
+    document.getElementById('finalPickEyebrow').textContent = t('selected_label');
+    document.getElementById('finalPickHeading').textContent = t('tonight_watching_heading');
 
     const backLabels = {
-      'screen-favorites-grid': '← Back to your picks',
-      'screen-search-results': '← Back to search results',
-      'screen-shared-picks': '← Back to shared picks',
-      'screen-deck': '← Back to swiping',
+      'screen-favorites-grid': t('btn_back_to_your_picks'),
+      'screen-search-results': t('back_to_search_results'),
+      'screen-shared-picks': t('back_to_shared_picks'),
+      'screen-deck': t('btn_back_to_swiping'),
     };
-    const backLabel = backLabels[finalPickReturnScreen] || '← Back';
+    const backLabel = backLabels[finalPickReturnScreen] || t('btn_back');
     document.getElementById('btnBackToFavoritesGridTop').textContent = backLabel;
     document.getElementById('btnBackToFavoritesGrid').textContent = backLabel;
 
@@ -2499,7 +3611,7 @@
         <div>
           <div style="font-family:var(--font-display); font-size:1.7rem; text-transform:uppercase; letter-spacing:.01em; line-height:1;">${movie.title}</div>
           <div style="font-family:var(--font-mono); font-size:.75rem; color:var(--muted); margin-top:.4rem;">${yearLabel} · ${movie.genre} · ${formatDuration(movie)}</div>
-          <div style="margin-top:.55rem;"><span class="platform-badge" id="finalPickPlatformBadge">Checking…</span></div>
+          <div style="margin-top:.55rem;"><span class="platform-badge" id="finalPickPlatformBadge">${t('checking_ellipsis')}</span></div>
         </div>
       </div>
     `;
@@ -2510,7 +3622,7 @@
     if(movie.overview){
       blocks.push(`
         <div class="detail-block">
-          <span class="detail-label">Description</span>
+          <span class="detail-label">${t('description_label')}</span>
           <p class="detail-text">${escapeHtml(movie.overview)}</p>
         </div>
       `);
@@ -2519,15 +3631,15 @@
     if(movie.willYouLikeThis){
       blocks.push(`
         <div class="detail-block">
-          <span class="detail-label">Is it for you?</span>
+          <span class="detail-label">${t('is_it_for_you_label')}</span>
           <p class="detail-text">${escapeHtml(movie.willYouLikeThis)}</p>
         </div>
       `);
     }
 
     const stats = [];
-    if(movie.rating) stats.push(`<div class="detail-stat">★ <strong>${movie.rating}</strong>/10 user rating</div>`);
-    if(movie.criticScore) stats.push(`<div class="detail-stat">Critic score <strong>${movie.criticScore}</strong>%</div>`);
+    if(movie.rating) stats.push(`<div class="detail-stat">${t('user_rating_template', { rating: movie.rating })}</div>`);
+    if(movie.criticScore) stats.push(`<div class="detail-stat">${t('critic_score_template', { score: movie.criticScore })}</div>`);
     if(movie.contentRating) stats.push(`<div class="detail-stat"><strong>${movie.contentRating}</strong></div>`);
     if(movie.allGenres) stats.push(`<div class="detail-stat">${escapeHtml(movie.allGenres)}</div>`);
     if(stats.length){
@@ -2535,10 +3647,10 @@
     }
 
     if(movie.trailerUrl){
-      blocks.push(`<a class="detail-trailer-link" href="${movie.trailerUrl}" target="_blank" rel="noopener">▶ Watch trailer</a>`);
+      blocks.push(`<a class="detail-trailer-link" href="${movie.trailerUrl}" target="_blank" rel="noopener">${t('watch_trailer_link')}</a>`);
     }
 
-    detailsEl.innerHTML = blocks.join('') || `<p class="detail-text" style="color:var(--muted);">No extra details available for this title.</p>`;
+    detailsEl.innerHTML = blocks.join('') || `<p class="detail-text" style="color:var(--muted);">${t('no_extra_details')}</p>`;
 
     renderProvidersPanel(
       document.getElementById('finalPickProviders'),
