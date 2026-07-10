@@ -1003,7 +1003,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.46</div>
+    <div class="wordmark">Watch2Night — build v3.47</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -2291,15 +2291,21 @@
   function providersSectionHtml(label, items, showPrice){
     if(!items || items.length === 0) return '';
     const chips = items.map(p => {
-      const priceSpan = showPrice && p.price ? `<span class="price">${p.price}</span>` : '';
+      // showPrice=true means this is a rent/buy section, where a price is
+      // normally expected — if the source data doesn't have one for this
+      // particular listing, say so plainly rather than silently showing
+      // nothing (which read as broken rather than "data unavailable").
+      const priceText = p.price || (showPrice ? 'Price varies' : '');
+      const priceSpan = priceText ? `<span class="price">${priceText}</span>` : '';
       // Logo alone is the norm — it already identifies the service. Text
       // name is only a fallback for the rare case a logo fails to load.
       const inner = p.logo_url
         ? `<img src="${p.logo_url}" alt="${p.name}" />${priceSpan}`
         : `<span>${p.name}</span>${priceSpan}`;
+      const ariaLabel = `${p.name}${priceText ? ' — ' + priceText : ''}`;
       return p.web_url
-        ? `<a class="provider-chip" href="${p.web_url}" target="_blank" rel="noopener" aria-label="${p.name}${showPrice && p.price ? ' — ' + p.price : ''}">${inner}</a>`
-        : `<div class="provider-chip" aria-label="${p.name}${showPrice && p.price ? ' — ' + p.price : ''}">${inner}</div>`;
+        ? `<a class="provider-chip" href="${p.web_url}" target="_blank" rel="noopener" aria-label="${ariaLabel}">${inner}</a>`
+        : `<div class="provider-chip" aria-label="${ariaLabel}">${inner}</div>`;
     }).join('');
     return `<div class="provider-section"><div class="provider-section-label">${label}</div><div class="provider-chips">${chips}</div></div>`;
   }
