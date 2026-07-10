@@ -999,7 +999,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.42</div>
+    <div class="wordmark">Watch2Night — build v3.43</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" placeholder="🔍 Search for a title…" />
@@ -1259,11 +1259,15 @@
     moods: new Set(),
     deckIndex: 0,
     favorites: loadSavedFavorites(), // persists across visits — see FAVORITES_STORAGE_KEY
-    backendPage: 1,        // Watchmode page currently loaded — used for "load more"
+    backendPage: 1,        // our own sequential page counter — backend walks MOTN's cursor chain to match
     loadingMore: false,
     noMoreResultsStreak: 0, // consecutive load-more attempts that added nothing
     region: 'US', // auto-detected from IP shortly after load; US until then/on failure
+    orderBy: 'popularity_1year', // randomized fresh per new deck — see buildDeck()
   };
+
+  // Must match main.py's MOTN_ORDER_BY_CHOICES exactly.
+  const ORDER_BY_CHOICES = ['popularity_1year', 'rating'];
 
   // Best-effort country auto-detection — updates state.region once resolved.
   // Deliberately non-blocking: the app works immediately with the US default
@@ -1441,7 +1445,7 @@
   function fetchDiscoverPage(page, limit){
     const platformParam = [...state.platforms].join(',');
     const moodParam = [...state.moods].join(',');
-    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}`;
+    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=${state.orderBy}`;
     return fetch(url)
       .then(r => { if(!r.ok) throw new Error('bad response'); return r.json(); })
       .then(data => {
@@ -1506,10 +1510,12 @@
 
   function buildDeck(){
     state.deckIndex = 0;
-    // Random starting page (not always 1) so repeated sessions with the same
-    // filters don't always open on the exact same popularity-sorted titles.
-    const startPage = Math.floor(Math.random() * 5) + 1;
-    state.backendPage = startPage;
+    // MOTN's cursor-based pagination can't jump to a random page, so every
+    // new deck always starts at page 1 — variety instead comes from
+    // randomizing the sort order fresh each time (kept fixed for the rest
+    // of this deck's lifetime so "load more" continues the same cursor chain).
+    state.orderBy = ORDER_BY_CHOICES[Math.floor(Math.random() * ORDER_BY_CHOICES.length)];
+    state.backendPage = 1;
     state.loadingMore = false;
     state.noMoreResultsStreak = 0;
     const wrap = document.getElementById('deckWrap');
@@ -1518,7 +1524,7 @@
     // A smaller first batch enriches faster, so the first card appears sooner.
     // We immediately start pulling more in the background right after, rather
     // than waiting until the visible stack is almost empty.
-    fetchWithRetries(() => fetchDiscoverPage(startPage, 8), 2, 1500)
+    fetchWithRetries(() => fetchDiscoverPage(1, 8), 2, 1500)
       .then(mapped => {
         if(mapped.length === 0) throw new Error('empty');
         deck = mapped;
