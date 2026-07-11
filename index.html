@@ -918,6 +918,57 @@
     letter-spacing:.05em;
     text-transform:uppercase;
   }
+
+  .cookie-notice{
+    position:fixed;
+    left:1rem; right:1rem; bottom:1rem;
+    max-width:600px;
+    margin:0 auto;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:1rem 1.2rem;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:.8rem 1.2rem;
+    z-index:500;
+    box-shadow:0 8px 30px rgba(0,0,0,.4);
+    animation:cookieSlideUp .4s ease;
+  }
+  @keyframes cookieSlideUp{
+    from{ transform:translateY(20px); opacity:0; }
+    to{ transform:translateY(0); opacity:1; }
+  }
+  .cookie-notice p{
+    flex:1 1 240px;
+    font-size:.85rem;
+    line-height:1.5;
+    color:var(--ink);
+    margin:0;
+  }
+  .cookie-notice-actions{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    flex-shrink:0;
+  }
+  .cookie-notice-actions a{
+    color:var(--teal);
+    font-size:.82rem;
+    text-decoration:none;
+    white-space:nowrap;
+  }
+  .cookie-notice-actions a:hover{ text-decoration:underline; }
+  .cookie-notice-actions .btn{
+    padding:.5rem 1.1rem;
+    font-size:.85rem;
+    white-space:nowrap;
+  }
+  @media (max-width:480px){
+    .cookie-notice{ flex-direction:column; align-items:stretch; text-align:center; }
+    .cookie-notice-actions{ justify-content:center; }
+  }
 </style>
 </head>
 <body>
@@ -1044,7 +1095,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.60</div>
+    <div class="wordmark">Watch2Night — build v3.61</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -1225,6 +1276,14 @@
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
   <footer>Watch2Night · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
+
+  <div class="cookie-notice" id="cookieNotice" style="display:none;">
+    <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
+    <div class="cookie-notice-actions">
+      <a href="legal.html#cookies" data-i18n="cookie_notice_learn_more">Learn more</a>
+      <button class="btn btn-primary" id="btnDismissCookieNotice" data-i18n="cookie_notice_dismiss">Got it</button>
+    </div>
+  </div>
 
 <script>
   /* ════════════════════════════════════════════════════════════
@@ -1407,6 +1466,9 @@ const TRANSLATIONS = {
     availability_varies: "Availability varies",
     rewind_label: "Rewind",
     toast_rewound: "↺ Restored to deck",
+    cookie_notice_text: "We only use essential local storage to remember your saved picks. No tracking, no ads.",
+    cookie_notice_learn_more: "Learn more",
+    cookie_notice_dismiss: "Got it",
     search_no_matches: "No matches found{scope}. Try a different search, or switch Movies/Series.",
     search_no_matches_series: " among series",
     search_no_matches_movies: " among movies",
@@ -1561,6 +1623,9 @@ const TRANSLATIONS = {
     availability_varies: "La disponibilidad varía",
     rewind_label: "Rebobinar",
     toast_rewound: "↺ Restaurado en la baraja",
+    cookie_notice_text: "Solo usamos almacenamiento local esencial para recordar tus elecciones guardadas. Sin rastreo, sin anuncios.",
+    cookie_notice_learn_more: "Saber más",
+    cookie_notice_dismiss: "Entendido",
     search_no_matches: "No se encontraron resultados{scope}. Prueba otra búsqueda o cambia entre Películas/Series.",
     search_no_matches_series: " entre las series",
     search_no_matches_movies: " entre las películas",
@@ -1715,6 +1780,9 @@ const TRANSLATIONS = {
     availability_varies: "A disponibilidade varia",
     rewind_label: "Voltar",
     toast_rewound: "↺ Restaurado no baralho",
+    cookie_notice_text: "Usamos apenas armazenamento local essencial para lembrar suas escolhas salvas. Sem rastreamento, sem anúncios.",
+    cookie_notice_learn_more: "Saiba mais",
+    cookie_notice_dismiss: "Entendi",
     search_no_matches: "Nenhum resultado encontrado{scope}. Tente outra busca ou alterne entre Filmes/Séries.",
     search_no_matches_series: " entre as séries",
     search_no_matches_movies: " entre os filmes",
@@ -1869,6 +1937,9 @@ const TRANSLATIONS = {
     availability_varies: "La disponibilité varie",
     rewind_label: "Revenir en arrière",
     toast_rewound: "↺ Remis dans le paquet",
+    cookie_notice_text: "Nous utilisons uniquement un stockage local essentiel pour retenir vos choix enregistrés. Pas de suivi, pas de publicité.",
+    cookie_notice_learn_more: "En savoir plus",
+    cookie_notice_dismiss: "Compris",
     search_no_matches: "Aucun résultat trouvé{scope}. Essayez une autre recherche, ou basculez entre Films/Séries.",
     search_no_matches_series: " parmi les séries",
     search_no_matches_movies: " parmi les films",
@@ -2023,6 +2094,9 @@ const TRANSLATIONS = {
     availability_varies: "Verfügbarkeit variiert",
     rewind_label: "Zurück",
     toast_rewound: "↺ Zurück in den Stapel gelegt",
+    cookie_notice_text: "Wir verwenden nur unbedingt notwendigen lokalen Speicher, um deine gespeicherte Auswahl zu merken. Kein Tracking, keine Werbung.",
+    cookie_notice_learn_more: "Mehr erfahren",
+    cookie_notice_dismiss: "Verstanden",
     search_no_matches: "Keine Treffer gefunden{scope}. Versuch eine andere Suche oder wechsle zwischen Filme/Serien.",
     search_no_matches_series: " unter den Serien",
     search_no_matches_movies: " unter den Filmen",
@@ -2177,6 +2251,9 @@ const TRANSLATIONS = {
     availability_varies: "उपलब्धता अलग-अलग हो सकती है",
     rewind_label: "वापस जाएं",
     toast_rewound: "↺ डेक में वापस लाया गया",
+    cookie_notice_text: "हम सिर्य़ आपकी सेव की गई पसंद याद रखने के लिए जरूरी लोकल स्टोरेज का उपयोग करते हैं। कोई ट्रैकिंग नहीं, कोई विज्ञापन नहीं।",
+    cookie_notice_learn_more: "और जानें",
+    cookie_notice_dismiss: "ठीक है",
     search_no_matches: "कोई परिणाम नहीं मिला{scope}। कोई और खोज करें, या फ़िल्में/सीरीज़ के बीच स्विच करें।",
     search_no_matches_series: " सीरीज़ में",
     search_no_matches_movies: " फ़िल्मों में",
@@ -2331,6 +2408,9 @@ const TRANSLATIONS = {
     availability_varies: "Dostępność zmienna",
     rewind_label: "Cofnij",
     toast_rewound: "↺ Przywrócono do talii",
+    cookie_notice_text: "Używamy wyłącznie niezbędnego przechowywania lokalnego, aby zapamiętać Twoje zapisane wybory. Bez śledzenia, bez reklam.",
+    cookie_notice_learn_more: "Dowiedz się więcej",
+    cookie_notice_dismiss: "Rozumiem",
     search_no_matches: "Nie znaleziono wyników{scope}. Spróbuj innego wyszukiwania lub przełącz między Filmy/Seriale.",
     search_no_matches_series: " wśród seriali",
     search_no_matches_movies: " wśród filmów",
@@ -2357,6 +2437,7 @@ const TRANSLATIONS = {
      STATE
      ════════════════════════════════════════════════════════════ */
   const FAVORITES_STORAGE_KEY = 'reel_favorites_v1';
+  const COOKIE_NOTICE_STORAGE_KEY = 'w2n_cookie_notice_dismissed_v1';
 
   function loadSavedFavorites(){
     try{
@@ -3790,6 +3871,39 @@ const TRANSLATIONS = {
 
     const btn = document.getElementById('btnShowOnboarding');
     if (btn) btn.addEventListener('click', showOnboardingHint);
+  })();
+
+  // Cookie/local-storage notice — shown once, dismissal remembered via its
+  // own (equally strictly-necessary) local storage flag. Never blocks use
+  // of the app; just a one-time transparency notice.
+  (function(){
+    let alreadyDismissed = false;
+    try {
+      alreadyDismissed = localStorage.getItem(COOKIE_NOTICE_STORAGE_KEY) === 'true';
+    } catch(e) {
+      // Storage unavailable (private browsing, etc.) — default to not
+      // showing the notice repeatedly is less important than not erroring.
+      alreadyDismissed = true;
+    }
+
+    if (!alreadyDismissed) {
+      const notice = document.getElementById('cookieNotice');
+      if (notice) notice.style.display = 'flex';
+    }
+
+    const dismissBtn = document.getElementById('btnDismissCookieNotice');
+    if (dismissBtn) {
+      dismissBtn.addEventListener('click', () => {
+        const notice = document.getElementById('cookieNotice');
+        if (notice) notice.style.display = 'none';
+        try {
+          localStorage.setItem(COOKIE_NOTICE_STORAGE_KEY, 'true');
+        } catch(e) {
+          // Couldn't persist — notice may reappear next visit, not worth
+          // interrupting the person over.
+        }
+      });
+    }
   })();
 </script>
 </body>
