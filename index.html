@@ -1031,7 +1031,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.56</div>
+    <div class="wordmark">Watch2Night — build v3.57</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -2677,7 +2677,7 @@ const TRANSLATIONS = {
   function fetchDiscoverPage(page, limit){
     const platformParam = [...state.platforms].join(',');
     const moodParam = [...state.moods].join(',');
-    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=${state.orderBy}`;
+    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=${state.orderBy}&language=${state.language}`;
     return fetch(url)
       .then(r => { if(!r.ok) throw new Error('bad response'); return r.json(); })
       .then(data => {
@@ -3317,7 +3317,7 @@ const TRANSLATIONS = {
     document.getElementById('searchResultsCount').textContent = t('results_label');
     showScreen('screen-search-results');
 
-    fetch(`${BACKEND_URL}/api/search?query=${encodeURIComponent(query)}&content_type=${state.contentType}`)
+    fetch(`${BACKEND_URL}/api/search?query=${encodeURIComponent(query)}&content_type=${state.contentType}&language=${state.language}`)
       .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
       .then(data => {
         const movies = mapApiResults(data.results || []);
@@ -3481,7 +3481,7 @@ const TRANSLATIONS = {
     grid.innerHTML = `<p class="providers-loading">${t('loading_their_picks')}</p>`;
     showScreen('screen-shared-picks');
 
-    fetch(`${BACKEND_URL}/api/titles?ids=${encodeURIComponent(idsParam)}`)
+    fetch(`${BACKEND_URL}/api/titles?ids=${encodeURIComponent(idsParam)}&language=${state.language}`)
       .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
       .then(data => {
         const movies = mapApiResults(data.results || []);
@@ -3623,7 +3623,7 @@ const TRANSLATIONS = {
       blocks.push(`
         <div class="detail-block">
           <span class="detail-label">${t('description_label')}</span>
-          <p class="detail-text">${escapeHtml(movie.overview)}</p>
+          <p class="detail-text" id="finalPickOverviewText">${escapeHtml(movie.overview)}</p>
         </div>
       `);
     }
@@ -3651,6 +3651,25 @@ const TRANSLATIONS = {
     }
 
     detailsEl.innerHTML = blocks.join('') || `<p class="detail-text" style="color:var(--muted);">${t('no_extra_details')}</p>`;
+
+    // MOTN doesn't support Portuguese/Hindi/Polish at all — for those three,
+    // the overview above is still English (matches everywhere else in the
+    // app). This asks the backend to translate just that one text via Groq,
+    // then swaps it in once ready. Deliberately only fires here (one title
+    // at a time, on actual interest) rather than for every swipe-deck card,
+    // since Groq's free tier caps at 30 requests/minute.
+    const GROQ_LANGUAGES = ['pt', 'hi', 'pl'];
+    if(GROQ_LANGUAGES.includes(state.language) && movie.watchmodeId && movie.overview){
+      fetch(`${BACKEND_URL}/api/title/${encodeURIComponent(movie.watchmodeId)}?language=${state.language}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          const overviewEl = document.getElementById('finalPickOverviewText');
+          if(data && data.overview && overviewEl){
+            overviewEl.textContent = data.overview;
+          }
+        })
+        .catch(() => {}); // silent — the English overview already showing is a perfectly fine fallback
+    }
 
     renderProvidersPanel(
       document.getElementById('finalPickProviders'),
