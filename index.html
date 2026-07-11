@@ -636,6 +636,19 @@
   .swipe-btn.pass:hover{ border-color:var(--rose); }
   .swipe-btn.like{ color:var(--amber); }
   .swipe-btn.like:hover{ border-color:var(--amber); }
+  .swipe-btn.rewind{
+    width:42px; height:42px;
+    font-size:1.15rem;
+    color:var(--teal);
+    align-self:center;
+  }
+  .swipe-btn.rewind:hover{ border-color:var(--teal); }
+  .swipe-btn.rewind:disabled{
+    opacity:.3;
+    cursor:default;
+    pointer-events:none;
+    transform:none;
+  }
 
   .deck-progress{
     font-family:var(--font-mono);
@@ -1031,7 +1044,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.59</div>
+    <div class="wordmark">Watch2Night — build v3.60</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -1103,6 +1116,7 @@
       <div class="deck-wrap" id="deckWrap"></div>
 
       <div class="swipe-controls">
+        <button class="swipe-btn rewind" id="btnRewind" data-i18n-aria="rewind_label" aria-label="Rewind" disabled>↺</button>
         <button class="swipe-btn pass" id="btnPass" data-i18n-aria="pass_label" aria-label="Pass">✕</button>
         <button class="swipe-btn like" id="btnLike" data-i18n-aria="like_label" aria-label="Like">♥</button>
       </div>
@@ -1391,6 +1405,8 @@ const TRANSLATIONS = {
     availability_unknown: "Availability unknown",
     rent_or_buy_only: "Rent or buy only",
     availability_varies: "Availability varies",
+    rewind_label: "Rewind",
+    toast_rewound: "↺ Restored to deck",
     search_no_matches: "No matches found{scope}. Try a different search, or switch Movies/Series.",
     search_no_matches_series: " among series",
     search_no_matches_movies: " among movies",
@@ -1543,6 +1559,8 @@ const TRANSLATIONS = {
     availability_unknown: "Disponibilidad desconocida",
     rent_or_buy_only: "Solo alquiler o compra",
     availability_varies: "La disponibilidad varía",
+    rewind_label: "Rebobinar",
+    toast_rewound: "↺ Restaurado en la baraja",
     search_no_matches: "No se encontraron resultados{scope}. Prueba otra búsqueda o cambia entre Películas/Series.",
     search_no_matches_series: " entre las series",
     search_no_matches_movies: " entre las películas",
@@ -1695,6 +1713,8 @@ const TRANSLATIONS = {
     availability_unknown: "Disponibilidade desconhecida",
     rent_or_buy_only: "Apenas aluguel ou compra",
     availability_varies: "A disponibilidade varia",
+    rewind_label: "Voltar",
+    toast_rewound: "↺ Restaurado no baralho",
     search_no_matches: "Nenhum resultado encontrado{scope}. Tente outra busca ou alterne entre Filmes/Séries.",
     search_no_matches_series: " entre as séries",
     search_no_matches_movies: " entre os filmes",
@@ -1847,6 +1867,8 @@ const TRANSLATIONS = {
     availability_unknown: "Disponibilité inconnue",
     rent_or_buy_only: "Location ou achat uniquement",
     availability_varies: "La disponibilité varie",
+    rewind_label: "Revenir en arrière",
+    toast_rewound: "↺ Remis dans le paquet",
     search_no_matches: "Aucun résultat trouvé{scope}. Essayez une autre recherche, ou basculez entre Films/Séries.",
     search_no_matches_series: " parmi les séries",
     search_no_matches_movies: " parmi les films",
@@ -1999,6 +2021,8 @@ const TRANSLATIONS = {
     availability_unknown: "Verfügbarkeit unbekannt",
     rent_or_buy_only: "Nur leihen oder kaufen",
     availability_varies: "Verfügbarkeit variiert",
+    rewind_label: "Zurück",
+    toast_rewound: "↺ Zurück in den Stapel gelegt",
     search_no_matches: "Keine Treffer gefunden{scope}. Versuch eine andere Suche oder wechsle zwischen Filme/Serien.",
     search_no_matches_series: " unter den Serien",
     search_no_matches_movies: " unter den Filmen",
@@ -2151,6 +2175,8 @@ const TRANSLATIONS = {
     availability_unknown: "उपलब्धता अज्ञात",
     rent_or_buy_only: "केवल किराए पर या खरीदें",
     availability_varies: "उपलब्धता अलग-अलग हो सकती है",
+    rewind_label: "वापस जाएं",
+    toast_rewound: "↺ डेक में वापस लाया गया",
     search_no_matches: "कोई परिणाम नहीं मिला{scope}। कोई और खोज करें, या फ़िल्में/सीरीज़ के बीच स्विच करें।",
     search_no_matches_series: " सीरीज़ में",
     search_no_matches_movies: " फ़िल्मों में",
@@ -2303,6 +2329,8 @@ const TRANSLATIONS = {
     availability_unknown: "Dostępność nieznana",
     rent_or_buy_only: "Tylko wypożyczenie lub zakup",
     availability_varies: "Dostępność zmienna",
+    rewind_label: "Cofnij",
+    toast_rewound: "↺ Przywrócono do talii",
     search_no_matches: "Nie znaleziono wyników{scope}. Spróbuj innego wyszukiwania lub przełącz między Filmy/Seriale.",
     search_no_matches_series: " wśród seriali",
     search_no_matches_movies: " wśród filmów",
@@ -2867,6 +2895,7 @@ const TRANSLATIONS = {
     const wrap = document.getElementById('deckWrap');
     updateDeckHeader();
     updateFavoritesButtons();
+    updateRewindButton();
 
     if(state.deckIndex >= deck.length){
       if(state.loadingMore){
@@ -3072,6 +3101,34 @@ const TRANSLATIONS = {
       renderDeck();
     }, 260);
   }
+
+  function updateRewindButton(){
+    const btn = document.getElementById('btnRewind');
+    if(btn) btn.disabled = state.deckIndex <= 0;
+  }
+
+  // Undoes the most recent swipe — goes back one card at a time (the deck
+  // array already keeps everything seen this session, so this just moves
+  // the pointer back rather than needing separate history tracking). If the
+  // card being rewound to had been liked, that's undone too — a genuine
+  // second chance to reconsider, not just a peek with the favorite silently
+  // still saved behind the scenes.
+  function rewindSwipe(){
+    if(state.deckIndex <= 0) return;
+    state.deckIndex--;
+    const movie = deck[state.deckIndex];
+    if(movie && movie.watchmodeId){
+      const idx = state.favorites.findIndex(f => f.watchmodeId === movie.watchmodeId);
+      if(idx !== -1){
+        state.favorites.splice(idx, 1);
+        persistFavorites();
+      }
+    }
+    renderDeck();
+    showToast(t('toast_rewound'));
+  }
+
+  document.getElementById('btnRewind').addEventListener('click', rewindSwipe);
 
   document.getElementById('btnPass').addEventListener('click', () => {
     const movie = deck[state.deckIndex];
