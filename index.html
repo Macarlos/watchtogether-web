@@ -1095,7 +1095,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.61</div>
+    <div class="wordmark">Watch2Night — build v3.62</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -1469,6 +1469,7 @@ const TRANSLATIONS = {
     cookie_notice_text: "We only use essential local storage to remember your saved picks. No tracking, no ads.",
     cookie_notice_learn_more: "Learn more",
     cookie_notice_dismiss: "Got it",
+    setup_surprise_mode_label: "Surprise me",
     search_no_matches: "No matches found{scope}. Try a different search, or switch Movies/Series.",
     search_no_matches_series: " among series",
     search_no_matches_movies: " among movies",
@@ -1626,6 +1627,7 @@ const TRANSLATIONS = {
     cookie_notice_text: "Solo usamos almacenamiento local esencial para recordar tus elecciones guardadas. Sin rastreo, sin anuncios.",
     cookie_notice_learn_more: "Saber más",
     cookie_notice_dismiss: "Entendido",
+    setup_surprise_mode_label: "Sorpréndeme",
     search_no_matches: "No se encontraron resultados{scope}. Prueba otra búsqueda o cambia entre Películas/Series.",
     search_no_matches_series: " entre las series",
     search_no_matches_movies: " entre las películas",
@@ -1783,6 +1785,7 @@ const TRANSLATIONS = {
     cookie_notice_text: "Usamos apenas armazenamento local essencial para lembrar suas escolhas salvas. Sem rastreamento, sem anúncios.",
     cookie_notice_learn_more: "Saiba mais",
     cookie_notice_dismiss: "Entendi",
+    setup_surprise_mode_label: "Me surpreenda",
     search_no_matches: "Nenhum resultado encontrado{scope}. Tente outra busca ou alterne entre Filmes/Séries.",
     search_no_matches_series: " entre as séries",
     search_no_matches_movies: " entre os filmes",
@@ -1940,6 +1943,7 @@ const TRANSLATIONS = {
     cookie_notice_text: "Nous utilisons uniquement un stockage local essentiel pour retenir vos choix enregistrés. Pas de suivi, pas de publicité.",
     cookie_notice_learn_more: "En savoir plus",
     cookie_notice_dismiss: "Compris",
+    setup_surprise_mode_label: "Surprenez-moi",
     search_no_matches: "Aucun résultat trouvé{scope}. Essayez une autre recherche, ou basculez entre Films/Séries.",
     search_no_matches_series: " parmi les séries",
     search_no_matches_movies: " parmi les films",
@@ -2097,6 +2101,7 @@ const TRANSLATIONS = {
     cookie_notice_text: "Wir verwenden nur unbedingt notwendigen lokalen Speicher, um deine gespeicherte Auswahl zu merken. Kein Tracking, keine Werbung.",
     cookie_notice_learn_more: "Mehr erfahren",
     cookie_notice_dismiss: "Verstanden",
+    setup_surprise_mode_label: "Überrasch mich",
     search_no_matches: "Keine Treffer gefunden{scope}. Versuch eine andere Suche oder wechsle zwischen Filme/Serien.",
     search_no_matches_series: " unter den Serien",
     search_no_matches_movies: " unter den Filmen",
@@ -2254,6 +2259,7 @@ const TRANSLATIONS = {
     cookie_notice_text: "हम सिर्य़ आपकी सेव की गई पसंद याद रखने के लिए जरूरी लोकल स्टोरेज का उपयोग करते हैं। कोई ट्रैकिंग नहीं, कोई विज्ञापन नहीं।",
     cookie_notice_learn_more: "और जानें",
     cookie_notice_dismiss: "ठीक है",
+    setup_surprise_mode_label: "मुझे सरप्राइज़ करें",
     search_no_matches: "कोई परिणाम नहीं मिला{scope}। कोई और खोज करें, या फ़िल्में/सीरीज़ के बीच स्विच करें।",
     search_no_matches_series: " सीरीज़ में",
     search_no_matches_movies: " फ़िल्मों में",
@@ -2411,6 +2417,7 @@ const TRANSLATIONS = {
     cookie_notice_text: "Używamy wyłącznie niezbędnego przechowywania lokalnego, aby zapamiętać Twoje zapisane wybory. Bez śledzenia, bez reklam.",
     cookie_notice_learn_more: "Dowiedz się więcej",
     cookie_notice_dismiss: "Rozumiem",
+    setup_surprise_mode_label: "Zaskocz mnie",
     search_no_matches: "Nie znaleziono wyników{scope}. Spróbuj innego wyszukiwania lub przełącz między Filmy/Seriale.",
     search_no_matches_series: " wśród seriali",
     search_no_matches_movies: " wśród filmów",
@@ -2469,7 +2476,8 @@ const TRANSLATIONS = {
     noMoreResultsStreak: 0, // consecutive load-more attempts that added nothing
     region: 'US', // auto-detected from IP shortly after load; US until then/on failure
     orderBy: 'popularity_1year', // randomized fresh per new deck — see buildDeck()
-    skipMoodStep: false, // true for "Watch with your Family" — mood is pre-set to 'family', step hidden
+    skipMoodStep: false, // true for "Watch with your Family" or first-screen "Surprise me" — mood step hidden either way
+    skipMoodReason: null, // 'family' | 'surprise' — which of the two skip-mood flows is active, for the eyebrow label
     availablePlatforms: FALLBACK_PLATFORMS, // replaced with the real per-region list once it loads
     language: 'en', // auto-detected from region; see REGION_TO_LANGUAGE below
   };
@@ -2619,7 +2627,7 @@ const TRANSLATIONS = {
     const eyebrow = document.getElementById('setupStep1Eyebrow');
     if(state.skipMoodStep){
       moodSection.style.display = 'none';
-      eyebrow.textContent = t('setup_family_mode_label');
+      eyebrow.textContent = t(state.skipMoodReason === 'surprise' ? 'setup_surprise_mode_label' : 'setup_family_mode_label');
     } else {
       moodSection.style.display = '';
       eyebrow.textContent = t('setup_step1_label');
@@ -2629,6 +2637,7 @@ const TRANSLATIONS = {
   document.getElementById('btnPickMovies').addEventListener('click', () => {
     state.contentType = 'movie';
     state.skipMoodStep = false;
+    state.skipMoodReason = null;
     updateSetupStepVisibility();
     showScreen('screen-setup');
   });
@@ -2636,6 +2645,7 @@ const TRANSLATIONS = {
   document.getElementById('btnPickSeries').addEventListener('click', () => {
     state.contentType = 'tv_series';
     state.skipMoodStep = false;
+    state.skipMoodReason = null;
     updateSetupStepVisibility();
     showScreen('screen-setup');
   });
@@ -2653,6 +2663,7 @@ const TRANSLATIONS = {
     state.moods.clear();
     state.moods.add('family');
     state.skipMoodStep = true;
+    state.skipMoodReason = 'family';
     // Keep both mood chip pickers visually in sync in case the user later
     // opens "Adjust categories" mid-swipe — they should see "Family" active,
     // not look like nothing is selected.
@@ -2684,12 +2695,26 @@ const TRANSLATIONS = {
     }
     state.moods.clear();
     state.skipMoodStep = false;
+    state.skipMoodReason = null;
     clearMoodFilterVisual();
     buildDeck();
     showScreen('screen-deck');
   }
 
-  document.getElementById('btnSurpriseMeFirst').addEventListener('click', () => goSurpriseMe(true));
+  // From the very first screen, "Surprise me" used to skip platforms
+  // entirely, searching everything regardless of what you actually pay
+  // for. Now it randomizes content type and mood as before, but still asks
+  // which platforms to search — the deck stays within services you
+  // actually have access to.
+  document.getElementById('btnSurpriseMeFirst').addEventListener('click', () => {
+    state.contentType = Math.random() < 0.5 ? 'movie' : 'tv_series';
+    state.moods.clear();
+    clearMoodFilterVisual();
+    state.skipMoodStep = true;
+    state.skipMoodReason = 'surprise';
+    updateSetupStepVisibility();
+    showScreen('screen-setup');
+  });
 
   /* ════════════════════════════════════════════════════════════
      SETUP SCREEN — chips
@@ -3831,6 +3856,7 @@ const TRANSLATIONS = {
     state.platforms.clear();
     state.moods.clear();
     state.skipMoodStep = false;
+    state.skipMoodReason = null;
     state.deckIndex = 0;
     state.backendPage = 1;
     state.loadingMore = false;
