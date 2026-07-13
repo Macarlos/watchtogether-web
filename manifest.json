@@ -2,6 +2,7 @@
   "name": "Watch2Night — swipe to find something to watch",
   "short_name": "Watch2Night",
   "description": "Pick your streaming platforms and mood, swipe through real movies and shows, and save or share your picks.",
+  "id": "/",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
