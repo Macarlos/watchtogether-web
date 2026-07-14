@@ -34,5 +34,28 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/screenshot-1.jpg",
+      "sizes": "800x782",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Pick Movies, Series, Family, or Surprise me"
+    },
+    {
+      "src": "screenshots/screenshot-2.jpg",
+      "sizes": "753x769",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Swipe through real movies and shows"
+    },
+    {
+      "src": "screenshots/screenshot-3.jpg",
+      "sizes": "590x643",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "See real rent and buy prices"
+    }
   ]
 }
