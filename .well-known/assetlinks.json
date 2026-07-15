@@ -1,8 +1,11 @@
 [{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "com.watch2night.twa",
-        "sha256_cert_fingerprints": ["76:9E:E2:C7:21:57:09:89:F4:DC:B7:89:F1:26:1A:65:52:28:55:9B:6B:20:82:43:E0:92:0C:16:5A:98:83:19"]
-      }
-    }]
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.watch2night.twa",
+    "sha256_cert_fingerprints": [
+      "76:9E:E2:C7:21:57:09:89:F4:DC:B7:89:F1:26:1A:65:52:28:55:9B:6B:20:82:43:E0:92:0C:16:5A:98:83:19",
+      "92:F7:5F:F4:77:B1:5B:93:E2:EE:D1:73:48:66:B4:49:66:C7:8E:92:E4:C2:5B:CB:8E:1D:88:3C:7F:BD:9F:5E"
+    ]
+  }
+}]
