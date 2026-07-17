@@ -806,6 +806,7 @@
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap:.9rem;
     width:100%;
+    touch-action:pan-y;
   }
   .favorite-brick{
     cursor:pointer;
@@ -819,6 +820,7 @@
     flex-direction:column;
     color:var(--ink);
     font-family:inherit;
+    touch-action:pan-y;
   }
   .favorite-brick:hover{ transform:translateY(-3px); border-color:var(--amber); }
   .favorite-brick .brick-poster{
@@ -830,6 +832,7 @@
     font-size:2rem;
     flex-shrink:0;
     position:relative;
+    touch-action:pan-y;
   }
   .favorite-brick .brick-heart{
     position:absolute; top:8px; right:8px; z-index:2;
@@ -841,6 +844,7 @@
     font-size:1.05rem;
     display:flex; align-items:center; justify-content:center;
     transition:background .15s, color .15s;
+    touch-action:manipulation;
   }
   .favorite-brick .brick-heart[data-saved="true"]{
     color:var(--amber);
@@ -1095,7 +1099,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.63</div>
+    <div class="wordmark">Watch2Night — build v3.64</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
