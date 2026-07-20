@@ -527,7 +527,14 @@
   .deck-wrap{
     width:100%;
     max-width:320px;
-    height:508px;
+    /* Fixed 508px caused the card to push the swipe buttons below the
+       fold on shorter viewports — and touching the card itself doesn't
+       scroll (by design, so it doesn't fight the swipe gesture), so those
+       buttons became invisible with no obvious way to reach them. Scaling
+       with viewport height keeps the buttons on-screen without relying on
+       users discovering that only the margin around the card scrolls. */
+    height:min(508px, 54vh);
+    min-height:340px;
     position:relative;
     margin:0 auto 1.6rem;
   }
@@ -1127,7 +1134,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.71</div>
+    <div class="wordmark">Watch2Night — build v3.72</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
