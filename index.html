@@ -1110,7 +1110,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.65</div>
+    <div class="wordmark">Watch2Night — build v3.66</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -3165,11 +3165,26 @@ const TRANSLATIONS = {
       else if(currentX < -110){ resolveFn(movie, false, card); }
       else { card.style.transform = ''; }
       currentX = 0;
+      cleanup();
+    }
+
+    // Each render used to attach a fresh pointermove/pointerup pair to window
+    // and never remove it, so every prior swipe's listeners stayed alive for
+    // the rest of the session — accumulating on window and executing on every
+    // single pointer move, plus keeping old (already-removed) card elements
+    // pinned in memory via closure. This was the source of the app feeling
+    // slower the longer someone swiped. Named references + cleanup() below
+    // ensure each drag's listeners detach themselves the moment it resolves.
+    function movePointer(e){ onMove(e.clientX); }
+    function upPointer(){ onUp(); }
+    function cleanup(){
+      window.removeEventListener('pointermove', movePointer);
+      window.removeEventListener('pointerup', upPointer);
     }
 
     card.addEventListener('pointerdown', e => onDown(e.clientX));
-    window.addEventListener('pointermove', e => onMove(e.clientX));
-    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointermove', movePointer);
+    window.addEventListener('pointerup', upPointer);
   }
 
   function addToFavorites(movie){
