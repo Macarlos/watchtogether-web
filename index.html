@@ -603,6 +603,17 @@
   }
   .card .info-toggle:hover{ background:var(--surface); border-color:var(--muted); }
 
+  /* screen-final-pick reuses .card purely for its visual styling (border,
+     background, padding) — but .card also carries touch-action:none and
+     overflow:hidden from the swipe deck, which blocked scrolling on the
+     description/ratings/pricing content here. Reset those two properties
+     for the static detail cards only; the swipe deck's cards are untouched. */
+  #screen-final-pick .card{
+    touch-action:pan-y;
+    overflow:visible;
+    user-select:text;
+  }
+
   .card .overview-overlay{
     position:absolute; inset:0;
     background:rgba(7,9,15,.94);
@@ -1099,7 +1110,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.64</div>
+    <div class="wordmark">Watch2Night — build v3.65</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
