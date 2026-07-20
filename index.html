@@ -624,6 +624,7 @@
     transition:opacity .18s;
     display:flex;
     align-items:flex-start;
+    touch-action:none;
   }
   .card .overview-overlay.show{ opacity:1; pointer-events:auto; }
   .card .overview-overlay p{
@@ -1110,7 +1111,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.66</div>
+    <div class="wordmark">Watch2Night — build v3.67</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -3167,6 +3168,20 @@ const TRANSLATIONS = {
       currentX = 0;
       cleanup();
     }
+    // Some mobile browsers (notably Samsung Internet) fire pointercancel
+    // instead of pointerup when a touch that started on the scrollable
+    // summary overlay gets reinterpreted mid-gesture as a native scroll.
+    // Without handling it, `dragging` stayed stuck true and the card
+    // became unresponsive to further swipes until the next card rendered —
+    // this is what testers saw as "sometimes can't swipe with summary open."
+    function onCancel(){
+      if(!dragging) return;
+      dragging = false;
+      card.style.transition = '';
+      card.style.transform = '';
+      currentX = 0;
+      cleanup();
+    }
 
     // Each render used to attach a fresh pointermove/pointerup pair to window
     // and never remove it, so every prior swipe's listeners stayed alive for
@@ -3177,14 +3192,17 @@ const TRANSLATIONS = {
     // ensure each drag's listeners detach themselves the moment it resolves.
     function movePointer(e){ onMove(e.clientX); }
     function upPointer(){ onUp(); }
+    function cancelPointer(){ onCancel(); }
     function cleanup(){
       window.removeEventListener('pointermove', movePointer);
       window.removeEventListener('pointerup', upPointer);
+      window.removeEventListener('pointercancel', cancelPointer);
     }
 
     card.addEventListener('pointerdown', e => onDown(e.clientX));
     window.addEventListener('pointermove', movePointer);
     window.addEventListener('pointerup', upPointer);
+    window.addEventListener('pointercancel', cancelPointer);
   }
 
   function addToFavorites(movie){
