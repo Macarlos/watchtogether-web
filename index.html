@@ -532,11 +532,16 @@
        scroll (by design, so it doesn't fight the swipe gesture), so those
        buttons became invisible with no obvious way to reach them. Scaling
        with viewport height keeps the buttons on-screen without relying on
-       users discovering that only the margin around the card scrolls. */
+       users discovering that only the margin around the card scrolls.
+       Desktop/web has plenty of vertical room, so it's restored to the
+       original fixed 508px below at the 700px width breakpoint. */
     height:min(508px, 54vh);
     min-height:340px;
     position:relative;
     margin:0 auto 1.6rem;
+  }
+  @media (min-width:700px){
+    .deck-wrap{ height:508px; min-height:508px; }
   }
   .card{
     position:absolute;
@@ -1134,7 +1139,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.72</div>
+    <div class="wordmark">Watch2Night — build v3.73</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
