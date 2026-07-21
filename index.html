@@ -1114,6 +1114,16 @@
     </div>
   </div>
 
+  <div class="share-overlay" id="recentlyAddedTypeOverlay">
+    <div class="share-dialog" id="recentlyAddedTypeDialogCard" role="dialog" aria-modal="true" aria-labelledby="recentlyAddedTypeDialogTitle" tabindex="-1" style="max-width:380px;">
+      <h3 id="recentlyAddedTypeDialogTitle" data-i18n="card_recently_added_title">Recently added</h3>
+      <p data-i18n="family_dialog_question">Movies or series?</p>
+      <button class="btn btn-primary btn-block" id="btnRecentlyAddedMovies" data-i18n="card_movies_title" style="margin-bottom:.6rem;">Movies</button>
+      <button class="btn btn-primary btn-block" id="btnRecentlyAddedSeries" data-i18n="card_series_title" style="margin-bottom:.6rem;">Series</button>
+      <button class="btn btn-ghost btn-block" id="btnCloseRecentlyAddedTypeDialog" data-i18n="btn_close">Close</button>
+    </div>
+  </div>
+
   <!-- ═══════════════ FIRST-TIME ONBOARDING HINT ═══════════════ -->
   <div class="onboarding-overlay" id="onboardingOverlay">
     <div class="share-dialog" id="onboardingDialogCard" role="dialog" aria-modal="true" aria-labelledby="onboardingDialogTitle" tabindex="-1" style="max-width:380px;">
@@ -1139,7 +1149,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.80</div>
+    <div class="wordmark">Watch2Night — build v3.81</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -2879,9 +2889,15 @@ const TRANSLATIONS = {
   // "Recently added" — uses a separate MOTN endpoint (catalog changes, not
   // search-by-filters) so mood/genre filtering and the rating filter don't
   // apply here; still asks which platforms, since that's what "added to
-  // your platforms" means.
+  // your platforms" means. Also asks movies vs series first, via a small
+  // dialog, same pattern as "Watch with your Family".
   document.getElementById('btnPickRecentlyAdded').addEventListener('click', () => {
-    state.contentType = 'movie';
+    openDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
+  });
+
+  function enterRecentlyAddedMode(contentType){
+    closeDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
+    state.contentType = contentType;
     state.mode = 'recently_added';
     state.moods.clear();
     clearMoodFilterVisual();
@@ -2891,6 +2907,12 @@ const TRANSLATIONS = {
     state.skipMoodReason = 'recently_added';
     updateSetupStepVisibility();
     showScreen('screen-setup');
+  }
+
+  document.getElementById('btnRecentlyAddedMovies').addEventListener('click', () => enterRecentlyAddedMode('movie'));
+  document.getElementById('btnRecentlyAddedSeries').addEventListener('click', () => enterRecentlyAddedMode('tv_series'));
+  document.getElementById('btnCloseRecentlyAddedTypeDialog').addEventListener('click', () => {
+    closeDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
   });
 
   /* ════════════════════════════════════════════════════════════
