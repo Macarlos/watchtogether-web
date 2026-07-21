@@ -1139,7 +1139,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.77</div>
+    <div class="wordmark">Watch2Night — build v3.78</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -1177,6 +1177,7 @@
       </div>
 
       <button class="btn btn-ghost" id="btnShowOnboarding" data-i18n="btn_how_to_use" style="margin-top:1.2rem;">How to use W2N</button>
+      <button class="btn btn-ghost" id="btnSeeCurrentChoices" data-i18n="btn_see_current_choices" style="margin-top:.6rem;">See my current choices →</button>
     </section>
 
     <!-- ═══════════════ SCREEN 2 — SETUP ═══════════════ -->
@@ -1399,6 +1400,7 @@ const TRANSLATIONS = {
     card_surprise_title: "Surprise me",
     card_surprise_desc: "Skip the choices — get a random pick instantly.",
     btn_how_to_use: "How to use W2N",
+    btn_see_current_choices: "See my current choices →",
     onboarding_title: "How Watch2Night works",
     onboarding_step1: "Pick your streaming platforms and a mood",
     onboarding_step2: "Swipe through real movies and shows",
@@ -1561,6 +1563,7 @@ const TRANSLATIONS = {
     card_surprise_title: "Sorpréndeme",
     card_surprise_desc: "Sin elegir nada — obtén una recomendación al instante.",
     btn_how_to_use: "Cómo usar W2N",
+    btn_see_current_choices: "Ver mis elecciones actuales →",
     onboarding_title: "Cómo funciona Watch2Night",
     onboarding_step1: "Elige tus plataformas de streaming y un estado de ánimo",
     onboarding_step2: "Desliza entre películas y series reales",
@@ -1723,6 +1726,7 @@ const TRANSLATIONS = {
     card_surprise_title: "Me surpreenda",
     card_surprise_desc: "Sem escolher nada — receba uma sugestão na hora.",
     btn_how_to_use: "Como usar o W2N",
+    btn_see_current_choices: "Ver minhas escolhas atuais →",
     onboarding_title: "Como o Watch2Night funciona",
     onboarding_step1: "Escolha suas plataformas de streaming e um clima",
     onboarding_step2: "Deslize por filmes e séries de verdade",
@@ -1885,6 +1889,7 @@ const TRANSLATIONS = {
     card_surprise_title: "Surprenez-moi",
     card_surprise_desc: "Sans rien choisir — obtenez une suggestion immédiate.",
     btn_how_to_use: "Comment utiliser W2N",
+    btn_see_current_choices: "Voir mes choix actuels →",
     onboarding_title: "Comment fonctionne Watch2Night",
     onboarding_step1: "Choisissez vos plateformes de streaming et une ambiance",
     onboarding_step2: "Parcourez de vrais films et séries",
@@ -2047,6 +2052,7 @@ const TRANSLATIONS = {
     card_surprise_title: "Überrasch mich",
     card_surprise_desc: "Ohne Auswahl — sofort einen Vorschlag bekommen.",
     btn_how_to_use: "So funktioniert W2N",
+    btn_see_current_choices: "Meine aktuellen Favoriten ansehen →",
     onboarding_title: "So funktioniert Watch2Night",
     onboarding_step1: "Wähle deine Streaming-Plattformen und eine Stimmung",
     onboarding_step2: "Wische durch echte Filme und Serien",
@@ -2209,6 +2215,7 @@ const TRANSLATIONS = {
     card_surprise_title: "मुझे सरप्राइज़ करें",
     card_surprise_desc: "कुछ भी चुने बिना — तुरंत एक सुझाव पाएं।",
     btn_how_to_use: "W2N कैसे उपयोग करें",
+    btn_see_current_choices: "मेरी मौजूदा पसंद देखें →",
     onboarding_title: "Watch2Night कैसे काम करता है",
     onboarding_step1: "अपने स्ट्रीमिंग प्लेटफ़ॉर्म और एक मूड चुनें",
     onboarding_step2: "असली फ़िल्मों और शो में स्वाइप करें",
@@ -2371,6 +2378,7 @@ const TRANSLATIONS = {
     card_surprise_title: "Zaskocz mnie",
     card_surprise_desc: "Bez wybierania niczego — od razu otrzymaj propozycję.",
     btn_how_to_use: "Jak korzystać z W2N",
+    btn_see_current_choices: "Zobacz moje obecne wybory →",
     onboarding_title: "Jak działa Watch2Night",
     onboarding_step1: "Wybierz swoje platformy streamingowe i nastrój",
     onboarding_step2: "Przesuwaj po prawdziwych filmach i serialach",
@@ -3415,6 +3423,7 @@ const TRANSLATIONS = {
       'screen-deck': t('btn_back_to_swiping'),
       'screen-done': t('btn_back'),
       'screen-search-results': t('back_to_search_results'),
+      'screen-content-type': '← ' + t('btn_back_to_main'),
     };
     document.getElementById('btnBackFromFavorites').textContent = backLabels[favoritesReturnScreen] || t('btn_back');
 
@@ -3487,6 +3496,7 @@ const TRANSLATIONS = {
   }
 
   document.getElementById('btnGoToFavorites').addEventListener('click', () => showFavoritesGrid('screen-deck'));
+  document.getElementById('btnSeeCurrentChoices').addEventListener('click', () => showFavoritesGrid('screen-content-type'));
   document.getElementById('btnGoToFavoritesFromDone').addEventListener('click', () => showFavoritesGrid('screen-done'));
   document.getElementById('btnBackFromFavorites').addEventListener('click', () => showScreen(favoritesReturnScreen));
 
