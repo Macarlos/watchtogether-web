@@ -1139,7 +1139,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.78</div>
+    <div class="wordmark">Watch2Night — build v3.79</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -2705,13 +2705,39 @@ const TRANSLATIONS = {
   /* ════════════════════════════════════════════════════════════
      SCREEN NAVIGATION
      ════════════════════════════════════════════════════════════ */
-  function showScreen(id){
+  function showScreen(id, fromPopState){
+    const current = getActiveScreenId();
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     window.scrollTo({top:0, behavior:'smooth'});
     // Hidden only on the very first screen — nothing to "restart" from there yet.
     document.getElementById('btnNewSearchPersistent').style.display = id === 'screen-content-type' ? 'none' : 'flex';
+
+    // A popstate-triggered call is the browser telling us it already moved
+    // through history (back/forward) — pushing again here would create a
+    // duplicate/looping entry. Only genuine in-app navigation pushes a new
+    // entry, and only when the screen actually changed (some call sites
+    // re-call showScreen with the same id on re-render).
+    if(!fromPopState && id !== current){
+      history.pushState({screen: id}, '', location.pathname + location.search);
+    }
   }
+
+  // Restores the screen recorded in a history entry when the user hits the
+  // browser's back/forward buttons — or, in the installed Android app, the
+  // system back gesture/button, which otherwise would just exit the app
+  // immediately since there'd be no history to step through.
+  window.addEventListener('popstate', (event) => {
+    const targetId = event.state?.screen;
+    if(targetId && document.getElementById(targetId)){
+      showScreen(targetId, true);
+    }
+  });
+
+  // Establishes a baseline history entry for the landing screen so the very
+  // first popstate (stepping back to where the app was opened) has a
+  // defined state to restore, rather than a bare null.
+  history.replaceState({screen: getActiveScreenId()}, '', location.pathname + location.search);
 
   // Shows/hides the mood-selection step in the setup screen — hidden for
   // "Watch with your Family" mode, since its mood is pre-set and not a choice.
