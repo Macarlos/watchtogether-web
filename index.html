@@ -1139,7 +1139,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.79</div>
+    <div class="wordmark">Watch2Night — build v3.80</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -1176,6 +1176,13 @@
         </button>
       </div>
 
+      <div class="path-row" style="margin-top:.85rem;">
+        <button class="path-card" id="btnPickRecentlyAdded">
+          <h3 data-i18n="card_recently_added_title">Recently added</h3>
+          <p data-i18n="card_recently_added_desc">Just landed on your platforms — newest first.</p>
+        </button>
+      </div>
+
       <button class="btn btn-ghost" id="btnShowOnboarding" data-i18n="btn_how_to_use" style="margin-top:1.2rem;">How to use W2N</button>
       <button class="btn btn-ghost" id="btnSeeCurrentChoices" data-i18n="btn_see_current_choices" style="margin-top:.6rem;">See my current choices →</button>
     </section>
@@ -1198,16 +1205,18 @@
         <button class="btn btn-ghost" id="btnSurpriseMeSetup" data-i18n="btn_surprise_setup" style="margin-top:.8rem;">🎲 Surprise me — any mood</button>
       </div>
 
-      <div class="section-head" style="margin-top:1.4rem;">
-        <span class="eyebrow" data-i18n="setup_rating_label">Optional</span>
-        <h2 data-i18n="setup_rating_heading">Any rating requirement?</h2>
-      </div>
-      <div class="chip-group" id="chipMinRating">
-        <button class="chip" type="button" data-rating="5">★ 5+</button>
-        <button class="chip" type="button" data-rating="6">★ 6+</button>
-        <button class="chip" type="button" data-rating="7">★ 7+</button>
-        <button class="chip" type="button" data-rating="8">★ 8+</button>
-        <button class="chip" type="button" data-rating="9">★ 9+</button>
+      <div id="ratingStepSection">
+        <div class="section-head" style="margin-top:1.4rem;">
+          <span class="eyebrow" data-i18n="setup_rating_label">Optional</span>
+          <h2 data-i18n="setup_rating_heading">Any rating requirement?</h2>
+        </div>
+        <div class="chip-group" id="chipMinRating">
+          <button class="chip" type="button" data-rating="5">★ 5+</button>
+          <button class="chip" type="button" data-rating="6">★ 6+</button>
+          <button class="chip" type="button" data-rating="7">★ 7+</button>
+          <button class="chip" type="button" data-rating="8">★ 8+</button>
+          <button class="chip" type="button" data-rating="9">★ 9+</button>
+        </div>
       </div>
 
       <div class="setup-actions">
@@ -1399,6 +1408,8 @@ const TRANSLATIONS = {
     card_family_desc: "Family-friendly picks everyone can enjoy together.",
     card_surprise_title: "Surprise me",
     card_surprise_desc: "Skip the choices — get a random pick instantly.",
+    card_recently_added_title: "Recently added",
+    card_recently_added_desc: "Just landed on your platforms — newest first.",
     btn_how_to_use: "How to use W2N",
     btn_see_current_choices: "See my current choices →",
     onboarding_title: "How Watch2Night works",
@@ -1408,6 +1419,7 @@ const TRANSLATIONS = {
     onboarding_dismiss: "Tap anywhere to dismiss",
     setup_step1_label: "Step 1 of 2",
     setup_family_mode_label: "Family mode",
+    setup_recently_added_mode_label: "Recently added",
     setup_step1_heading: "What can you watch on?",
     setup_step2_label: "Step 2 of 2",
     setup_step2_heading: "What's the mood?",
@@ -1562,6 +1574,8 @@ const TRANSLATIONS = {
     card_family_desc: "Selecciones aptas para toda la familia.",
     card_surprise_title: "Sorpréndeme",
     card_surprise_desc: "Sin elegir nada — obtén una recomendación al instante.",
+    card_recently_added_title: "Recién añadidos",
+    card_recently_added_desc: "Recién llegados a tus plataformas — los más nuevos primero.",
     btn_how_to_use: "Cómo usar W2N",
     btn_see_current_choices: "Ver mis elecciones actuales →",
     onboarding_title: "Cómo funciona Watch2Night",
@@ -1571,6 +1585,7 @@ const TRANSLATIONS = {
     onboarding_dismiss: "Toca en cualquier lugar para cerrar",
     setup_step1_label: "Paso 1 de 2",
     setup_family_mode_label: "Modo familiar",
+    setup_recently_added_mode_label: "Recién añadidos",
     setup_step1_heading: "¿Dónde puedes ver contenido?",
     setup_step2_label: "Paso 2 de 2",
     setup_step2_heading: "¿Qué estado de ánimo tienes?",
@@ -1725,6 +1740,8 @@ const TRANSLATIONS = {
     card_family_desc: "Escolhas para toda a família aproveitar junto.",
     card_surprise_title: "Me surpreenda",
     card_surprise_desc: "Sem escolher nada — receba uma sugestão na hora.",
+    card_recently_added_title: "Adicionados recentemente",
+    card_recently_added_desc: "Acabaram de chegar às suas plataformas — os mais novos primeiro.",
     btn_how_to_use: "Como usar o W2N",
     btn_see_current_choices: "Ver minhas escolhas atuais →",
     onboarding_title: "Como o Watch2Night funciona",
@@ -1734,6 +1751,7 @@ const TRANSLATIONS = {
     onboarding_dismiss: "Toque em qualquer lugar para fechar",
     setup_step1_label: "Passo 1 de 2",
     setup_family_mode_label: "Modo família",
+    setup_recently_added_mode_label: "Adicionados recentemente",
     setup_step1_heading: "Onde você pode assistir?",
     setup_step2_label: "Passo 2 de 2",
     setup_step2_heading: "Qual é o clima?",
@@ -1888,6 +1906,8 @@ const TRANSLATIONS = {
     card_family_desc: "Des choix adaptés à toute la famille.",
     card_surprise_title: "Surprenez-moi",
     card_surprise_desc: "Sans rien choisir — obtenez une suggestion immédiate.",
+    card_recently_added_title: "Ajoutés récemment",
+    card_recently_added_desc: "Tout juste arrivés sur vos plateformes — les plus récents en premier.",
     btn_how_to_use: "Comment utiliser W2N",
     btn_see_current_choices: "Voir mes choix actuels →",
     onboarding_title: "Comment fonctionne Watch2Night",
@@ -1897,6 +1917,7 @@ const TRANSLATIONS = {
     onboarding_dismiss: "Touchez n'importe où pour fermer",
     setup_step1_label: "Étape 1 sur 2",
     setup_family_mode_label: "Mode famille",
+    setup_recently_added_mode_label: "Ajoutés récemment",
     setup_step1_heading: "Sur quoi pouvez-vous regarder ?",
     setup_step2_label: "Étape 2 sur 2",
     setup_step2_heading: "Quelle est l'ambiance ?",
@@ -2051,6 +2072,8 @@ const TRANSLATIONS = {
     card_family_desc: "Familienfreundliche Auswahl für alle.",
     card_surprise_title: "Überrasch mich",
     card_surprise_desc: "Ohne Auswahl — sofort einen Vorschlag bekommen.",
+    card_recently_added_title: "Kürzlich hinzugefügt",
+    card_recently_added_desc: "Gerade erst auf deinen Plattformen gelandet — Neuestes zuerst.",
     btn_how_to_use: "So funktioniert W2N",
     btn_see_current_choices: "Meine aktuellen Favoriten ansehen →",
     onboarding_title: "So funktioniert Watch2Night",
@@ -2060,6 +2083,7 @@ const TRANSLATIONS = {
     onboarding_dismiss: "Zum Schließen irgendwo tippen",
     setup_step1_label: "Schritt 1 von 2",
     setup_family_mode_label: "Familienmodus",
+    setup_recently_added_mode_label: "Kürzlich hinzugefügt",
     setup_step1_heading: "Wo kannst du schauen?",
     setup_step2_label: "Schritt 2 von 2",
     setup_step2_heading: "Welche Stimmung?",
@@ -2214,6 +2238,8 @@ const TRANSLATIONS = {
     card_family_desc: "पूरे परिवार के लिए पसंद आने वाली चीज़ें।",
     card_surprise_title: "मुझे सरप्राइज़ करें",
     card_surprise_desc: "कुछ भी चुने बिना — तुरंत एक सुझाव पाएं।",
+    card_recently_added_title: "हाल ही में जोड़े गए",
+    card_recently_added_desc: "अभी-अभी आपके प्लेटफ़ॉर्म पर आए — सबसे नए सबसे पहले।",
     btn_how_to_use: "W2N कैसे उपयोग करें",
     btn_see_current_choices: "मेरी मौजूदा पसंद देखें →",
     onboarding_title: "Watch2Night कैसे काम करता है",
@@ -2223,6 +2249,7 @@ const TRANSLATIONS = {
     onboarding_dismiss: "बंद करने के लिए कहीं भी टैप करें",
     setup_step1_label: "चरण 1 का 2",
     setup_family_mode_label: "फ़ैमिली मोड",
+    setup_recently_added_mode_label: "हाल ही में जोड़े गए",
     setup_step1_heading: "आप कहाँ देख सकते हैं?",
     setup_step2_label: "चरण 2 का 2",
     setup_step2_heading: "मूड क्या है?",
@@ -2377,6 +2404,8 @@ const TRANSLATIONS = {
     card_family_desc: "Propozycje, które spodobają się całej rodzinie.",
     card_surprise_title: "Zaskocz mnie",
     card_surprise_desc: "Bez wybierania niczego — od razu otrzymaj propozycję.",
+    card_recently_added_title: "Ostatnio dodane",
+    card_recently_added_desc: "Właśnie pojawiły się na twoich platformach — najnowsze najpierw.",
     btn_how_to_use: "Jak korzystać z W2N",
     btn_see_current_choices: "Zobacz moje obecne wybory →",
     onboarding_title: "Jak działa Watch2Night",
@@ -2386,6 +2415,7 @@ const TRANSLATIONS = {
     onboarding_dismiss: "Dotknij w dowolnym miejscu, aby zamknąć",
     setup_step1_label: "Krok 1 z 2",
     setup_family_mode_label: "Tryb rodzinny",
+    setup_recently_added_mode_label: "Ostatnio dodane",
     setup_step1_heading: "Na czym możesz oglądać?",
     setup_step2_label: "Krok 2 z 2",
     setup_step2_heading: "Jaki masz nastrój?",
@@ -2573,6 +2603,7 @@ const TRANSLATIONS = {
     availablePlatforms: FALLBACK_PLATFORMS, // replaced with the real per-region list once it loads
     language: 'en', // auto-detected from region; see REGION_TO_LANGUAGE below
     minRating: 0, // optional filter, 0 = off; set to 7 when the "7.0+ only" toggle is active
+    mode: 'discover', // 'discover' (default) or 'recently_added'
   };
 
   // Must match main.py's MOTN_ORDER_BY_CHOICES exactly.
@@ -2740,13 +2771,19 @@ const TRANSLATIONS = {
   history.replaceState({screen: getActiveScreenId()}, '', location.pathname + location.search);
 
   // Shows/hides the mood-selection step in the setup screen — hidden for
-  // "Watch with your Family" mode, since its mood is pre-set and not a choice.
+  // "Watch with your Family" mode (pre-set, not a choice) and for "Recently
+  // Added" mode (its own separate MOTN endpoint, no genre filtering support).
+  // The rating filter is also hidden for Recently Added specifically, since
+  // that endpoint doesn't support server-side rating filtering.
   function updateSetupStepVisibility(){
     const moodSection = document.getElementById('moodStepSection');
+    const ratingSection = document.getElementById('ratingStepSection');
     const eyebrow = document.getElementById('setupStep1Eyebrow');
+    ratingSection.style.display = state.mode === 'recently_added' ? 'none' : '';
     if(state.skipMoodStep){
       moodSection.style.display = 'none';
-      eyebrow.textContent = t(state.skipMoodReason === 'surprise' ? 'setup_surprise_mode_label' : 'setup_family_mode_label');
+      const labels = { surprise: 'setup_surprise_mode_label', family: 'setup_family_mode_label', recently_added: 'setup_recently_added_mode_label' };
+      eyebrow.textContent = t(labels[state.skipMoodReason] || 'setup_surprise_mode_label');
     } else {
       moodSection.style.display = '';
       eyebrow.textContent = t('setup_step1_label');
@@ -2755,6 +2792,7 @@ const TRANSLATIONS = {
 
   document.getElementById('btnPickMovies').addEventListener('click', () => {
     state.contentType = 'movie';
+    state.mode = 'discover';
     state.skipMoodStep = false;
     state.skipMoodReason = null;
     updateSetupStepVisibility();
@@ -2763,6 +2801,7 @@ const TRANSLATIONS = {
 
   document.getElementById('btnPickSeries').addEventListener('click', () => {
     state.contentType = 'tv_series';
+    state.mode = 'discover';
     state.skipMoodStep = false;
     state.skipMoodReason = null;
     updateSetupStepVisibility();
@@ -2779,6 +2818,7 @@ const TRANSLATIONS = {
   function enterFamilyMode(contentType){
     closeDialog(document.getElementById('familyTypeOverlay'), 'active');
     state.contentType = contentType;
+    state.mode = 'discover';
     state.moods.clear();
     state.moods.add('family');
     state.skipMoodStep = true;
@@ -2827,10 +2867,28 @@ const TRANSLATIONS = {
   // actually have access to.
   document.getElementById('btnSurpriseMeFirst').addEventListener('click', () => {
     state.contentType = Math.random() < 0.5 ? 'movie' : 'tv_series';
+    state.mode = 'discover';
     state.moods.clear();
     clearMoodFilterVisual();
     state.skipMoodStep = true;
     state.skipMoodReason = 'surprise';
+    updateSetupStepVisibility();
+    showScreen('screen-setup');
+  });
+
+  // "Recently added" — uses a separate MOTN endpoint (catalog changes, not
+  // search-by-filters) so mood/genre filtering and the rating filter don't
+  // apply here; still asks which platforms, since that's what "added to
+  // your platforms" means.
+  document.getElementById('btnPickRecentlyAdded').addEventListener('click', () => {
+    state.contentType = 'movie';
+    state.mode = 'recently_added';
+    state.moods.clear();
+    clearMoodFilterVisual();
+    state.minRating = 0;
+    document.querySelectorAll('#chipMinRating .chip').forEach(c => setChipActive(c, false));
+    state.skipMoodStep = true;
+    state.skipMoodReason = 'recently_added';
     updateSetupStepVisibility();
     showScreen('screen-setup');
   });
@@ -2940,9 +2998,14 @@ const TRANSLATIONS = {
 
   function fetchDiscoverPage(page, limit){
     const platformParam = [...state.platforms].join(',');
-    const moodParam = [...state.moods].join(',');
-    const ratingParam = state.minRating > 0 ? `&min_rating=${state.minRating}` : '';
-    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=${state.orderBy}&language=${state.language}${ratingParam}`;
+    let url;
+    if(state.mode === 'recently_added'){
+      url = `${BACKEND_URL}/api/recently-added?platforms=${platformParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&language=${state.language}`;
+    } else {
+      const moodParam = [...state.moods].join(',');
+      const ratingParam = state.minRating > 0 ? `&min_rating=${state.minRating}` : '';
+      url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=${state.orderBy}&language=${state.language}${ratingParam}`;
+    }
     return fetch(url)
       .then(r => { if(!r.ok) throw new Error('bad response'); return r.json(); })
       .then(data => {
@@ -4029,6 +4092,7 @@ const TRANSLATIONS = {
   function fullRestart(){
     history.replaceState(null, '', location.pathname);
     state.contentType = 'movie';
+    state.mode = 'discover';
     state.platforms.clear();
     state.moods.clear();
     state.minRating = 0;
