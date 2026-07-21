@@ -1139,7 +1139,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.75</div>
+    <div class="wordmark">Watch2Night — build v3.76</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -1195,6 +1195,16 @@
         </div>
         <div class="chip-group" id="chipMoods"></div>
         <button class="btn btn-ghost" id="btnSurpriseMeSetup" data-i18n="btn_surprise_setup" style="margin-top:.8rem;">🎲 Surprise me — any mood</button>
+      </div>
+
+      <div class="section-head" style="margin-top:1.4rem;">
+        <span class="eyebrow" data-i18n="setup_rating_label">Optional</span>
+        <h2 data-i18n="setup_rating_heading">Any rating requirement?</h2>
+      </div>
+      <div class="chip-group">
+        <button class="chip" id="chipMinRating" type="button" data-active="false">
+          <span class="dot"></span><span data-i18n="rating_chip_7plus">★ 7.0+ only</span>
+        </button>
       </div>
 
       <div class="setup-actions">
@@ -1397,6 +1407,9 @@ const TRANSLATIONS = {
     setup_step1_heading: "What can you watch on?",
     setup_step2_label: "Step 2 of 2",
     setup_step2_heading: "What's the mood?",
+    setup_rating_label: "Optional",
+    setup_rating_heading: "Any rating requirement?",
+    rating_chip_7plus: "★ 7.0+ only",
     btn_surprise_setup: "🎲 Surprise me — any mood",
     btn_start_swiping: "Start swiping →",
     family_dialog_question: "Movies or series?",
@@ -1556,6 +1569,9 @@ const TRANSLATIONS = {
     setup_step1_heading: "¿Dónde puedes ver contenido?",
     setup_step2_label: "Paso 2 de 2",
     setup_step2_heading: "¿Qué estado de ánimo tienes?",
+    setup_rating_label: "Opcional",
+    setup_rating_heading: "¿Alguna puntuación mínima?",
+    rating_chip_7plus: "★ Solo 7.0+",
     btn_surprise_setup: "🎲 Sorpréndeme — cualquier estado de ánimo",
     btn_start_swiping: "Empezar a deslizar →",
     family_dialog_question: "¿Películas o series?",
@@ -1715,6 +1731,9 @@ const TRANSLATIONS = {
     setup_step1_heading: "Onde você pode assistir?",
     setup_step2_label: "Passo 2 de 2",
     setup_step2_heading: "Qual é o clima?",
+    setup_rating_label: "Opcional",
+    setup_rating_heading: "Alguma nota mínima?",
+    rating_chip_7plus: "★ Apenas 7.0+",
     btn_surprise_setup: "🎲 Me surpreenda — qualquer clima",
     btn_start_swiping: "Começar a deslizar →",
     family_dialog_question: "Filmes ou séries?",
@@ -1874,6 +1893,9 @@ const TRANSLATIONS = {
     setup_step1_heading: "Sur quoi pouvez-vous regarder ?",
     setup_step2_label: "Étape 2 sur 2",
     setup_step2_heading: "Quelle est l'ambiance ?",
+    setup_rating_label: "Facultatif",
+    setup_rating_heading: "Une note minimale ?",
+    rating_chip_7plus: "★ 7.0+ uniquement",
     btn_surprise_setup: "🎲 Surprenez-moi — n'importe quelle ambiance",
     btn_start_swiping: "Commencer à parcourir →",
     family_dialog_question: "Films ou séries ?",
@@ -2033,6 +2055,9 @@ const TRANSLATIONS = {
     setup_step1_heading: "Wo kannst du schauen?",
     setup_step2_label: "Schritt 2 von 2",
     setup_step2_heading: "Welche Stimmung?",
+    setup_rating_label: "Optional",
+    setup_rating_heading: "Mindestbewertung gewünscht?",
+    rating_chip_7plus: "★ Nur 7.0+",
     btn_surprise_setup: "🎲 Überrasch mich — egal welche Stimmung",
     btn_start_swiping: "Los geht's →",
     family_dialog_question: "Filme oder Serien?",
@@ -2192,6 +2217,9 @@ const TRANSLATIONS = {
     setup_step1_heading: "आप कहाँ देख सकते हैं?",
     setup_step2_label: "चरण 2 का 2",
     setup_step2_heading: "मूड क्या है?",
+    setup_rating_label: "वैकल्पिक",
+    setup_rating_heading: "कोई न्यूनतम रेटिंग चाहिए?",
+    rating_chip_7plus: "★ केवल 7.0+",
     btn_surprise_setup: "🎲 मुझे सरप्राइज़ करें — कोई भी मूड",
     btn_start_swiping: "स्वाइप करना शुरू करें →",
     family_dialog_question: "फ़िल्में या सीरीज़?",
@@ -2351,6 +2379,9 @@ const TRANSLATIONS = {
     setup_step1_heading: "Na czym możesz oglądać?",
     setup_step2_label: "Krok 2 z 2",
     setup_step2_heading: "Jaki masz nastrój?",
+    setup_rating_label: "Opcjonalnie",
+    setup_rating_heading: "Minimalna ocena?",
+    rating_chip_7plus: "★ Tylko 7.0+",
     btn_surprise_setup: "🎲 Zaskocz mnie — dowolny nastrój",
     btn_start_swiping: "Zacznij przesuwać →",
     family_dialog_question: "Filmy czy seriale?",
@@ -2531,6 +2562,7 @@ const TRANSLATIONS = {
     skipMoodReason: null, // 'family' | 'surprise' — which of the two skip-mood flows is active, for the eyebrow label
     availablePlatforms: FALLBACK_PLATFORMS, // replaced with the real per-region list once it loads
     language: 'en', // auto-detected from region; see REGION_TO_LANGUAGE below
+    minRating: 0, // optional filter, 0 = off; set to 7 when the "7.0+ only" toggle is active
   };
 
   // Must match main.py's MOTN_ORDER_BY_CHOICES exactly.
@@ -2816,6 +2848,11 @@ const TRANSLATIONS = {
 
   document.getElementById('btnSurpriseMeSetup').addEventListener('click', () => goSurpriseMe(false));
 
+  document.getElementById('chipMinRating').addEventListener('click', (e) => {
+    state.minRating = state.minRating > 0 ? 0 : 7;
+    setChipActive(e.currentTarget, state.minRating > 0);
+  });
+
   function flashButton(btn, text){
     const original = btn.textContent;
     btn.textContent = text;
@@ -2862,7 +2899,8 @@ const TRANSLATIONS = {
   function fetchDiscoverPage(page, limit){
     const platformParam = [...state.platforms].join(',');
     const moodParam = [...state.moods].join(',');
-    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=${state.orderBy}&language=${state.language}`;
+    const ratingParam = state.minRating > 0 ? `&min_rating=${state.minRating}` : '';
+    const url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=${state.orderBy}&language=${state.language}${ratingParam}`;
     return fetch(url)
       .then(r => { if(!r.ok) throw new Error('bad response'); return r.json(); })
       .then(data => {
@@ -3949,6 +3987,7 @@ const TRANSLATIONS = {
     state.contentType = 'movie';
     state.platforms.clear();
     state.moods.clear();
+    state.minRating = 0;
     state.skipMoodStep = false;
     state.skipMoodReason = null;
     state.deckIndex = 0;
