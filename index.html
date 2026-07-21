@@ -1139,7 +1139,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.74</div>
+    <div class="wordmark">Watch2Night — build v3.75</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -3201,7 +3201,6 @@ const TRANSLATIONS = {
       else if(currentX < -110){ resolveFn(movie, false, card); }
       else { card.style.transform = ''; }
       currentX = 0;
-      cleanup();
     }
     // Some mobile browsers (notably Samsung Internet) fire pointercancel
     // instead of pointerup when a touch that started on the scrollable
@@ -3215,19 +3214,31 @@ const TRANSLATIONS = {
       card.style.transition = '';
       card.style.transform = '';
       currentX = 0;
-      cleanup();
     }
 
-    // Each render used to attach a fresh pointermove/pointerup pair to window
-    // and never remove it, so every prior swipe's listeners stayed alive for
-    // the rest of the session — accumulating on window and executing on every
-    // single pointer move, plus keeping old (already-removed) card elements
-    // pinned in memory via closure. This was the source of the app feeling
-    // slower the longer someone swiped. Named references + cleanup() below
-    // ensure each drag's listeners detach themselves the moment it resolves.
-    function movePointer(e){ onMove(e.clientX); }
-    function upPointer(){ onUp(); }
-    function cancelPointer(){ onCancel(); }
+    // A snap-back (drag released without crossing the swipe threshold) or a
+    // cancel doesn't replace the card — the same element and this same
+    // closure are still in play, waiting for another drag attempt. So
+    // listeners must NOT be torn down at that point, or a second drag on the
+    // same still-visible card has nothing left to respond to it (this was
+    // the "stuck, only the buttons work" bug). Instead, each event lazily
+    // checks whether the card has actually left the DOM — which only
+    // happens once resolveFn genuinely fires, from a drag or a button click
+    // — and only then removes its own window listeners. This still fixes
+    // the original leak (dead listeners from replaced cards accumulating on
+    // window) since the very next pointer event self-detects and cleans up.
+    function movePointer(e){
+      if(!card.isConnected){ cleanup(); return; }
+      onMove(e.clientX);
+    }
+    function upPointer(){
+      if(!card.isConnected){ cleanup(); return; }
+      onUp();
+    }
+    function cancelPointer(){
+      if(!card.isConnected){ cleanup(); return; }
+      onCancel();
+    }
     function cleanup(){
       window.removeEventListener('pointermove', movePointer);
       window.removeEventListener('pointerup', upPointer);
