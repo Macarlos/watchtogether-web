@@ -1139,7 +1139,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night — build v3.76</div>
+    <div class="wordmark">Watch2Night — build v3.77</div>
 
     <div class="global-search-bar">
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="🔍 Search for a title…" />
@@ -1201,10 +1201,12 @@
         <span class="eyebrow" data-i18n="setup_rating_label">Optional</span>
         <h2 data-i18n="setup_rating_heading">Any rating requirement?</h2>
       </div>
-      <div class="chip-group">
-        <button class="chip" id="chipMinRating" type="button" data-active="false">
-          <span class="dot"></span><span data-i18n="rating_chip_7plus">★ 7.0+ only</span>
-        </button>
+      <div class="chip-group" id="chipMinRating">
+        <button class="chip" type="button" data-rating="5">★ 5+</button>
+        <button class="chip" type="button" data-rating="6">★ 6+</button>
+        <button class="chip" type="button" data-rating="7">★ 7+</button>
+        <button class="chip" type="button" data-rating="8">★ 8+</button>
+        <button class="chip" type="button" data-rating="9">★ 9+</button>
       </div>
 
       <div class="setup-actions">
@@ -2848,9 +2850,15 @@ const TRANSLATIONS = {
 
   document.getElementById('btnSurpriseMeSetup').addEventListener('click', () => goSurpriseMe(false));
 
-  document.getElementById('chipMinRating').addEventListener('click', (e) => {
-    state.minRating = state.minRating > 0 ? 0 : 7;
-    setChipActive(e.currentTarget, state.minRating > 0);
+  document.querySelectorAll('#chipMinRating .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const value = Number(chip.dataset.rating);
+      const turningOn = state.minRating !== value;
+      state.minRating = turningOn ? value : 0;
+      document.querySelectorAll('#chipMinRating .chip').forEach(c =>
+        setChipActive(c, turningOn && Number(c.dataset.rating) === value)
+      );
+    });
   });
 
   function flashButton(btn, text){
