@@ -1358,7 +1358,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v3.86 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
+  <footer>Watch2Night v3.87 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3104,6 +3104,7 @@ const TRANSLATIONS = {
     wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>${t('deck_loading')}</p></div>`;
     document.getElementById('btnPass').disabled = true;
     document.getElementById('btnLike').disabled = true;
+    updateRewindButton();
 
     // A smaller first batch enriches faster, so the first card appears sooner.
     // We immediately start pulling more in the background right after, rather
