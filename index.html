@@ -1351,7 +1351,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v3.84 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
+  <footer>Watch2Night v3.85 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3095,6 +3095,8 @@ const TRANSLATIONS = {
     state.noMoreResultsStreak = 0;
     const wrap = document.getElementById('deckWrap');
     wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>${t('deck_loading')}</p></div>`;
+    document.getElementById('btnPass').disabled = true;
+    document.getElementById('btnLike').disabled = true;
 
     // A smaller first batch enriches faster, so the first card appears sooner.
     // We immediately start pulling more in the background right after, rather
@@ -3213,6 +3215,7 @@ const TRANSLATIONS = {
     updateRewindButton();
 
     if(state.deckIndex >= deck.length){
+      updateSwipeButtonsEnabled(false);
       if(state.loadingMore){
         wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>${t('deck_loading_more')}</p></div>`;
         return;
@@ -3230,6 +3233,7 @@ const TRANSLATIONS = {
       return;
     }
 
+    updateSwipeButtonsEnabled(true);
     wrap.innerHTML = '';
 
     // Render current + next card (next sits behind, slightly scaled) for a stacked feel.
@@ -3463,6 +3467,16 @@ const TRANSLATIONS = {
   function updateRewindButton(){
     const btn = document.getElementById('btnRewind');
     if(btn) btn.disabled = state.deckIndex <= 0;
+  }
+
+  // Pass/like have no purpose while there's no current card to act on — both
+  // during the very first load, and mid-session if the deck runs out and is
+  // waiting on more results. They previously stayed clickable throughout
+  // (silently doing nothing, guarded only by an internal `if(!movie) return`)
+  // which read as broken rather than loading.
+  function updateSwipeButtonsEnabled(hasCurrentCard){
+    document.getElementById('btnPass').disabled = !hasCurrentCard;
+    document.getElementById('btnLike').disabled = !hasCurrentCard;
   }
 
   // Undoes the most recent swipe — goes back one card at a time (the deck
