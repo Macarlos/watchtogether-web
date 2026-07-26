@@ -52,7 +52,7 @@
   }
 
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  html{-webkit-font-smoothing:antialiased;}
+  html{-webkit-font-smoothing:antialiased; overflow-x:hidden;}
 
   body{
     background:
@@ -468,6 +468,8 @@
   .similar-titles-row{
     display:flex;
     gap:.7rem;
+    width:100%;
+    max-width:100%;
     overflow-x:auto;
     padding-bottom:.3rem;
     -webkit-overflow-scrolling:touch;
@@ -1404,7 +1406,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v3.88 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
+  <footer>Watch2Night v3.89 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1553,7 +1555,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Start a new session",
     btn_back_to_main: "Back to main page",
     checking_where_to_watch: "Checking where to watch…",
-    similar_titles_heading: "You might also like",
+    similar_titles_heading: "Similar genre picks",
     region_disclosure_template: "Availability and prices reflect the {region} catalog, regardless of where you are.",
     region_disclosure_prices_template: "Prices and availability shown reflect the {region} catalog, regardless of where you are.",
     btn_share_this_pick: "Share this pick →",
@@ -1719,7 +1721,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Empezar una nueva sesión",
     btn_back_to_main: "Volver a la página principal",
     checking_where_to_watch: "Buscando dónde verlo…",
-    similar_titles_heading: "También te podría gustar",
+    similar_titles_heading: "Del mismo género",
     region_disclosure_template: "La disponibilidad y los precios reflejan el catálogo de {region}, sin importar dónde estés.",
     region_disclosure_prices_template: "Los precios y la disponibilidad mostrados reflejan el catálogo de {region}, sin importar dónde estés.",
     btn_share_this_pick: "Compartir esta elección →",
@@ -1885,7 +1887,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Começar uma nova sessão",
     btn_back_to_main: "Voltar à página principal",
     checking_where_to_watch: "Verificando onde assistir…",
-    similar_titles_heading: "Você também pode gostar",
+    similar_titles_heading: "Do mesmo gênero",
     region_disclosure_template: "A disponibilidade e os preços refletem o catálogo {region}, não importa onde você esteja.",
     region_disclosure_prices_template: "Os preços e a disponibilidade mostrados refletem o catálogo {region}, não importa onde você esteja.",
     btn_share_this_pick: "Compartilhar esta escolha →",
@@ -2051,7 +2053,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Démarrer une nouvelle session",
     btn_back_to_main: "Retour à la page principale",
     checking_where_to_watch: "Vérification d'où regarder…",
-    similar_titles_heading: "Vous pourriez aussi aimer",
+    similar_titles_heading: "Du même genre",
     region_disclosure_template: "La disponibilité et les prix reflètent le catalogue {region}, quel que soit l'endroit où vous êtes.",
     region_disclosure_prices_template: "Les prix et la disponibilité affichés reflètent le catalogue {region}, quel que soit l'endroit où vous êtes.",
     btn_share_this_pick: "Partager ce choix →",
@@ -2217,7 +2219,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Neue Sitzung starten",
     btn_back_to_main: "Zurück zur Startseite",
     checking_where_to_watch: "Prüfe, wo du schauen kannst…",
-    similar_titles_heading: "Das könnte dir auch gefallen",
+    similar_titles_heading: "Ähnliches Genre",
     region_disclosure_template: "Verfügbarkeit und Preise entsprechen dem {region} Katalog, unabhängig davon, wo du dich befindest.",
     region_disclosure_prices_template: "Angezeigte Preise und Verfügbarkeit entsprechen dem {region} Katalog, unabhängig davon, wo du dich befindest.",
     btn_share_this_pick: "Diese Auswahl teilen →",
@@ -2383,7 +2385,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "नया सेशन शुरू करें",
     btn_back_to_main: "मुख्य पेज पर वापस जाएं",
     checking_where_to_watch: "कहाँ देखें यह जाँचा जा रहा है…",
-    similar_titles_heading: "आपको यह भी पसंद आ सकता है",
+    similar_titles_heading: "इसी शैली की अन्य फ़िल्में",
     region_disclosure_template: "उपलब्धता और कीमतें {region} कैटलॉग के अनुसार दिखाई गई हैं, चाहे आप कहीं भी हों।",
     region_disclosure_prices_template: "दिखाई गई कीमतें और उपलब्धता {region} कैटलॉग के अनुसार हैं, चाहे आप कहीं भी हों।",
     btn_share_this_pick: "यह पसंद शेयर करें →",
@@ -2549,7 +2551,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Rozpocznij nową sesję",
     btn_back_to_main: "Powrót do strony głównej",
     checking_where_to_watch: "Sprawdzamy, gdzie obejrzeć…",
-    similar_titles_heading: "Może Ci się spodobać",
+    similar_titles_heading: "Podobny gatunek",
     region_disclosure_template: "Dostępność i ceny odzwierciedlają katalog {region}, niezależnie od tego, gdzie jesteś.",
     region_disclosure_prices_template: "Wyświetlone ceny i dostępność odzwierciedlają katalog {region}, niezależnie od tego, gdzie jesteś.",
     btn_share_this_pick: "Udostępnij ten wybór →",
