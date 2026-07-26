@@ -465,6 +465,33 @@
 
   .detail-block{ display:flex; flex-direction:column; gap:.4rem; }
 
+  .similar-titles-wrap{ position:relative; width:100%; min-width:0; }
+
+  .similar-scroll-btn{
+    display:none; /* desktop-only — see the min-width:700px block below */
+    position:absolute; top:0; bottom:.3rem;
+    width:52px;
+    align-items:center;
+    border:none; cursor:pointer; z-index:2;
+    color:var(--ink); font-size:1.4rem;
+    background:none;
+    opacity:0; pointer-events:none;
+    transition:opacity .15s;
+  }
+  .similar-scroll-btn.visible{ opacity:1; pointer-events:auto; }
+  .similar-scroll-btn.prev{
+    left:0; justify-content:flex-start; padding-left:.2rem;
+    background:linear-gradient(to right, var(--bg) 25%, transparent);
+  }
+  .similar-scroll-btn.next{
+    right:0; justify-content:flex-end; padding-right:.2rem;
+    background:linear-gradient(to left, var(--bg) 25%, transparent);
+  }
+  .similar-scroll-btn:hover{ color:var(--amber); }
+  @media (min-width:700px){
+    .similar-scroll-btn{ display:flex; }
+  }
+
   .similar-titles-row{
     display:flex;
     gap:.7rem;
@@ -1380,7 +1407,11 @@
         <div class="section-head" style="text-align:left; margin-bottom:.7rem;">
           <h2 style="font-size:1.05rem;" id="similarTitlesHeading" data-i18n="similar_titles_heading">You might also like</h2>
         </div>
-        <div class="similar-titles-row" id="similarTitlesRow"></div>
+        <div class="similar-titles-wrap">
+          <button class="similar-scroll-btn prev" id="similarScrollPrev" type="button" aria-label="Scroll left"><i class="ti ti-chevron-left" aria-hidden="true"></i></button>
+          <div class="similar-titles-row" id="similarTitlesRow"></div>
+          <button class="similar-scroll-btn next" id="similarScrollNext" type="button" aria-label="Scroll right"><i class="ti ti-chevron-right" aria-hidden="true"></i></button>
+        </div>
       </div>
 
       <button class="btn btn-primary btn-block" id="btnShareThisPick" data-i18n="btn_share_this_pick" style="margin-bottom:.6rem;">Share this pick →</button>
@@ -1407,7 +1438,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v3.90 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
+  <footer>Watch2Night v3.91 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1556,7 +1587,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Start a new session",
     btn_back_to_main: "Back to main page",
     checking_where_to_watch: "Checking where to watch…",
-    similar_titles_heading: "Similar genre picks",
+    similar_titles_heading: "You might also like",
     region_disclosure_template: "Availability and prices reflect the {region} catalog, regardless of where you are.",
     region_disclosure_prices_template: "Prices and availability shown reflect the {region} catalog, regardless of where you are.",
     btn_share_this_pick: "Share this pick →",
@@ -1722,7 +1753,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Empezar una nueva sesión",
     btn_back_to_main: "Volver a la página principal",
     checking_where_to_watch: "Buscando dónde verlo…",
-    similar_titles_heading: "Del mismo género",
+    similar_titles_heading: "También te podría gustar",
     region_disclosure_template: "La disponibilidad y los precios reflejan el catálogo de {region}, sin importar dónde estés.",
     region_disclosure_prices_template: "Los precios y la disponibilidad mostrados reflejan el catálogo de {region}, sin importar dónde estés.",
     btn_share_this_pick: "Compartir esta elección →",
@@ -1888,7 +1919,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Começar uma nova sessão",
     btn_back_to_main: "Voltar à página principal",
     checking_where_to_watch: "Verificando onde assistir…",
-    similar_titles_heading: "Do mesmo gênero",
+    similar_titles_heading: "Você também pode gostar",
     region_disclosure_template: "A disponibilidade e os preços refletem o catálogo {region}, não importa onde você esteja.",
     region_disclosure_prices_template: "Os preços e a disponibilidade mostrados refletem o catálogo {region}, não importa onde você esteja.",
     btn_share_this_pick: "Compartilhar esta escolha →",
@@ -2054,7 +2085,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Démarrer une nouvelle session",
     btn_back_to_main: "Retour à la page principale",
     checking_where_to_watch: "Vérification d'où regarder…",
-    similar_titles_heading: "Du même genre",
+    similar_titles_heading: "Vous pourriez aussi aimer",
     region_disclosure_template: "La disponibilité et les prix reflètent le catalogue {region}, quel que soit l'endroit où vous êtes.",
     region_disclosure_prices_template: "Les prix et la disponibilité affichés reflètent le catalogue {region}, quel que soit l'endroit où vous êtes.",
     btn_share_this_pick: "Partager ce choix →",
@@ -2220,7 +2251,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Neue Sitzung starten",
     btn_back_to_main: "Zurück zur Startseite",
     checking_where_to_watch: "Prüfe, wo du schauen kannst…",
-    similar_titles_heading: "Ähnliches Genre",
+    similar_titles_heading: "Das könnte dir auch gefallen",
     region_disclosure_template: "Verfügbarkeit und Preise entsprechen dem {region} Katalog, unabhängig davon, wo du dich befindest.",
     region_disclosure_prices_template: "Angezeigte Preise und Verfügbarkeit entsprechen dem {region} Katalog, unabhängig davon, wo du dich befindest.",
     btn_share_this_pick: "Diese Auswahl teilen →",
@@ -2386,7 +2417,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "नया सेशन शुरू करें",
     btn_back_to_main: "मुख्य पेज पर वापस जाएं",
     checking_where_to_watch: "कहाँ देखें यह जाँचा जा रहा है…",
-    similar_titles_heading: "इसी शैली की अन्य फ़िल्में",
+    similar_titles_heading: "आपको यह भी पसंद आ सकता है",
     region_disclosure_template: "उपलब्धता और कीमतें {region} कैटलॉग के अनुसार दिखाई गई हैं, चाहे आप कहीं भी हों।",
     region_disclosure_prices_template: "दिखाई गई कीमतें और उपलब्धता {region} कैटलॉग के अनुसार हैं, चाहे आप कहीं भी हों।",
     btn_share_this_pick: "यह पसंद शेयर करें →",
@@ -2552,7 +2583,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Rozpocznij nową sesję",
     btn_back_to_main: "Powrót do strony głównej",
     checking_where_to_watch: "Sprawdzamy, gdzie obejrzeć…",
-    similar_titles_heading: "Podobny gatunek",
+    similar_titles_heading: "Może Ci się spodobać",
     region_disclosure_template: "Dostępność i ceny odzwierciedlają katalog {region}, niezależnie od tego, gdzie jesteś.",
     region_disclosure_prices_template: "Wyświetlone ceny i dostępność odzwierciedlają katalog {region}, niezależnie od tego, gdzie jesteś.",
     btn_share_this_pick: "Udostępnij ten wybór →",
@@ -4214,9 +4245,37 @@ const TRANSLATIONS = {
           });
         });
         section.style.display = '';
+        updateSimilarScrollButtons();
       })
       .catch(() => {}); // silent — this is a nice-to-have extra, not core functionality
   }
+
+  // Desktop-only click arrows for the similar-titles carousel (CSS already
+  // hides these under 700px — mobile relies on touch drag, same as every
+  // other horizontally-scrollable row in the app). Visibility reflects the
+  // row's actual scroll position, not just "always show both" — no point
+  // offering a left-arrow with nothing further left to see.
+  function updateSimilarScrollButtons(){
+    const row = document.getElementById('similarTitlesRow');
+    const prevBtn = document.getElementById('similarScrollPrev');
+    const nextBtn = document.getElementById('similarScrollNext');
+    const canScrollLeft = row.scrollLeft > 4;
+    const canScrollRight = row.scrollLeft + row.clientWidth < row.scrollWidth - 4;
+    prevBtn.classList.toggle('visible', canScrollLeft);
+    nextBtn.classList.toggle('visible', canScrollRight);
+  }
+
+  (function(){
+    const row = document.getElementById('similarTitlesRow');
+    row.addEventListener('scroll', updateSimilarScrollButtons);
+    document.getElementById('similarScrollPrev').addEventListener('click', () => {
+      row.scrollBy({ left: -260, behavior: 'smooth' });
+    });
+    document.getElementById('similarScrollNext').addEventListener('click', () => {
+      row.scrollBy({ left: 260, behavior: 'smooth' });
+    });
+    window.addEventListener('resize', updateSimilarScrollButtons);
+  })();
 
   document.getElementById('btnBackToFavoritesGridTop').addEventListener('click', () => showScreen(finalPickReturnScreen));
   document.getElementById('btnFinalRestartTop').addEventListener('click', () => fullRestart());
