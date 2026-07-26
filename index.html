@@ -464,6 +464,45 @@
   .final-pick-nav .btn{ flex:1; font-size:.78rem; padding:.55rem .8rem; }
 
   .detail-block{ display:flex; flex-direction:column; gap:.4rem; }
+
+  .similar-titles-row{
+    display:flex;
+    gap:.7rem;
+    overflow-x:auto;
+    padding-bottom:.3rem;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-x;
+  }
+  .similar-title-card{
+    flex:0 0 auto;
+    width:100px;
+    text-align:left;
+    background:none;
+    border:none;
+    color:var(--ink);
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .similar-title-card img{
+    width:100%;
+    aspect-ratio:2/3;
+    object-fit:cover;
+    border-radius:8px;
+    border:1px solid var(--border);
+    display:block;
+    margin-bottom:.4rem;
+    transition:border-color .15s, transform .15s;
+  }
+  .similar-title-card:hover img{ border-color:var(--amber); transform:translateY(-2px); }
+  .similar-title-card .similar-title-name{
+    font-size:.72rem;
+    font-weight:600;
+    line-height:1.25;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
   .detail-label{
     font-family:var(--font-mono);
     font-size:.66rem;
@@ -1334,6 +1373,13 @@
         <p class="region-disclosure" data-i18n-template="region_disclosure_prices_template" style="color:var(--muted); font-size:.72rem; margin-top:.9rem; line-height:1.5;">Prices and availability shown reflect the US catalog, regardless of where you are.</p>
       </div>
 
+      <div id="similarTitlesSection" style="display:none; margin-bottom:1.2rem;">
+        <div class="section-head" style="text-align:left; margin-bottom:.7rem;">
+          <h2 style="font-size:1.05rem;" id="similarTitlesHeading" data-i18n="similar_titles_heading">You might also like</h2>
+        </div>
+        <div class="similar-titles-row" id="similarTitlesRow"></div>
+      </div>
+
       <button class="btn btn-primary btn-block" id="btnShareThisPick" data-i18n="btn_share_this_pick" style="margin-bottom:.6rem;">Share this pick →</button>
       <button class="btn btn-primary btn-block" id="btnContinueSwiping" data-i18n="btn_continue_swiping" style="margin-bottom:.6rem;">Continue swiping →</button>
       <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid" data-i18n="btn_back_to_your_picks">← Back to your picks</button>
@@ -1358,7 +1404,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v3.87 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
+  <footer>Watch2Night v3.88 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1507,6 +1553,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Start a new session",
     btn_back_to_main: "Back to main page",
     checking_where_to_watch: "Checking where to watch…",
+    similar_titles_heading: "You might also like",
     region_disclosure_template: "Availability and prices reflect the {region} catalog, regardless of where you are.",
     region_disclosure_prices_template: "Prices and availability shown reflect the {region} catalog, regardless of where you are.",
     btn_share_this_pick: "Share this pick →",
@@ -1672,6 +1719,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Empezar una nueva sesión",
     btn_back_to_main: "Volver a la página principal",
     checking_where_to_watch: "Buscando dónde verlo…",
+    similar_titles_heading: "También te podría gustar",
     region_disclosure_template: "La disponibilidad y los precios reflejan el catálogo de {region}, sin importar dónde estés.",
     region_disclosure_prices_template: "Los precios y la disponibilidad mostrados reflejan el catálogo de {region}, sin importar dónde estés.",
     btn_share_this_pick: "Compartir esta elección →",
@@ -1837,6 +1885,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Começar uma nova sessão",
     btn_back_to_main: "Voltar à página principal",
     checking_where_to_watch: "Verificando onde assistir…",
+    similar_titles_heading: "Você também pode gostar",
     region_disclosure_template: "A disponibilidade e os preços refletem o catálogo {region}, não importa onde você esteja.",
     region_disclosure_prices_template: "Os preços e a disponibilidade mostrados refletem o catálogo {region}, não importa onde você esteja.",
     btn_share_this_pick: "Compartilhar esta escolha →",
@@ -2002,6 +2051,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Démarrer une nouvelle session",
     btn_back_to_main: "Retour à la page principale",
     checking_where_to_watch: "Vérification d'où regarder…",
+    similar_titles_heading: "Vous pourriez aussi aimer",
     region_disclosure_template: "La disponibilité et les prix reflètent le catalogue {region}, quel que soit l'endroit où vous êtes.",
     region_disclosure_prices_template: "Les prix et la disponibilité affichés reflètent le catalogue {region}, quel que soit l'endroit où vous êtes.",
     btn_share_this_pick: "Partager ce choix →",
@@ -2167,6 +2217,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Neue Sitzung starten",
     btn_back_to_main: "Zurück zur Startseite",
     checking_where_to_watch: "Prüfe, wo du schauen kannst…",
+    similar_titles_heading: "Das könnte dir auch gefallen",
     region_disclosure_template: "Verfügbarkeit und Preise entsprechen dem {region} Katalog, unabhängig davon, wo du dich befindest.",
     region_disclosure_prices_template: "Angezeigte Preise und Verfügbarkeit entsprechen dem {region} Katalog, unabhängig davon, wo du dich befindest.",
     btn_share_this_pick: "Diese Auswahl teilen →",
@@ -2332,6 +2383,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "नया सेशन शुरू करें",
     btn_back_to_main: "मुख्य पेज पर वापस जाएं",
     checking_where_to_watch: "कहाँ देखें यह जाँचा जा रहा है…",
+    similar_titles_heading: "आपको यह भी पसंद आ सकता है",
     region_disclosure_template: "उपलब्धता और कीमतें {region} कैटलॉग के अनुसार दिखाई गई हैं, चाहे आप कहीं भी हों।",
     region_disclosure_prices_template: "दिखाई गई कीमतें और उपलब्धता {region} कैटलॉग के अनुसार हैं, चाहे आप कहीं भी हों।",
     btn_share_this_pick: "यह पसंद शेयर करें →",
@@ -2497,6 +2549,7 @@ const TRANSLATIONS = {
     btn_start_new_session: "Rozpocznij nową sesję",
     btn_back_to_main: "Powrót do strony głównej",
     checking_where_to_watch: "Sprawdzamy, gdzie obejrzeć…",
+    similar_titles_heading: "Może Ci się spodobać",
     region_disclosure_template: "Dostępność i ceny odzwierciedlają katalog {region}, niezależnie od tego, gdzie jesteś.",
     region_disclosure_prices_template: "Wyświetlone ceny i dostępność odzwierciedlają katalog {region}, niezależnie od tego, gdzie jesteś.",
     btn_share_this_pick: "Udostępnij ten wybór →",
@@ -4116,7 +4169,50 @@ const TRANSLATIONS = {
       movie.title,
       document.getElementById('finalPickPlatformBadge')
     );
+    loadSimilarTitles(movie);
     showScreen('screen-final-pick');
+  }
+
+  // "You might also like" — genre-based, seeded by whatever title is
+  // currently open. Reuses mapApiResults (same shape /api/discover already
+  // produces) so these cards render with zero new logic, and clicking one
+  // just calls showFinalPick again — which naturally re-fetches ITS OWN
+  // providers and similar titles too, so browsing similar-to-similar just
+  // works without any extra plumbing.
+  function loadSimilarTitles(movie){
+    const section = document.getElementById('similarTitlesSection');
+    const row = document.getElementById('similarTitlesRow');
+    section.style.display = 'none';
+    row.innerHTML = '';
+    if(!movie.watchmodeId) return;
+
+    const platformParam = [...state.platforms].join(',');
+    const url = `${BACKEND_URL}/api/similar/${encodeURIComponent(movie.watchmodeId)}?platforms=${platformParam}&region=${state.region}&content_type=${state.contentType}&language=${state.language}`;
+
+    fetch(url)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if(!data || !Array.isArray(data.results) || data.results.length === 0) return;
+        // The person may have already navigated elsewhere by the time this
+        // resolves (it's a background fetch) — only render if we're still
+        // looking at the same title this was requested for.
+        if(currentFinalPickMovie !== movie) return;
+
+        const similar = mapApiResults(data.results);
+        row.innerHTML = similar.map((m, i) => `
+          <button class="similar-title-card" data-similar-index="${i}">
+            ${m.poster_url ? `<img src="${m.poster_url}" alt="" loading="lazy">` : ''}
+            <div class="similar-title-name">${escapeHtml(m.title)}</div>
+          </button>
+        `).join('');
+        row.querySelectorAll('.similar-title-card').forEach(card => {
+          card.addEventListener('click', () => {
+            showFinalPick(similar[Number(card.dataset.similarIndex)]);
+          });
+        });
+        section.style.display = '';
+      })
+      .catch(() => {}); // silent — this is a nice-to-have extra, not core functionality
   }
 
   document.getElementById('btnBackToFavoritesGridTop').addEventListener('click', () => showScreen(finalPickReturnScreen));
