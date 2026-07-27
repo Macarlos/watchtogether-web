@@ -1462,7 +1462,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v3.93 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
+  <footer>Watch2Night v3.94 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -2678,6 +2678,9 @@ const TRANSLATIONS = {
 };
 
   const BACKEND_URL = 'https://watchtogether-backend-zxwy.onrender.com';
+  // Must match GROQ_TRANSLATE_LANGUAGES in main.py — languages MOTN doesn't
+  // support natively, so their overviews need on-demand translation.
+  const GROQ_TRANSLATE_LANGUAGES = new Set(['pt', 'hi', 'pl']);
 
   // Anonymous session counter — one silent ping per page load, no cookie or
   // identifier attached. Purely a "how many times has this been opened" tally.
@@ -3438,6 +3441,12 @@ const TRANSLATIONS = {
     infoBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       overviewOverlay.classList.toggle('show');
+      // Translation now happens lazily, right here, only for the one card
+      // someone actually opens — not eagerly for a whole batch of cards up
+      // front (that was burning through Groq's 30-req/min free tier fast
+      // enough that some translations would silently fail and fall back to
+      // English, which is what showed up as "sometimes no translation").
+      if(overviewOverlay.classList.contains('show')) loadTranslatedOverviewIfNeeded(movie, overviewOverlay);
     });
     infoRow.appendChild(infoBtn);
 
@@ -3474,6 +3483,39 @@ const TRANSLATIONS = {
     if(isTop){ attachDrag(card, movie, resolveFn); }
 
     return card;
+  }
+
+  // Fetches a translated overview for exactly one card, only the first
+  // time its summary is opened — reuses /api/title/{id}, the existing
+  // single-title endpoint that was always meant to be the one place this
+  // happens (its own docstring says so), rather than the bulk per-batch
+  // translation that used to run on every card in every fetch and burned
+  // through Groq's free-tier rate limit fast enough to cause silent
+  // fallback-to-English failures during normal swiping.
+  function loadTranslatedOverviewIfNeeded(movie, overviewOverlay){
+    if(!GROQ_TRANSLATE_LANGUAGES.has(state.language)) return;
+    if(!movie.watchmodeId) return;
+    if(movie._translatedOverview){
+      overviewOverlay.querySelector('p').textContent = movie._translatedOverview;
+      return;
+    }
+    if(movie._translationRequested) return; // already in flight
+    movie._translationRequested = true;
+
+    fetch(`${BACKEND_URL}/api/title/${encodeURIComponent(movie.watchmodeId)}?language=${state.language}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if(!data || !data.overview) return;
+        movie._translatedOverview = data.overview;
+        // Only update if this card's overlay is still open and showing —
+        // the person may have already moved on to the next card by the
+        // time this resolves.
+        if(overviewOverlay.classList.contains('show')){
+          overviewOverlay.querySelector('p').textContent = data.overview;
+        }
+      })
+      .catch(() => {})
+      .finally(() => { movie._translationRequested = false; });
   }
 
   function attachDrag(card, movie, resolveFn){
