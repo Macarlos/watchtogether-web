@@ -1462,7 +1462,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v3.94 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
+  <footer>Watch2Night v3.95 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -4201,8 +4201,15 @@ const TRANSLATIONS = {
       'screen-deck': t('btn_back_to_swiping'),
     };
     const backLabel = backLabels[finalPickReturnScreen] || t('btn_back');
+    // When someone opened full details from the swipe deck itself, "Continue
+    // swiping" already does exactly what this button would — showing both
+    // was a literal duplicate. Only show this one when the return context
+    // is genuinely different (favorites, search results, a shared link).
+    const cameFromDeck = finalPickReturnScreen === 'screen-deck';
     document.getElementById('btnBackToFavoritesGridTop').textContent = backLabel;
+    document.getElementById('btnBackToFavoritesGridTop').style.display = cameFromDeck ? 'none' : '';
     document.getElementById('btnBackToFavoritesGrid').textContent = backLabel;
+    document.getElementById('btnBackToFavoritesGrid').style.display = cameFromDeck ? 'none' : '';
 
     const el = document.getElementById('finalPickCard');
     const yearLabel = movie.endYear && movie.endYear !== movie.year
