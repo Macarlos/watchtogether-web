@@ -162,19 +162,19 @@
   .persistent-back-btn{
     position:fixed; top:14px; right:14px; z-index:90;
     display:none; align-items:center; gap:.4rem;
-    background:rgba(11,14,20,.5);
-    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-    border:1px solid rgba(255,255,255,.14);
-    color:var(--ink); font-family:var(--font-mono); font-size:.72rem;
-    padding:.5rem .9rem .5rem .7rem; border-radius:999px; letter-spacing:.02em;
-    transition:background .15s, border-color .15s, transform .15s;
+    background:var(--amber);
+    border:none;
+    color:#2b1a00; font-family:var(--font-mono); font-size:.74rem; font-weight:700;
+    padding:.5rem .85rem; border-radius:999px; letter-spacing:.02em;
+    box-shadow:0 3px 10px rgba(0,0,0,.35);
+    transition:transform .15s, box-shadow .15s, background .15s;
     cursor:pointer;
   }
-  .persistent-back-btn i{ font-size:1rem; color:var(--teal); }
+  .persistent-back-btn i{ font-size:1rem; color:#2b1a00; }
   .persistent-back-btn:hover{
-    background:rgba(11,14,20,.75);
-    border-color:rgba(255,255,255,.3);
+    background:#ffc247;
     transform:translateY(-1px);
+    box-shadow:0 5px 14px rgba(0,0,0,.4);
   }
 
   .global-search-bar{ width:100%; margin-bottom:1.75rem; }
@@ -1121,7 +1121,7 @@
 
   <button id="btnNewSearchPersistent" class="persistent-back-btn">
     <i class="ti ti-home" aria-hidden="true"></i>
-    <span data-i18n="btn_back_to_main">Back to main page</span>
+    <span data-i18n="btn_home_short">Home</span>
   </button>
 
   <!-- ═══════════════ SHARE DIALOG ═══════════════ -->
@@ -1462,7 +1462,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v3.98 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v3.99 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1611,6 +1611,7 @@ const TRANSLATIONS = {
     btn_back_to_your_picks: "← Back to your picks",
     btn_start_new_session: "Start a new session",
     btn_back_to_main: "Back to main page",
+    btn_home_short: "Home",
     checking_where_to_watch: "Checking where to watch…",
     similar_titles_heading: "You might also like",
     region_disclosure_template: "Availability and prices reflect the {region} catalog, regardless of where you are.",
@@ -1778,6 +1779,7 @@ const TRANSLATIONS = {
     btn_back_to_your_picks: "← Volver a tus elecciones",
     btn_start_new_session: "Empezar una nueva sesión",
     btn_back_to_main: "Volver a la página principal",
+    btn_home_short: "Inicio",
     checking_where_to_watch: "Buscando dónde verlo…",
     similar_titles_heading: "También te podría gustar",
     region_disclosure_template: "La disponibilidad y los precios reflejan el catálogo de {region}, sin importar dónde estés.",
@@ -1945,6 +1947,7 @@ const TRANSLATIONS = {
     btn_back_to_your_picks: "← Voltar às suas escolhas",
     btn_start_new_session: "Começar uma nova sessão",
     btn_back_to_main: "Voltar à página principal",
+    btn_home_short: "Início",
     checking_where_to_watch: "Verificando onde assistir…",
     similar_titles_heading: "Você também pode gostar",
     region_disclosure_template: "A disponibilidade e os preços refletem o catálogo {region}, não importa onde você esteja.",
@@ -2112,6 +2115,7 @@ const TRANSLATIONS = {
     btn_back_to_your_picks: "← Retour à vos choix",
     btn_start_new_session: "Démarrer une nouvelle session",
     btn_back_to_main: "Retour à la page principale",
+    btn_home_short: "Accueil",
     checking_where_to_watch: "Vérification d'où regarder…",
     similar_titles_heading: "Vous pourriez aussi aimer",
     region_disclosure_template: "La disponibilité et les prix reflètent le catalogue {region}, quel que soit l'endroit où vous êtes.",
@@ -2279,6 +2283,7 @@ const TRANSLATIONS = {
     btn_back_to_your_picks: "← Zurück zu deiner Auswahl",
     btn_start_new_session: "Neue Sitzung starten",
     btn_back_to_main: "Zurück zur Startseite",
+    btn_home_short: "Start",
     checking_where_to_watch: "Prüfe, wo du schauen kannst…",
     similar_titles_heading: "Das könnte dir auch gefallen",
     region_disclosure_template: "Verfügbarkeit und Preise entsprechen dem {region} Katalog, unabhängig davon, wo du dich befindest.",
@@ -2446,6 +2451,7 @@ const TRANSLATIONS = {
     btn_back_to_your_picks: "← अपनी पसंद पर वापस जाएं",
     btn_start_new_session: "नया सेशन शुरू करें",
     btn_back_to_main: "मुख्य पेज पर वापस जाएं",
+    btn_home_short: "होम",
     checking_where_to_watch: "कहाँ देखें यह जाँचा जा रहा है…",
     similar_titles_heading: "आपको यह भी पसंद आ सकता है",
     region_disclosure_template: "उपलब्धता और कीमतें {region} कैटलॉग के अनुसार दिखाई गई हैं, चाहे आप कहीं भी हों।",
@@ -2613,6 +2619,7 @@ const TRANSLATIONS = {
     btn_back_to_your_picks: "← Wróć do swoich wyborów",
     btn_start_new_session: "Rozpocznij nową sesję",
     btn_back_to_main: "Powrót do strony głównej",
+    btn_home_short: "Strona główna",
     checking_where_to_watch: "Sprawdzamy, gdzie obejrzeć…",
     similar_titles_heading: "Może Ci się spodobać",
     region_disclosure_template: "Dostępność i ceny odzwierciedlają katalog {region}, niezależnie od tego, gdzie jesteś.",
