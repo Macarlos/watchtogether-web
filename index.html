@@ -1495,7 +1495,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.10 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.11 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -2942,6 +2942,23 @@ const TRANSLATIONS = {
   // system back gesture/button, which otherwise would just exit the app
   // immediately since there'd be no history to step through.
   window.addEventListener('popstate', (event) => {
+    // If any dialog is open, back should just close it — not also
+    // navigate the screen underneath. Reuses the same set of overlays
+    // already checked by the Escape-key handler above, so any new dialog
+    // added there gets this behavior automatically.
+    const openOverlay = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay']
+      .map(id => document.getElementById(id))
+      .find(el => el && el.classList.contains('active'));
+    const openOnboarding = document.getElementById('onboardingOverlay');
+    if(openOverlay){
+      closeDialogVisual(openOverlay, 'active');
+      return;
+    }
+    if(openOnboarding && openOnboarding.classList.contains('visible')){
+      closeDialogVisual(openOnboarding, 'visible');
+      return;
+    }
+
     const targetId = event.state?.screen;
     if(targetId && document.getElementById(targetId)){
       showScreen(targetId, true);
@@ -3866,9 +3883,15 @@ const TRANSLATIONS = {
     overlay.classList.add(openClass);
     const dialog = overlay.querySelector('.share-dialog');
     if(dialog) dialog.focus();
+    // Marks that a dialog is open in the browser's own history, so the
+    // back button/Android back gesture has something to act on — without
+    // this, opening a dialog was invisible to browser history entirely,
+    // so pressing back just navigated the screen underneath while the
+    // dialog itself stayed stuck open on top.
+    history.pushState({dialogOpen: true}, '', location.pathname + location.search);
   }
 
-  function closeDialog(overlay, openClass){
+  function closeDialogVisual(overlay, openClass){
     overlay.classList.remove(openClass);
     if(lastDialogTrigger && typeof lastDialogTrigger.focus === 'function'){
       lastDialogTrigger.focus();
@@ -3876,15 +3899,28 @@ const TRANSLATIONS = {
     lastDialogTrigger = null;
   }
 
+  function closeDialog(overlay, openClass){
+    closeDialogVisual(overlay, openClass);
+    // Clean up the history entry pushed on open — but only if we're still
+    // sitting on it (i.e. this close came from a button/Escape/Apply, not
+    // from the back button itself, which already popped it before this
+    // ever runs).
+    if(history.state?.dialogOpen) history.back();
+  }
+
   document.addEventListener('keydown', (e) => {
     if(e.key !== 'Escape') return;
     const share = document.getElementById('shareOverlay');
     const category = document.getElementById('categoryOverlay');
     const platform = document.getElementById('platformOverlay');
+    const family = document.getElementById('familyTypeOverlay');
+    const recentlyAdded = document.getElementById('recentlyAddedTypeOverlay');
     const onboarding = document.getElementById('onboardingOverlay');
     if(share.classList.contains('active')) closeDialog(share, 'active');
     else if(category.classList.contains('active')) closeDialog(category, 'active');
     else if(platform.classList.contains('active')) closeDialog(platform, 'active');
+    else if(family.classList.contains('active')) closeDialog(family, 'active');
+    else if(recentlyAdded.classList.contains('active')) closeDialog(recentlyAdded, 'active');
     else if(onboarding.classList.contains('visible')) closeDialog(onboarding, 'visible');
   });
 
