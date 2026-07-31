@@ -1382,7 +1382,7 @@
       <p class="demo-note" id="deckHint" data-i18n="deck_hint">Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.</p>
       <div style="width:100%; max-width:230px; display:flex; flex-direction:column; gap:.6rem; margin-top:1rem;">
         <button class="btn btn-ghost" id="btnAdjustCategories" style="width:100%; display:flex; align-items:center; justify-content:center; gap:.5rem;"><i class="ti ti-adjustments" aria-hidden="true"></i><span data-i18n="btn_adjust_categories">Adjust categories</span></button>
-        <button class="btn btn-ghost" id="btnGoToFavorites" data-i18n="btn_see_picks_so_far" style="width:100%; display:none;">See my picks so far</button>
+        <button class="btn btn-ghost" id="btnGoToFavorites" style="width:100%; display:none; align-items:center; justify-content:center; gap:.5rem;"><i class="ti ti-list-check" aria-hidden="true"></i><span data-i18n="btn_see_picks_so_far">See my picks so far</span></button>
       </div>
     </section>
 
@@ -1494,7 +1494,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.08 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.09 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3403,7 +3403,7 @@ const TRANSLATIONS = {
     const has = state.favorites.length > 0;
     ['btnGoToFavorites', 'btnGoToFavoritesFromDone', 'btnGoToFavoritesFromSearch'].forEach(id => {
       const el = document.getElementById(id);
-      if(el) el.style.display = has ? 'inline-block' : 'none';
+      if(el) el.style.display = has ? 'flex' : 'none';
     });
   }
 
