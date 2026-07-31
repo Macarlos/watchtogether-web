@@ -727,21 +727,31 @@
     gap:.5rem;
     padding:.55rem 0 .8rem;
     margin:0 16px;
-    flex-wrap:wrap;
   }
   .card .info-toggle{
+    flex:1;
+    min-width:0;
     background:var(--surface-2);
     border:1px solid var(--border);
     color:var(--ink);
-    padding:.4rem .85rem;
+    padding:.4rem .5rem;
     border-radius:999px;
     display:flex; align-items:center; justify-content:center;
-    font-size:.75rem;
+    gap:.35rem;
+    font-size:.7rem;
     font-family:var(--font-mono);
     letter-spacing:.02em;
     white-space:nowrap;
+    text-decoration:none;
+    text-align:center;
+    overflow:hidden;
+    text-overflow:ellipsis;
     transition:background .15s, border-color .15s;
   }
+  .card .info-toggle i{ font-size:.95rem; flex-shrink:0; }
+  .card .info-toggle.info-summary i{ color:var(--teal); }
+  .card .info-toggle.info-trailer i{ color:var(--rose); }
+  .card .info-toggle.info-watch i{ color:var(--amber); }
   .card .info-toggle:hover{ background:var(--surface); border-color:var(--muted); }
 
   /* screen-final-pick reuses .card purely for its visual styling (border,
@@ -1488,7 +1498,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.04 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.05 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1666,9 +1676,9 @@ const TRANSLATIONS = {
     buy_label: "Buy",
     free_ads_label: "Free with ads",
     price_varies: "Price varies",
-    full_description_btn: "📺 Where to watch",
-    plot_summary_btn: "ⓘ Plot summary",
-    trailer_btn: "🔍 Find trailer",
+    full_description_btn: "Where to watch",
+    plot_summary_btn: "Plot summary",
+    trailer_btn: "Find trailer",
     show_plot_summary_aria: "Show plot summary",
     see_full_details_aria: "See full details for {title}",
     searching_label: "Searching…",
@@ -1835,9 +1845,9 @@ const TRANSLATIONS = {
     buy_label: "Comprar",
     free_ads_label: "Gratis con anuncios",
     price_varies: "El precio varía",
-    full_description_btn: "📺 Dónde ver",
-    plot_summary_btn: "ⓘ Resumen",
-    trailer_btn: "🔍 Buscar tráiler",
+    full_description_btn: "Dónde ver",
+    plot_summary_btn: "Resumen",
+    trailer_btn: "Buscar tráiler",
     show_plot_summary_aria: "Mostrar resumen",
     see_full_details_aria: "Ver todos los detalles de {title}",
     searching_label: "Buscando…",
@@ -2004,9 +2014,9 @@ const TRANSLATIONS = {
     buy_label: "Comprar",
     free_ads_label: "Grátis com anúncios",
     price_varies: "Preço variável",
-    full_description_btn: "📺 Onde assistir",
-    plot_summary_btn: "ⓘ Resumo",
-    trailer_btn: "🔍 Encontrar trailer",
+    full_description_btn: "Onde assistir",
+    plot_summary_btn: "Resumo",
+    trailer_btn: "Encontrar trailer",
     show_plot_summary_aria: "Mostrar resumo",
     see_full_details_aria: "Ver todos os detalhes de {title}",
     searching_label: "Buscando…",
@@ -2173,9 +2183,9 @@ const TRANSLATIONS = {
     buy_label: "Acheter",
     free_ads_label: "Gratuit avec publicité",
     price_varies: "Le prix varie",
-    full_description_btn: "📺 Où regarder",
-    plot_summary_btn: "ⓘ Résumé",
-    trailer_btn: "🔍 Trouver la bande-annonce",
+    full_description_btn: "Où regarder",
+    plot_summary_btn: "Résumé",
+    trailer_btn: "Trouver la bande-annonce",
     show_plot_summary_aria: "Afficher le résumé",
     see_full_details_aria: "Voir tous les détails de {title}",
     searching_label: "Recherche…",
@@ -2342,9 +2352,9 @@ const TRANSLATIONS = {
     buy_label: "Kaufen",
     free_ads_label: "Kostenlos mit Werbung",
     price_varies: "Preis variiert",
-    full_description_btn: "📺 Wo anschauen",
-    plot_summary_btn: "ⓘ Zusammenfassung",
-    trailer_btn: "🔍 Trailer suchen",
+    full_description_btn: "Wo anschauen",
+    plot_summary_btn: "Zusammenfassung",
+    trailer_btn: "Trailer suchen",
     show_plot_summary_aria: "Zusammenfassung anzeigen",
     see_full_details_aria: "Alle Details zu {title} ansehen",
     searching_label: "Suche läuft…",
@@ -2511,9 +2521,9 @@ const TRANSLATIONS = {
     buy_label: "खरीदें",
     free_ads_label: "विज्ञापनों के साथ मुफ़्त",
     price_varies: "कीमत अलग-अलग हो सकती है",
-    full_description_btn: "📺 कहाँ देखें",
-    plot_summary_btn: "ⓘ प्लॉट सारांश",
-    trailer_btn: "🔍 ट्रेलर खोजें",
+    full_description_btn: "कहाँ देखें",
+    plot_summary_btn: "प्लॉट सारांश",
+    trailer_btn: "ट्रेलर खोजें",
     show_plot_summary_aria: "प्लॉट सारांश दिखाएं",
     see_full_details_aria: "{title} का पूरा विवरण देखें",
     searching_label: "खोजा जा रहा है…",
@@ -2680,9 +2690,9 @@ const TRANSLATIONS = {
     buy_label: "Kup",
     free_ads_label: "Za darmo z reklamami",
     price_varies: "Cena zmienna",
-    full_description_btn: "📺 Gdzie obejrzeć",
-    plot_summary_btn: "ⓘ Streszczenie fabuły",
-    trailer_btn: "🔍 Znajdź zwiastun",
+    full_description_btn: "Gdzie obejrzeć",
+    plot_summary_btn: "Streszczenie fabuły",
+    trailer_btn: "Znajdź zwiastun",
     show_plot_summary_aria: "Pokaż streszczenie fabuły",
     see_full_details_aria: "Zobacz pełne informacje o {title}",
     searching_label: "Szukanie…",
@@ -3506,9 +3516,9 @@ const TRANSLATIONS = {
     infoRow.className = 'info-toggle-row';
 
     const infoBtn = document.createElement('button');
-    infoBtn.className = 'info-toggle';
+    infoBtn.className = 'info-toggle info-summary';
     infoBtn.setAttribute('aria-label', t('show_plot_summary_aria'));
-    infoBtn.innerHTML = t('plot_summary_btn');
+    infoBtn.innerHTML = `<i class="ti ti-info-circle" aria-hidden="true"></i><span>${t('plot_summary_btn')}</span>`;
     // The card listens for pointerdown/pointerup to power dragging — without
     // stopping propagation here too, a tap on this button gets briefly caught
     // by that drag logic as well, which caused the summary to flash and close.
@@ -3528,11 +3538,11 @@ const TRANSLATIONS = {
 
     if(movie.trailerUrl){
       const trailerLink = document.createElement('a');
-      trailerLink.className = 'info-toggle';
+      trailerLink.className = 'info-toggle info-trailer';
       trailerLink.href = movie.trailerUrl;
       trailerLink.target = '_blank';
       trailerLink.rel = 'noopener';
-      trailerLink.innerHTML = t('trailer_btn');
+      trailerLink.innerHTML = `<i class="ti ti-brand-youtube" aria-hidden="true"></i><span>${t('trailer_btn')}</span>`;
       trailerLink.addEventListener('pointerdown', e => e.stopPropagation());
       trailerLink.addEventListener('pointerup', e => e.stopPropagation());
       trailerLink.addEventListener('click', e => e.stopPropagation());
@@ -3540,9 +3550,9 @@ const TRANSLATIONS = {
     }
 
     const fullDetailsBtn = document.createElement('button');
-    fullDetailsBtn.className = 'info-toggle';
+    fullDetailsBtn.className = 'info-toggle info-watch';
     fullDetailsBtn.setAttribute('aria-label', t('see_full_details_aria', { title: movie.title }));
-    fullDetailsBtn.innerHTML = t('full_description_btn');
+    fullDetailsBtn.innerHTML = `<i class="ti ti-device-tv" aria-hidden="true"></i><span>${t('full_description_btn')}</span>`;
     fullDetailsBtn.addEventListener('pointerdown', e => e.stopPropagation());
     fullDetailsBtn.addEventListener('pointerup', e => e.stopPropagation());
     fullDetailsBtn.addEventListener('click', (e) => {
