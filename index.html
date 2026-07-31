@@ -1488,7 +1488,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.02 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.03 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -2952,6 +2952,23 @@ const TRANSLATIONS = {
   // first popstate (stepping back to where the app was opened) has a
   // defined state to restore, rather than a bare null.
   history.replaceState({screen: getActiveScreenId()}, '', location.pathname + location.search);
+
+  // Second, independent safety net for stopping a playing trailer: the
+  // Android TWA's system back gesture doesn't always reliably fire a JS
+  // popstate event the way a real browser back button does (a known TWA
+  // quirk), which was letting the trailer keep playing after leaving the
+  // app on mobile even though the same in-app showScreen() cleanup handled
+  // every other case correctly, including web browser back. Hiding/pausing
+  // the app for ANY reason is a reasonable moment to kill trailer audio,
+  // not just an in-app screen change.
+  function stopAnyPlayingTrailer(){
+    const trailerBlock = document.getElementById('trailerBlock');
+    if(trailerBlock) trailerBlock.querySelectorAll('iframe').forEach(f => f.remove());
+  }
+  document.addEventListener('visibilitychange', () => {
+    if(document.hidden) stopAnyPlayingTrailer();
+  });
+  window.addEventListener('pagehide', stopAnyPlayingTrailer);
 
   // Shows/hides the mood-selection step in the setup screen — hidden for
   // "Watch with your Family" mode (pre-set, not a choice) and for "Recently
