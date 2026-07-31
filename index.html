@@ -420,6 +420,7 @@
     width:54px; height:54px;
     opacity:.55;
   }
+  #btnAdjustCategories i{ color:var(--amber); font-size:1rem; }
   /* Deliberately quiet buttons (e.g. destructive "Clear all picks") opt out */
   .btn-quiet{ background:transparent !important; box-shadow:none !important; }
   .btn-quiet::before, .btn-quiet::after{ display:none; }
@@ -1380,7 +1381,7 @@
       </div>
       <p class="demo-note" id="deckHint" data-i18n="deck_hint">Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.</p>
       <div style="width:100%; max-width:230px; display:flex; flex-direction:column; gap:.6rem; margin-top:1rem;">
-        <button class="btn btn-ghost" id="btnAdjustCategories" data-i18n="btn_adjust_categories" style="width:100%;">🏷 Adjust categories</button>
+        <button class="btn btn-ghost" id="btnAdjustCategories" style="width:100%; display:flex; align-items:center; justify-content:center; gap:.5rem;"><i class="ti ti-adjustments" aria-hidden="true"></i><span data-i18n="btn_adjust_categories">Adjust categories</span></button>
         <button class="btn btn-ghost" id="btnGoToFavorites" data-i18n="btn_see_picks_so_far" style="width:100%; display:none;">See my picks so far</button>
       </div>
     </section>
@@ -1493,7 +1494,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.07 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.08 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1607,7 +1608,7 @@ const TRANSLATIONS = {
     pass_label: "Pass",
     like_label: "Like",
     deck_hint: 'Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.',
-    btn_adjust_categories: "🏷 Adjust categories",
+    btn_adjust_categories: "Adjust categories",
     btn_see_picks_so_far: "See my picks so far",
     deck_loading: "Finding what you can watch…",
     deck_loading_more: "Finding more titles…",
@@ -1775,7 +1776,7 @@ const TRANSLATIONS = {
     pass_label: "Descartar",
     like_label: "Me gusta",
     deck_hint: 'Arrastra una tarjeta o usa los botones. Toca "Resumen" para saber más sobre un título.',
-    btn_adjust_categories: "🏷 Ajustar categorías",
+    btn_adjust_categories: "Ajustar categorías",
     btn_see_picks_so_far: "Ver mis elecciones hasta ahora",
     deck_loading: "Buscando qué puedes ver…",
     deck_loading_more: "Buscando más títulos…",
@@ -1943,7 +1944,7 @@ const TRANSLATIONS = {
     pass_label: "Passar",
     like_label: "Curtir",
     deck_hint: 'Arraste um cartão ou use os botões. Toque em "Resumo" para saber mais sobre um título.',
-    btn_adjust_categories: "🏷 Ajustar categorias",
+    btn_adjust_categories: "Ajustar categorias",
     btn_see_picks_so_far: "Ver minhas escolhas até agora",
     deck_loading: "Procurando o que você pode assistir…",
     deck_loading_more: "Procurando mais títulos…",
@@ -2111,7 +2112,7 @@ const TRANSLATIONS = {
     pass_label: "Passer",
     like_label: "J'aime",
     deck_hint: 'Faites glisser une carte ou utilisez les boutons. Touchez « Résumé » pour en savoir plus sur un titre.',
-    btn_adjust_categories: "🏷 Ajuster les catégories",
+    btn_adjust_categories: "Ajuster les catégories",
     btn_see_picks_so_far: "Voir mes choix jusqu'ici",
     deck_loading: "Recherche de ce que vous pouvez regarder…",
     deck_loading_more: "Recherche d'autres titres…",
@@ -2279,7 +2280,7 @@ const TRANSLATIONS = {
     pass_label: "Ablehnen",
     like_label: "Gefällt mir",
     deck_hint: 'Ziehe eine Karte oder nutze die Buttons. Tippe auf „Zusammenfassung", um mehr über einen Titel zu erfahren.',
-    btn_adjust_categories: "🏷 Kategorien anpassen",
+    btn_adjust_categories: "Kategorien anpassen",
     btn_see_picks_so_far: "Meine bisherige Auswahl ansehen",
     deck_loading: "Suche, was du schauen kannst…",
     deck_loading_more: "Suche nach weiteren Titeln…",
@@ -2447,7 +2448,7 @@ const TRANSLATIONS = {
     pass_label: "छोड़ें",
     like_label: "पसंद",
     deck_hint: 'कार्ड को खींचें, या बटन का उपयोग करें। किसी टाइटल के बारे में और पढ़ने के लिए "प्लॉट सारांश" पर टैप करें।',
-    btn_adjust_categories: "🏷 श्रेणियाँ समायोजित करें",
+    btn_adjust_categories: "श्रेणियाँ समायोजित करें",
     btn_see_picks_so_far: "अब तक की मेरी पसंद देखें",
     deck_loading: "आप क्या देख सकते हैं यह ढूंढा जा रहा है…",
     deck_loading_more: "और टाइटल ढूंढे जा रहे हैं…",
@@ -2615,7 +2616,7 @@ const TRANSLATIONS = {
     pass_label: "Pomiń",
     like_label: "Podoba mi się",
     deck_hint: 'Przeciągnij kartę lub użyj przycisków. Dotknij „Streszczenie fabuły", aby dowiedzieć się więcej o tytule.',
-    btn_adjust_categories: "🏷 Dostosuj kategorie",
+    btn_adjust_categories: "Dostosuj kategorie",
     btn_see_picks_so_far: "Zobacz moje dotychczasowe wybory",
     deck_loading: "Szukamy, co możesz obejrzeć…",
     deck_loading_more: "Szukamy kolejnych tytułów…",
