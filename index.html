@@ -583,8 +583,28 @@
     font-size:.85rem;
     font-weight:600;
     text-decoration:none;
+    background:none;
+    border:none;
+    padding:0;
+    cursor:pointer;
+    font-family:inherit;
   }
   .detail-trailer-link:hover{ text-decoration:underline; }
+  .detail-trailer-link:disabled{ opacity:.6; cursor:default; }
+
+  .trailer-embed{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/9;
+    border-radius:10px;
+    overflow:hidden;
+    background:#000;
+  }
+  .trailer-embed iframe{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    border:none;
+  }
 
   .ticket{
     width:100%;
@@ -1462,7 +1482,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.00 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.01 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1658,6 +1678,7 @@ const TRANSLATIONS = {
     user_rating_template: "★ {rating}/10 user rating",
     critic_score_template: "Critic score {score}%",
     watch_trailer_link: "🔍 Find trailer on YouTube",
+    loading_trailer: "Loading trailer…",
     no_extra_details: "No extra details available for this title.",
     availability_unknown: "Availability unknown",
     rent_or_buy_only: "Rent or buy only",
@@ -1826,6 +1847,7 @@ const TRANSLATIONS = {
     user_rating_template: "★ {rating}/10 valoración de usuarios",
     critic_score_template: "Puntuación de la crítica {score}%",
     watch_trailer_link: "🔍 Buscar tráiler en YouTube",
+    loading_trailer: "Cargando tráiler…",
     no_extra_details: "No hay detalles adicionales disponibles para este título.",
     availability_unknown: "Disponibilidad desconocida",
     rent_or_buy_only: "Solo alquiler o compra",
@@ -1994,6 +2016,7 @@ const TRANSLATIONS = {
     user_rating_template: "★ {rating}/10 avaliação dos usuários",
     critic_score_template: "Nota da crítica {score}%",
     watch_trailer_link: "🔍 Procurar trailer no YouTube",
+    loading_trailer: "Carregando trailer…",
     no_extra_details: "Nenhum detalhe extra disponível para este título.",
     availability_unknown: "Disponibilidade desconhecida",
     rent_or_buy_only: "Apenas aluguel ou compra",
@@ -2162,6 +2185,7 @@ const TRANSLATIONS = {
     user_rating_template: "★ {rating}/10 note des utilisateurs",
     critic_score_template: "Note de la critique {score} %",
     watch_trailer_link: "🔍 Chercher la bande-annonce sur YouTube",
+    loading_trailer: "Chargement de la bande-annonce…",
     no_extra_details: "Aucun détail supplémentaire disponible pour ce titre.",
     availability_unknown: "Disponibilité inconnue",
     rent_or_buy_only: "Location ou achat uniquement",
@@ -2330,6 +2354,7 @@ const TRANSLATIONS = {
     user_rating_template: "★ {rating}/10 Nutzerbewertung",
     critic_score_template: "Kritikerwertung {score}%",
     watch_trailer_link: "🔍 Trailer auf YouTube suchen",
+    loading_trailer: "Trailer wird geladen…",
     no_extra_details: "Keine weiteren Details für diesen Titel verfügbar.",
     availability_unknown: "Verfügbarkeit unbekannt",
     rent_or_buy_only: "Nur leihen oder kaufen",
@@ -2498,6 +2523,7 @@ const TRANSLATIONS = {
     user_rating_template: "★ {rating}/10 यूज़र रेटिंग",
     critic_score_template: "क्रिटिक स्कोर {score}%",
     watch_trailer_link: "🔍 YouTube पर ट्रेलर खोजें",
+    loading_trailer: "ट्रेलर लोड हो रहा है…",
     no_extra_details: "इस टाइटल के लिए कोई अतिरिक्त विवरण उपलब्ध नहीं है।",
     availability_unknown: "उपलब्धता अज्ञात",
     rent_or_buy_only: "केवल किराए पर या खरीदें",
@@ -2666,6 +2692,7 @@ const TRANSLATIONS = {
     user_rating_template: "★ {rating}/10 ocena użytkowników",
     critic_score_template: "Ocena krytyków {score}%",
     watch_trailer_link: "🔍 Szukaj zwiastuna na YouTube",
+    loading_trailer: "Wczytywanie zwiastuna…",
     no_extra_details: "Brak dodatkowych informacji dla tego tytułu.",
     availability_unknown: "Dostępność nieznana",
     rent_or_buy_only: "Tylko wypożyczenie lub zakup",
@@ -4271,10 +4298,44 @@ const TRANSLATIONS = {
     }
 
     if(movie.trailerUrl){
-      blocks.push(`<a class="detail-trailer-link" href="${movie.trailerUrl}" target="_blank" rel="noopener">${t('watch_trailer_link')}</a>`);
+      blocks.push(`<div class="trailer-block" id="trailerBlock"><button class="detail-trailer-link" id="btnWatchTrailer" type="button">${t('watch_trailer_link')}</button></div>`);
     }
 
     detailsEl.innerHTML = blocks.join('') || `<p class="detail-text" style="color:var(--muted);">${t('no_extra_details')}</p>`;
+
+    // Tries to find one specific, real trailer video via YouTube's search
+    // API and embed it right here — only on demand, when someone actually
+    // taps to watch it, not eagerly for every card (see /api/trailer's own
+    // docstring for why). Falls back to the old "open a YouTube search"
+    // link if nothing's found, quota's exhausted, or the request fails —
+    // a missing embedded trailer should never be a worse experience than
+    // what was already there before this feature existed.
+    const trailerBtn = document.getElementById('btnWatchTrailer');
+    if(trailerBtn){
+      trailerBtn.addEventListener('click', () => {
+        const originalLabel = trailerBtn.textContent;
+        trailerBtn.textContent = t('loading_trailer');
+        trailerBtn.disabled = true;
+        const yearParam = movie.year ? `&year=${encodeURIComponent(movie.year)}` : '';
+        fetch(`${BACKEND_URL}/api/trailer?title=${encodeURIComponent(movie.title)}${yearParam}`)
+          .then(r => r.ok ? r.json() : null)
+          .then(data => {
+            const block = document.getElementById('trailerBlock');
+            if(data && data.video_id && block){
+              block.innerHTML = `<div class="trailer-embed"><iframe src="https://www.youtube.com/embed/${encodeURIComponent(data.video_id)}?autoplay=1" title="${escapeHtml(movie.title)} trailer" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+            } else {
+              window.open(movie.trailerUrl, '_blank', 'noopener');
+              trailerBtn.textContent = originalLabel;
+              trailerBtn.disabled = false;
+            }
+          })
+          .catch(() => {
+            window.open(movie.trailerUrl, '_blank', 'noopener');
+            trailerBtn.textContent = originalLabel;
+            trailerBtn.disabled = false;
+          });
+      });
+    }
 
     // MOTN doesn't support Portuguese/Hindi/Polish at all — for those three,
     // the overview above is still English (matches everywhere else in the
