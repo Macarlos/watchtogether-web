@@ -1495,7 +1495,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.11 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.12 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3904,8 +3904,16 @@ const TRANSLATIONS = {
     // Clean up the history entry pushed on open — but only if we're still
     // sitting on it (i.e. this close came from a button/Escape/Apply, not
     // from the back button itself, which already popped it before this
-    // ever runs).
-    if(history.state?.dialogOpen) history.back();
+    // ever runs). Uses replaceState, not back(): back() is asynchronous,
+    // and several callers (e.g. enterRecentlyAddedMode) immediately call
+    // showScreen() right after closing this same dialog — that pushes a
+    // new entry before the scheduled back() actually fires, so by the time
+    // it did, it was popping the wrong entry and landing on the wrong
+    // screen entirely. replaceState is synchronous and doesn't navigate
+    // anywhere, so there's nothing left to race.
+    if(history.state?.dialogOpen){
+      history.replaceState({screen: getActiveScreenId()}, '', location.pathname + location.search);
+    }
   }
 
   document.addEventListener('keydown', (e) => {
