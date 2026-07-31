@@ -161,19 +161,20 @@
 
   .persistent-back-btn{
     position:fixed; top:14px; right:14px; z-index:90;
-    display:none; align-items:center; gap:.4rem;
-    background:var(--amber);
-    border:none;
-    color:#2b1a00; font-family:var(--font-mono); font-size:.74rem; font-weight:700;
-    padding:.5rem .85rem; border-radius:999px; letter-spacing:.02em;
+    display:none; align-items:center; justify-content:center;
+    width:40px; height:40px;
+    background:rgba(11,14,20,.6);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:50%;
     box-shadow:0 3px 10px rgba(0,0,0,.35);
-    transition:transform .15s, box-shadow .15s, background .15s;
+    transition:transform .15s, box-shadow .15s, border-color .15s;
     cursor:pointer;
   }
-  .persistent-back-btn i{ font-size:1rem; color:#2b1a00; }
+  .persistent-back-btn i{ font-size:1.05rem; color:var(--teal); }
   .persistent-back-btn:hover{
-    background:#ffc247;
     transform:translateY(-1px);
+    border-color:rgba(255,255,255,.3);
     box-shadow:0 5px 14px rgba(0,0,0,.4);
   }
 
@@ -1119,9 +1120,8 @@
     <div class="poster-bg-overlay"></div>
   </div>
 
-  <button id="btnNewSearchPersistent" class="persistent-back-btn">
+  <button id="btnNewSearchPersistent" class="persistent-back-btn" data-i18n-aria="btn_home_short" aria-label="Home">
     <i class="ti ti-home" aria-hidden="true"></i>
-    <span data-i18n="btn_home_short">Home</span>
   </button>
 
   <!-- ═══════════════ SHARE DIALOG ═══════════════ -->
@@ -1462,7 +1462,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v3.99 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.00 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
