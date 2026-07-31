@@ -592,10 +592,16 @@
   .detail-trailer-link:hover{ text-decoration:underline; }
   .detail-trailer-link:disabled{ opacity:.6; cursor:default; }
 
+  .trailer-block{ width:100%; }
   .trailer-embed{
     position:relative;
     width:100%;
-    aspect-ratio:16/9;
+    height:0;
+    padding-bottom:56.25%; /* 16:9 — classic intrinsic-ratio technique instead
+      of the modern aspect-ratio property, since some Android WebViews used
+      by the installed app don't reliably support aspect-ratio, which was
+      collapsing this box to near-zero height and shrinking the video down
+      to the iframe's own tiny default size. */
     border-radius:10px;
     overflow:hidden;
     background:#000;
@@ -1482,7 +1488,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.01 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.02 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -2903,6 +2909,18 @@ const TRANSLATIONS = {
      ════════════════════════════════════════════════════════════ */
   function showScreen(id, fromPopState){
     const current = getActiveScreenId();
+
+    // An embedded YouTube trailer keeps playing (and making noise) even
+    // after leaving the screen, since removing the .active class doesn't
+    // stop an iframe's playback — only actually removing the iframe does.
+    // This is the one place ALL navigation passes through (button clicks,
+    // browser back/forward, the Android back gesture), so it's the only
+    // place this needs handling.
+    if(current === 'screen-final-pick' && id !== 'screen-final-pick'){
+      const trailerBlock = document.getElementById('trailerBlock');
+      if(trailerBlock) trailerBlock.querySelectorAll('iframe').forEach(f => f.remove());
+    }
+
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     window.scrollTo({top:0, behavior:'smooth'});
@@ -4322,7 +4340,7 @@ const TRANSLATIONS = {
           .then(data => {
             const block = document.getElementById('trailerBlock');
             if(data && data.video_id && block){
-              block.innerHTML = `<div class="trailer-embed"><iframe src="https://www.youtube.com/embed/${encodeURIComponent(data.video_id)}?autoplay=1" title="${escapeHtml(movie.title)} trailer" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+              block.innerHTML = `<div class="trailer-embed"><iframe width="100%" height="100%" src="https://www.youtube.com/embed/${encodeURIComponent(data.video_id)}?autoplay=1" title="${escapeHtml(movie.title)} trailer" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
             } else {
               window.open(movie.trailerUrl, '_blank', 'noopener');
               trailerBtn.textContent = originalLabel;
