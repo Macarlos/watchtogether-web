@@ -1510,11 +1510,11 @@
         <div class="icon">🍿</div>
         <h3 id="doneTitle" data-i18n="done_title_no_mood">That's the stack</h3>
         <p id="doneText" data-i18n="done_text_no_mood_no_favorites">Everyone's swiped. Whatever matched is above — no match yet? Widen the mood or add another platform.</p>
-        <button class="btn btn-primary" id="btnExploreAllCategories" data-i18n="btn_explore_all_categories" style="display:none; margin-bottom:.6rem;">Explore all categories</button>
-        <button class="btn btn-primary" id="btnAddCategoryFromDone" data-i18n="btn_add_another_category" style="display:none; margin-bottom:.6rem;">+ Add another category</button>
-        <button class="btn btn-primary" id="btnAddPlatformFromDone" data-i18n="btn_add_another_platform" style="display:none; margin-bottom:.6rem;">+ Add another platform</button>
-        <button class="btn btn-primary" id="btnGoToFavoritesFromDone" data-i18n="btn_see_my_picks" style="display:none; margin-bottom:.6rem;">See my picks</button>
-        <button class="btn btn-ghost" id="btnRestart" data-i18n="btn_start_new_session">Start a new session</button>
+        <button class="btn btn-primary btn-block" id="btnExploreAllCategories" data-i18n="btn_explore_all_categories" style="display:none; margin-bottom:.6rem;">Explore all categories</button>
+        <button class="btn btn-primary btn-block" id="btnAddCategoryFromDone" data-i18n="btn_add_another_category" style="display:none; margin-bottom:.6rem;">+ Add another category</button>
+        <button class="btn btn-primary btn-block" id="btnAddPlatformFromDone" data-i18n="btn_add_another_platform" style="display:none; margin-bottom:.6rem;">+ Add another platform</button>
+        <button class="btn btn-primary btn-block" id="btnGoToFavoritesFromDone" data-i18n="btn_see_my_picks" style="display:none; margin-bottom:.6rem;">See my picks</button>
+        <button class="btn btn-ghost btn-block" id="btnRestart" data-i18n="btn_start_new_session">Start a new session</button>
       </div>
     </section>
 
@@ -1522,7 +1522,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.22 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.23 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3462,10 +3462,10 @@ const TRANSLATIONS = {
         : t('done_text_no_mood_no_favorites');
     }
 
-    document.getElementById('btnExploreAllCategories').style.display = hasMoodFilter ? 'inline-block' : 'none';
-    document.getElementById('btnAddCategoryFromDone').style.display = hasMoodFilter ? 'inline-block' : 'none';
+    document.getElementById('btnExploreAllCategories').style.display = hasMoodFilter ? 'block' : 'none';
+    document.getElementById('btnAddCategoryFromDone').style.display = hasMoodFilter ? 'block' : 'none';
     document.getElementById('btnAddPlatformFromDone').style.display =
-      (state.platforms.size < state.availablePlatforms.length) ? 'inline-block' : 'none';
+      (state.platforms.size < state.availablePlatforms.length) ? 'block' : 'none';
     updateFavoritesButtons();
     showScreen('screen-done');
   }
