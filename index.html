@@ -698,6 +698,18 @@
     overflow:hidden;
     background-color:var(--surface-2);
   }
+  .card .trailer-play-badge{
+    position:absolute;
+    right:10px; bottom:10px;
+    width:34px; height:34px;
+    border-radius:50%;
+    background:rgba(8,10,16,.6);
+    border:1px solid rgba(255,255,255,.35);
+    display:flex; align-items:center; justify-content:center;
+    z-index:2;
+  }
+  .card .trailer-play-badge i{ font-size:14px; color:var(--amber); }
+  .card .trailer-play-badge:hover{ border-color:rgba(255,255,255,.55); }
   .card .meta{
     margin:0 16px;
     padding:.85rem 0 1rem;
@@ -1503,7 +1515,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.17 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.18 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1686,6 +1698,7 @@ const TRANSLATIONS = {
     plot_summary_btn: "Plot summary",
     show_plot_summary_aria: "Show plot summary",
     see_full_details_aria: "See full details for {title}",
+    play_trailer_aria: "Play trailer for {title}",
     searching_label: "Searching…",
     results_for_query_template: 'Results for "{query}"',
     loading_their_picks: "Loading their picks…",
@@ -1855,6 +1868,7 @@ const TRANSLATIONS = {
     plot_summary_btn: "Resumen",
     show_plot_summary_aria: "Mostrar resumen",
     see_full_details_aria: "Ver todos los detalles de {title}",
+    play_trailer_aria: "Reproducir tráiler de {title}",
     searching_label: "Buscando…",
     results_for_query_template: 'Resultados para "{query}"',
     loading_their_picks: "Cargando sus elecciones…",
@@ -2024,6 +2038,7 @@ const TRANSLATIONS = {
     plot_summary_btn: "Resumo",
     show_plot_summary_aria: "Mostrar resumo",
     see_full_details_aria: "Ver todos os detalhes de {title}",
+    play_trailer_aria: "Reproduzir trailer de {title}",
     searching_label: "Buscando…",
     results_for_query_template: 'Resultados para "{query}"',
     loading_their_picks: "Carregando as escolhas dele(a)…",
@@ -2193,6 +2208,7 @@ const TRANSLATIONS = {
     plot_summary_btn: "Résumé",
     show_plot_summary_aria: "Afficher le résumé",
     see_full_details_aria: "Voir tous les détails de {title}",
+    play_trailer_aria: "Lire la bande-annonce de {title}",
     searching_label: "Recherche…",
     results_for_query_template: 'Résultats pour « {query} »',
     loading_their_picks: "Chargement de leurs choix…",
@@ -2362,6 +2378,7 @@ const TRANSLATIONS = {
     plot_summary_btn: "Zusammenfassung",
     show_plot_summary_aria: "Zusammenfassung anzeigen",
     see_full_details_aria: "Alle Details zu {title} ansehen",
+    play_trailer_aria: "Trailer zu {title} abspielen",
     searching_label: "Suche läuft…",
     results_for_query_template: 'Ergebnisse für „{query}"',
     loading_their_picks: "Ihre Auswahl wird geladen…",
@@ -2531,6 +2548,7 @@ const TRANSLATIONS = {
     plot_summary_btn: "प्लॉट सारांश",
     show_plot_summary_aria: "प्लॉट सारांश दिखाएं",
     see_full_details_aria: "{title} का पूरा विवरण देखें",
+    play_trailer_aria: "{title} का ट्रेलर चलाएं",
     searching_label: "खोजा जा रहा है…",
     results_for_query_template: '"{query}" के लिए परिणाम',
     loading_their_picks: "उनकी पसंद लोड हो रही है…",
@@ -2700,6 +2718,7 @@ const TRANSLATIONS = {
     plot_summary_btn: "Streszczenie fabuły",
     show_plot_summary_aria: "Pokaż streszczenie fabuły",
     see_full_details_aria: "Zobacz pełne informacje o {title}",
+    play_trailer_aria: "Odtwórz zwiastun {title}",
     searching_label: "Szukanie…",
     results_for_query_template: 'Wyniki dla „{query}"',
     loading_their_picks: "Wczytywanie ich wyborów…",
@@ -3522,6 +3541,24 @@ const TRANSLATIONS = {
     overviewOverlay.innerHTML = `<p>${summaryText}</p>`;
     poster.appendChild(overviewOverlay);
 
+    if(movie.trailerUrl){
+      const trailerBadge = document.createElement('button');
+      trailerBadge.className = 'trailer-play-badge';
+      trailerBadge.type = 'button';
+      trailerBadge.setAttribute('aria-label', t('play_trailer_aria', { title: movie.title }));
+      trailerBadge.innerHTML = '<i class="ti ti-player-play-filled" aria-hidden="true"></i>';
+      trailerBadge.addEventListener('pointerdown', e => e.stopPropagation());
+      trailerBadge.addEventListener('pointerup', e => e.stopPropagation());
+      trailerBadge.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Doesn't resolve the swipe — same behavior as "Where to watch",
+        // the card stays put so "Continue swiping" picks up right here.
+        finalPickReturnScreen = 'screen-deck';
+        showFinalPick(movie, true);
+      });
+      poster.appendChild(trailerBadge);
+    }
+
     card.appendChild(poster);
 
     const meta = document.createElement('div');
@@ -4311,7 +4348,7 @@ const TRANSLATIONS = {
 
   let currentFinalPickMovie = null;
 
-  function showFinalPick(movie){
+  function showFinalPick(movie, autoplayTrailer){
     currentFinalPickMovie = movie;
     document.getElementById('finalPickEyebrow').textContent = t('selected_label');
     document.getElementById('finalPickHeading').textContent = t('tonight_watching_heading');
@@ -4416,6 +4453,9 @@ const TRANSLATIONS = {
             trailerBtn.disabled = false;
           });
       });
+      // Arrived via the poster's play badge — trigger the same fetch the
+      // button itself would, rather than duplicating the logic above.
+      if(autoplayTrailer) trailerBtn.click();
     }
 
     // MOTN doesn't support Portuguese/Hindi/Polish at all — for those three,
