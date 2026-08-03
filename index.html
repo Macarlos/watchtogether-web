@@ -701,15 +701,15 @@
   .card .trailer-play-badge{
     position:absolute;
     right:10px; bottom:10px;
-    width:34px; height:34px;
+    width:38px; height:38px;
     border-radius:50%;
-    background:rgba(8,10,16,.6);
-    border:1px solid rgba(255,255,255,.35);
+    background:rgba(8,10,16,.55);
+    border:1.5px solid var(--amber);
     display:flex; align-items:center; justify-content:center;
     z-index:2;
   }
-  .card .trailer-play-badge i{ font-size:14px; color:var(--amber); }
-  .card .trailer-play-badge:hover{ border-color:rgba(255,255,255,.55); }
+  .card .trailer-play-badge i{ font-size:16px; color:var(--amber); margin-left:2px; }
+  .card .trailer-play-badge:hover{ background:rgba(8,10,16,.75); }
   .card .meta{
     margin:0 16px;
     padding:.85rem 0 1rem;
@@ -1515,7 +1515,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.18 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.19 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3546,7 +3546,7 @@ const TRANSLATIONS = {
       trailerBadge.className = 'trailer-play-badge';
       trailerBadge.type = 'button';
       trailerBadge.setAttribute('aria-label', t('play_trailer_aria', { title: movie.title }));
-      trailerBadge.innerHTML = '<i class="ti ti-player-play-filled" aria-hidden="true"></i>';
+      trailerBadge.innerHTML = '<i class="ti ti-player-play" aria-hidden="true"></i>';
       trailerBadge.addEventListener('pointerdown', e => e.stopPropagation());
       trailerBadge.addEventListener('pointerup', e => e.stopPropagation());
       trailerBadge.addEventListener('click', (e) => {
