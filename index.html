@@ -427,6 +427,7 @@
   }
   #btnAdjustCategories i{ color:var(--amber); font-size:1rem; }
   #btnGoToFavorites i{ color:var(--amber); font-size:1rem; }
+  #btnSurpriseMeSetup i{ color:var(--amber); font-size:1rem; }
   /* Deliberately quiet buttons (e.g. destructive "Clear all picks") opt out */
   .btn-quiet{ background:transparent !important; box-shadow:none !important; }
   .btn-quiet::before, .btn-quiet::after{ display:none; }
@@ -1371,7 +1372,7 @@
           <h2 data-i18n="setup_step2_heading">What's the mood?</h2>
         </div>
         <div class="chip-group" id="chipMoods"></div>
-        <button class="btn btn-ghost" id="btnSurpriseMeSetup" data-i18n="btn_surprise_setup" style="margin-top:.8rem;">🎲 Surprise me — any mood</button>
+        <button class="btn btn-ghost" id="btnSurpriseMeSetup" style="margin-top:.8rem; display:flex; align-items:center; justify-content:center; gap:.5rem;"><i class="ti ti-arrows-shuffle" aria-hidden="true"></i><span data-i18n="btn_surprise_setup">Surprise me — any mood</span></button>
       </div>
 
       <div id="ratingStepSection">
@@ -1521,7 +1522,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.20 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.21 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1608,7 +1609,7 @@ const TRANSLATIONS = {
     setup_rating_label: "Optional",
     setup_rating_heading: "Any rating requirement?",
     rating_chip_7plus: "★ 7.0+ only",
-    btn_surprise_setup: "🎲 Surprise me — any mood",
+    btn_surprise_setup: "Surprise me — any mood",
     btn_start_swiping: "Start swiping",
     family_dialog_question: "Movies or series?",
     btn_close: "Close",
@@ -1779,7 +1780,7 @@ const TRANSLATIONS = {
     setup_rating_label: "Opcional",
     setup_rating_heading: "¿Alguna puntuación mínima?",
     rating_chip_7plus: "★ Solo 7.0+",
-    btn_surprise_setup: "🎲 Sorpréndeme — cualquier estado de ánimo",
+    btn_surprise_setup: "Sorpréndeme — cualquier estado de ánimo",
     btn_start_swiping: "Empezar a deslizar",
     family_dialog_question: "¿Películas o series?",
     btn_close: "Cerrar",
@@ -1950,7 +1951,7 @@ const TRANSLATIONS = {
     setup_rating_label: "Opcional",
     setup_rating_heading: "Alguma nota mínima?",
     rating_chip_7plus: "★ Apenas 7.0+",
-    btn_surprise_setup: "🎲 Me surpreenda — qualquer clima",
+    btn_surprise_setup: "Me surpreenda — qualquer clima",
     btn_start_swiping: "Começar a deslizar",
     family_dialog_question: "Filmes ou séries?",
     btn_close: "Fechar",
@@ -2121,7 +2122,7 @@ const TRANSLATIONS = {
     setup_rating_label: "Facultatif",
     setup_rating_heading: "Une note minimale ?",
     rating_chip_7plus: "★ 7.0+ uniquement",
-    btn_surprise_setup: "🎲 Surprenez-moi — n'importe quelle ambiance",
+    btn_surprise_setup: "Surprenez-moi — n'importe quelle ambiance",
     btn_start_swiping: "Commencer à parcourir",
     family_dialog_question: "Films ou séries ?",
     btn_close: "Fermer",
@@ -2292,7 +2293,7 @@ const TRANSLATIONS = {
     setup_rating_label: "Optional",
     setup_rating_heading: "Mindestbewertung gewünscht?",
     rating_chip_7plus: "★ Nur 7.0+",
-    btn_surprise_setup: "🎲 Überrasch mich — egal welche Stimmung",
+    btn_surprise_setup: "Überrasch mich — egal welche Stimmung",
     btn_start_swiping: "Los geht's",
     family_dialog_question: "Filme oder Serien?",
     btn_close: "Schließen",
@@ -2463,7 +2464,7 @@ const TRANSLATIONS = {
     setup_rating_label: "वैकल्पिक",
     setup_rating_heading: "कोई न्यूनतम रेटिंग चाहिए?",
     rating_chip_7plus: "★ केवल 7.0+",
-    btn_surprise_setup: "🎲 मुझे सरप्राइज़ करें — कोई भी मूड",
+    btn_surprise_setup: "मुझे सरप्राइज़ करें — कोई भी मूड",
     btn_start_swiping: "स्वाइप करना शुरू करें",
     family_dialog_question: "फ़िल्में या सीरीज़?",
     btn_close: "बंद करें",
@@ -2634,7 +2635,7 @@ const TRANSLATIONS = {
     setup_rating_label: "Opcjonalnie",
     setup_rating_heading: "Minimalna ocena?",
     rating_chip_7plus: "★ Tylko 7.0+",
-    btn_surprise_setup: "🎲 Zaskocz mnie — dowolny nastrój",
+    btn_surprise_setup: "Zaskocz mnie — dowolny nastrój",
     btn_start_swiping: "Zacznij przesuwać",
     family_dialog_question: "Filmy czy seriale?",
     btn_close: "Zamknij",
