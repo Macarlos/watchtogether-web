@@ -157,6 +157,10 @@
     color:var(--amber);
     text-transform:uppercase;
     margin-bottom:1.75rem;
+    background:none;
+    border:none;
+    padding:0;
+    cursor:pointer;
   }
 
   .persistent-back-btn{
@@ -1298,7 +1302,7 @@
   <div class="bulb-rail" id="bulbRailTop"></div>
 
   <div class="app">
-    <div class="wordmark">Watch2Night</div>
+    <button class="wordmark" id="btnWordmarkHome" type="button">Watch2Night</button>
 
     <div class="global-search-bar">
       <i class="ti ti-search" aria-hidden="true"></i>
@@ -1522,7 +1526,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.23 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.24 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -4621,6 +4625,7 @@ const TRANSLATIONS = {
   document.getElementById('btnRestart').addEventListener('click', fullRestart);
   document.getElementById('btnFinalRestart').addEventListener('click', fullRestart);
   document.getElementById('btnNewSearchPersistent').addEventListener('click', fullRestart);
+  document.getElementById('btnWordmarkHome').addEventListener('click', fullRestart);
 
   // PWA: register service worker (app shell caching + offline fallback)
   if ('serviceWorker' in navigator) {
