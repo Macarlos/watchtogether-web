@@ -601,6 +601,12 @@
   .detail-trailer-link i{ font-size:1rem; }
 
   .trailer-block{ width:100%; }
+  .trailer-fallback-msg{
+    color:var(--muted);
+    font-size:.85rem;
+    line-height:1.6;
+  }
+  .trailer-fallback-msg a{ color:var(--amber); font-weight:600; }
   .trailer-embed{
     position:relative;
     width:100%;
@@ -1515,7 +1521,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.19 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.20 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1713,6 +1719,7 @@ const TRANSLATIONS = {
     critic_score_template: "Critic score {score}%",
     watch_trailer_link: "Find trailer on YouTube",
     loading_trailer: "Loading trailer…",
+    trailer_unavailable_message: "Couldn't load a trailer automatically.",
     no_extra_details: "No extra details available for this title.",
     availability_unknown: "Availability unknown",
     rent_or_buy_only: "Rent or buy only",
@@ -1883,6 +1890,7 @@ const TRANSLATIONS = {
     critic_score_template: "Puntuación de la crítica {score}%",
     watch_trailer_link: "Buscar tráiler en YouTube",
     loading_trailer: "Cargando tráiler…",
+    trailer_unavailable_message: "No se pudo cargar un tráiler automáticamente.",
     no_extra_details: "No hay detalles adicionales disponibles para este título.",
     availability_unknown: "Disponibilidad desconocida",
     rent_or_buy_only: "Solo alquiler o compra",
@@ -2053,6 +2061,7 @@ const TRANSLATIONS = {
     critic_score_template: "Nota da crítica {score}%",
     watch_trailer_link: "Procurar trailer no YouTube",
     loading_trailer: "Carregando trailer…",
+    trailer_unavailable_message: "Não foi possível carregar um trailer automaticamente.",
     no_extra_details: "Nenhum detalhe extra disponível para este título.",
     availability_unknown: "Disponibilidade desconhecida",
     rent_or_buy_only: "Apenas aluguel ou compra",
@@ -2223,6 +2232,7 @@ const TRANSLATIONS = {
     critic_score_template: "Note de la critique {score} %",
     watch_trailer_link: "Chercher la bande-annonce sur YouTube",
     loading_trailer: "Chargement de la bande-annonce…",
+    trailer_unavailable_message: "Impossible de charger une bande-annonce automatiquement.",
     no_extra_details: "Aucun détail supplémentaire disponible pour ce titre.",
     availability_unknown: "Disponibilité inconnue",
     rent_or_buy_only: "Location ou achat uniquement",
@@ -2393,6 +2403,7 @@ const TRANSLATIONS = {
     critic_score_template: "Kritikerwertung {score}%",
     watch_trailer_link: "Trailer auf YouTube suchen",
     loading_trailer: "Trailer wird geladen…",
+    trailer_unavailable_message: "Trailer konnte nicht automatisch geladen werden.",
     no_extra_details: "Keine weiteren Details für diesen Titel verfügbar.",
     availability_unknown: "Verfügbarkeit unbekannt",
     rent_or_buy_only: "Nur leihen oder kaufen",
@@ -2563,6 +2574,7 @@ const TRANSLATIONS = {
     critic_score_template: "क्रिटिक स्कोर {score}%",
     watch_trailer_link: "YouTube पर ट्रेलर खोजें",
     loading_trailer: "ट्रेलर लोड हो रहा है…",
+    trailer_unavailable_message: "ट्रेलर अपने आप लोड नहीं हो सका।",
     no_extra_details: "इस टाइटल के लिए कोई अतिरिक्त विवरण उपलब्ध नहीं है।",
     availability_unknown: "उपलब्धता अज्ञात",
     rent_or_buy_only: "केवल किराए पर या खरीदें",
@@ -2733,6 +2745,7 @@ const TRANSLATIONS = {
     critic_score_template: "Ocena krytyków {score}%",
     watch_trailer_link: "Szukaj zwiastuna na YouTube",
     loading_trailer: "Wczytywanie zwiastuna…",
+    trailer_unavailable_message: "Nie udało się automatycznie wczytać zwiastuna.",
     no_extra_details: "Brak dodatkowych informacji dla tego tytułu.",
     availability_unknown: "Dostępność nieznana",
     rent_or_buy_only: "Tylko wypożyczenie lub zakup",
@@ -4430,7 +4443,10 @@ const TRANSLATIONS = {
     // what was already there before this feature existed.
     const trailerBtn = document.getElementById('btnWatchTrailer');
     if(trailerBtn){
+      let wasManualClick = true;
       trailerBtn.addEventListener('click', () => {
+        const isManual = wasManualClick;
+        wasManualClick = true; // reset — a later real tap (e.g. retrying from the fallback message) is manual again
         const originalLabel = trailerBtn.textContent;
         trailerBtn.textContent = t('loading_trailer');
         trailerBtn.disabled = true;
@@ -4441,21 +4457,34 @@ const TRANSLATIONS = {
             const block = document.getElementById('trailerBlock');
             if(data && data.video_id && block){
               block.innerHTML = `<div class="trailer-embed"><iframe width="100%" height="100%" src="https://www.youtube.com/embed/${encodeURIComponent(data.video_id)}?autoplay=1" title="${escapeHtml(movie.title)} trailer" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
-            } else {
+            } else if(isManual){
               window.open(movie.trailerUrl, '_blank', 'noopener');
               trailerBtn.textContent = originalLabel;
               trailerBtn.disabled = false;
+            } else if(block){
+              // A plain <a> tag always works regardless of how the click
+              // was triggered — unlike window.open(), which browsers
+              // silently block when called from code that didn't run in
+              // direct, immediate response to a real user tap (exactly
+              // the case here, since this came from the play badge
+              // automatically, not someone tapping this button itself).
+              block.innerHTML = `<p class="trailer-fallback-msg">${t('trailer_unavailable_message')} <a href="${movie.trailerUrl}" target="_blank" rel="noopener">${t('watch_trailer_link')}</a></p>`;
             }
           })
           .catch(() => {
-            window.open(movie.trailerUrl, '_blank', 'noopener');
-            trailerBtn.textContent = originalLabel;
-            trailerBtn.disabled = false;
+            const block = document.getElementById('trailerBlock');
+            if(isManual){
+              window.open(movie.trailerUrl, '_blank', 'noopener');
+              trailerBtn.textContent = originalLabel;
+              trailerBtn.disabled = false;
+            } else if(block){
+              block.innerHTML = `<p class="trailer-fallback-msg">${t('trailer_unavailable_message')} <a href="${movie.trailerUrl}" target="_blank" rel="noopener">${t('watch_trailer_link')}</a></p>`;
+            }
           });
       });
       // Arrived via the poster's play badge — trigger the same fetch the
       // button itself would, rather than duplicating the logic above.
-      if(autoplayTrailer) trailerBtn.click();
+      if(autoplayTrailer){ wasManualClick = false; trailerBtn.click(); }
     }
 
     // MOTN doesn't support Portuguese/Hindi/Polish at all — for those three,
