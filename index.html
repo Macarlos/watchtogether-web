@@ -202,6 +202,23 @@
   }
   .global-search-bar input:focus{ border-color:var(--teal); }
   .global-search-bar input::placeholder{ color:var(--muted); }
+  .global-search-bar input{ padding-right:2.4rem; }
+  .global-search-clear{
+    position:absolute; right:6px; top:50%; transform:translateY(-50%);
+    width:28px; height:28px;
+    border-radius:50%;
+    background:transparent;
+    border:none;
+    color:var(--muted);
+    font-size:.85rem;
+    display:none;
+    align-items:center; justify-content:center;
+    cursor:pointer;
+    touch-action:manipulation;
+    transition:background .15s, color .15s;
+  }
+  .global-search-clear:hover{ background:var(--surface-2); color:var(--ink); }
+  .global-search-clear.visible{ display:flex; }
 
   .screen{ width:100%; display:none; flex-direction:column; align-items:center; }
   .screen.active{ display:flex; animation:rise .5s cubic-bezier(.2,.9,.25,1); }
@@ -1334,6 +1351,7 @@
     <div class="global-search-bar">
       <i class="ti ti-search" aria-hidden="true"></i>
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="Search for a title…" />
+      <button class="global-search-clear" id="btnClearGlobalSearch" type="button" data-i18n-aria="aria_clear_search" aria-label="Clear search"><i class="ti ti-x" aria-hidden="true"></i></button>
     </div>
 
     <!-- ═══════════════ SCREEN 1 — MOVIES OR SERIES (the new first screen) ═══════════════ -->
@@ -1613,6 +1631,7 @@ const TRANSLATIONS = {
     contact_link: "Contact",
     blog_link: "Blog",
     search_placeholder: "Search for a title…",
+    aria_clear_search: "Clear search",
     hero_title_line1: "Tonight you're",
     hero_title_accent: "watching.",
     hero_subtitle: "Swipe through what's actually available on your platforms. Save what you like, then share your picks with anyone.",
@@ -1788,6 +1807,7 @@ const TRANSLATIONS = {
     contact_link: "Contacto",
     blog_link: "Blog",
     search_placeholder: "Busca un título…",
+    aria_clear_search: "Borrar búsqueda",
     hero_title_line1: "Esta noche vas",
     hero_title_accent: "a ver algo.",
     hero_subtitle: "Desliza entre lo que realmente está disponible en tus plataformas. Guarda lo que te guste y comparte tus elecciones con quien quieras.",
@@ -1963,6 +1983,7 @@ const TRANSLATIONS = {
     contact_link: "Contato",
     blog_link: "Blog",
     search_placeholder: "Procure um título…",
+    aria_clear_search: "Limpar busca",
     hero_title_line1: "Hoje à noite você vai",
     hero_title_accent: "assistir algo.",
     hero_subtitle: "Deslize pelo que realmente está disponível nas suas plataformas. Salve o que gostar e compartilhe suas escolhas com qualquer pessoa.",
@@ -2138,6 +2159,7 @@ const TRANSLATIONS = {
     contact_link: "Contact",
     blog_link: "Blog",
     search_placeholder: "Rechercher un titre…",
+    aria_clear_search: "Effacer la recherche",
     hero_title_line1: "Ce soir, vous allez",
     hero_title_accent: "regarder quelque chose.",
     hero_subtitle: "Parcourez ce qui est réellement disponible sur vos plateformes. Enregistrez ce que vous aimez, puis partagez vos choix avec qui vous voulez.",
@@ -2313,6 +2335,7 @@ const TRANSLATIONS = {
     contact_link: "Kontakt",
     blog_link: "Blog",
     search_placeholder: "Titel suchen…",
+    aria_clear_search: "Suche löschen",
     hero_title_line1: "Heute Abend siehst du",
     hero_title_accent: "etwas.",
     hero_subtitle: "Wische durch das, was auf deinen Plattformen wirklich verfügbar ist. Speichere, was dir gefällt, und teile deine Auswahl mit jedem.",
@@ -2488,6 +2511,7 @@ const TRANSLATIONS = {
     contact_link: "संपर्क करें",
     blog_link: "ब्लॉग",
     search_placeholder: "कोई टाइटल खोजें…",
+    aria_clear_search: "खोज साफ़ करें",
     hero_title_line1: "आज रात आप",
     hero_title_accent: "कुछ देखने वाले हैं।",
     hero_subtitle: "अपने प्लेटफ़ॉर्म पर जो वाकई उपलब्ध है उसे स्वाइप करें। जो पसंद आए उसे सेव करें, फिर अपनी पसंद किसी के साथ भी शेयर करें।",
@@ -2663,6 +2687,7 @@ const TRANSLATIONS = {
     contact_link: "Kontakt",
     blog_link: "Blog",
     search_placeholder: "Szukaj tytułu…",
+    aria_clear_search: "Wyczyść wyszukiwanie",
     hero_title_line1: "Dziś wieczorem",
     hero_title_accent: "coś obejrzysz.",
     hero_subtitle: "Przesuwaj po tym, co naprawdę jest dostępne na Twoich platformach. Zapisuj to, co Ci się podoba, i udostępniaj swoje wybory każdemu.",
@@ -4184,6 +4209,20 @@ const TRANSLATIONS = {
     const query = e.target.value.trim();
     if(!query) return;
     performSearch(query);
+  });
+
+  // Small "×" to clear whatever's typed — only shown once there's actually
+  // text to clear, same pattern as every other conditional button in the app.
+  const globalSearchInput = document.getElementById('globalSearchInput');
+  const btnClearGlobalSearch = document.getElementById('btnClearGlobalSearch');
+  const updateClearSearchVisibility = () => {
+    btnClearGlobalSearch.classList.toggle('visible', globalSearchInput.value.length > 0);
+  };
+  globalSearchInput.addEventListener('input', updateClearSearchVisibility);
+  btnClearGlobalSearch.addEventListener('click', () => {
+    globalSearchInput.value = '';
+    updateClearSearchVisibility();
+    globalSearchInput.focus();
   });
 
   document.getElementById('btnBackFromSearch').addEventListener('click', () => showScreen(searchReturnScreen));
