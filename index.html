@@ -211,16 +211,28 @@
     border:none;
     outline:none;
     color:var(--muted);
-    font-size:1.3rem;
-    line-height:1;
-    display:flex;
-    align-items:center; justify-content:center;
     padding:0;
     cursor:pointer;
     touch-action:manipulation;
     transition:background .15s, color .15s;
   }
   .global-search-clear:hover{ background:var(--surface-2); color:var(--ink); }
+  /* Drawn with two crossed bars rather than a font glyph/icon — a character
+     like × is never perfectly symmetrical across fonts, so it looks visually
+     off-center inside a circle even when its bounding box is centered
+     correctly. Two pseudo-element bars, each centered on the button's exact
+     midpoint independent of any font, is centering that can't drift. */
+  .global-search-clear::before,
+  .global-search-clear::after{
+    content:'';
+    position:absolute;
+    top:50%; left:50%;
+    width:12px; height:2px;
+    background:currentColor;
+    border-radius:1px;
+  }
+  .global-search-clear::before{ transform:translate(-50%, -50%) rotate(45deg); }
+  .global-search-clear::after{ transform:translate(-50%, -50%) rotate(-45deg); }
 
   .screen{ width:100%; display:none; flex-direction:column; align-items:center; }
   .screen.active{ display:flex; animation:rise .5s cubic-bezier(.2,.9,.25,1); }
@@ -1353,7 +1365,7 @@
     <div class="global-search-bar">
       <i class="ti ti-search" aria-hidden="true"></i>
       <input type="text" id="globalSearchInput" data-i18n-placeholder="search_placeholder" placeholder="Search for a title…" />
-      <button class="global-search-clear" id="btnClearGlobalSearch" type="button" data-i18n-aria="aria_clear_search" aria-label="Clear search">&times;</button>
+      <button class="global-search-clear" id="btnClearGlobalSearch" type="button" data-i18n-aria="aria_clear_search" aria-label="Clear search"></button>
     </div>
 
     <!-- ═══════════════ SCREEN 1 — MOVIES OR SERIES (the new first screen) ═══════════════ -->
@@ -1575,7 +1587,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.27 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.28 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
