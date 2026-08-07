@@ -1051,6 +1051,30 @@
     border-color:var(--amber);
   }
   .favorite-brick .brick-heart:hover{ background:rgba(11,14,20,.9); }
+
+  /* Save/heart toggle on the full-details screen (screen-final-pick) — same
+     visual language as .brick-heart, but sits inline in the header row
+     rather than absolutely positioned over a poster, since this screen's
+     poster is small and the header has room beside it. */
+  .final-pick-heart{
+    flex-shrink:0;
+    width:38px; height:38px;
+    border-radius:50%;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--ink);
+    font-size:1.2rem;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .15s, color .15s, border-color .15s;
+    touch-action:manipulation;
+    cursor:pointer;
+  }
+  .final-pick-heart[data-saved="true"]{
+    color:var(--amber);
+    background:rgba(255,176,32,.12);
+    border-color:var(--amber);
+  }
+  .final-pick-heart:hover{ border-color:var(--amber); }
   .favorite-brick .brick-info{ padding:.55rem .6rem .7rem; }
   .favorite-brick .brick-title{
     font-family:var(--font-display);
@@ -1529,7 +1553,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.25 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.26 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1734,6 +1758,10 @@ const TRANSLATIONS = {
     availability_varies: "Availability varies",
     rewind_label: "Rewind",
     toast_rewound: "↺ Restored to deck",
+    toast_added_to_picks: "Added to your picks",
+    toast_removed_from_picks: "Removed from your picks",
+    aria_save_to_picks: "Save to your picks",
+    aria_remove_from_picks: "Remove from your picks",
     cookie_notice_text: "We only use essential local storage to remember your saved picks. No tracking, no ads.",
     cookie_notice_learn_more: "Learn more",
     cookie_notice_dismiss: "Got it",
@@ -1905,6 +1933,10 @@ const TRANSLATIONS = {
     availability_varies: "La disponibilidad varía",
     rewind_label: "Rebobinar",
     toast_rewound: "↺ Restaurado en la baraja",
+    toast_added_to_picks: "Añadido a tus selecciones",
+    toast_removed_from_picks: "Eliminado de tus selecciones",
+    aria_save_to_picks: "Guardar en tus selecciones",
+    aria_remove_from_picks: "Quitar de tus selecciones",
     cookie_notice_text: "Solo usamos almacenamiento local esencial para recordar tus elecciones guardadas. Sin rastreo, sin anuncios.",
     cookie_notice_learn_more: "Saber más",
     cookie_notice_dismiss: "Entendido",
@@ -2076,6 +2108,10 @@ const TRANSLATIONS = {
     availability_varies: "A disponibilidade varia",
     rewind_label: "Voltar",
     toast_rewound: "↺ Restaurado no baralho",
+    toast_added_to_picks: "Adicionado às suas escolhas",
+    toast_removed_from_picks: "Removido das suas escolhas",
+    aria_save_to_picks: "Salvar nas suas escolhas",
+    aria_remove_from_picks: "Remover das suas escolhas",
     cookie_notice_text: "Usamos apenas armazenamento local essencial para lembrar suas escolhas salvas. Sem rastreamento, sem anúncios.",
     cookie_notice_learn_more: "Saiba mais",
     cookie_notice_dismiss: "Entendi",
@@ -2247,6 +2283,10 @@ const TRANSLATIONS = {
     availability_varies: "La disponibilité varie",
     rewind_label: "Revenir en arrière",
     toast_rewound: "↺ Remis dans le paquet",
+    toast_added_to_picks: "Ajouté à vos choix",
+    toast_removed_from_picks: "Retiré de vos choix",
+    aria_save_to_picks: "Enregistrer dans vos choix",
+    aria_remove_from_picks: "Retirer de vos choix",
     cookie_notice_text: "Nous utilisons uniquement un stockage local essentiel pour retenir vos choix enregistrés. Pas de suivi, pas de publicité.",
     cookie_notice_learn_more: "En savoir plus",
     cookie_notice_dismiss: "Compris",
@@ -2418,6 +2458,10 @@ const TRANSLATIONS = {
     availability_varies: "Verfügbarkeit variiert",
     rewind_label: "Zurück",
     toast_rewound: "↺ Zurück in den Stapel gelegt",
+    toast_added_to_picks: "Zu deinen Favoriten hinzugefügt",
+    toast_removed_from_picks: "Aus deinen Favoriten entfernt",
+    aria_save_to_picks: "Zu Favoriten speichern",
+    aria_remove_from_picks: "Aus Favoriten entfernen",
     cookie_notice_text: "Wir verwenden nur unbedingt notwendigen lokalen Speicher, um deine gespeicherte Auswahl zu merken. Kein Tracking, keine Werbung.",
     cookie_notice_learn_more: "Mehr erfahren",
     cookie_notice_dismiss: "Verstanden",
@@ -2589,6 +2633,10 @@ const TRANSLATIONS = {
     availability_varies: "उपलब्धता अलग-अलग हो सकती है",
     rewind_label: "वापस जाएं",
     toast_rewound: "↺ डेक में वापस लाया गया",
+    toast_added_to_picks: "आपकी पसंद में जोड़ा गया",
+    toast_removed_from_picks: "आपकी पसंद से हटाया गया",
+    aria_save_to_picks: "अपनी पसंद में सहेजें",
+    aria_remove_from_picks: "अपनी पसंद से हटाएं",
     cookie_notice_text: "हम सिर्य़ आपकी सेव की गई पसंद याद रखने के लिए जरूरी लोकल स्टोरेज का उपयोग करते हैं। कोई ट्रैकिंग नहीं, कोई विज्ञापन नहीं।",
     cookie_notice_learn_more: "और जानें",
     cookie_notice_dismiss: "ठीक है",
@@ -2760,6 +2808,10 @@ const TRANSLATIONS = {
     availability_varies: "Dostępność zmienna",
     rewind_label: "Cofnij",
     toast_rewound: "↺ Przywrócono do talii",
+    toast_added_to_picks: "Dodano do Twoich wyborów",
+    toast_removed_from_picks: "Usunięto z Twoich wyborów",
+    aria_save_to_picks: "Zapisz w swoich wyborach",
+    aria_remove_from_picks: "Usuń ze swoich wyborów",
     cookie_notice_text: "Używamy wyłącznie niezbędnego przechowywania lokalnego, aby zapamiętać Twoje zapisane wybory. Bez śledzenia, bez reklam.",
     cookie_notice_learn_more: "Dowiedz się więcej",
     cookie_notice_dismiss: "Rozumiem",
@@ -4405,13 +4457,42 @@ const TRANSLATIONS = {
     el.innerHTML = `
       <div style="display:flex; gap:1rem; align-items:center; text-align:left;">
         ${movie.poster_url ? `<img src="${movie.poster_url}" alt="" style="width:72px; border-radius:8px; flex-shrink:0;">` : ''}
-        <div>
+        <div style="flex:1; min-width:0;">
           <div style="font-family:var(--font-display); font-size:1.7rem; text-transform:uppercase; letter-spacing:.01em; line-height:1;">${movie.title}</div>
           <div style="font-family:var(--font-mono); font-size:.75rem; color:var(--muted); margin-top:.4rem;">${yearLabel} · ${movie.genre} · ${formatDuration(movie)}</div>
           <div style="margin-top:.55rem;"><span class="platform-badge" id="finalPickPlatformBadge">${t('checking_ellipsis')}</span></div>
         </div>
+        <button class="final-pick-heart" id="finalPickHeart" type="button">
+          <i class="ti ti-thumb-up" aria-hidden="true"></i>
+        </button>
       </div>
     `;
+
+    // Save/unsave straight from the full-details screen — this is the only
+    // remaining entry point into this screen that previously had no way to
+    // favorite the title at all (swiping right already saves before this
+    // screen opens; the favorites/search/shared grids save via the brick's
+    // own heart icon before you tap in). "You might also like" cards jump
+    // straight here with neither of those, so without this the title simply
+    // couldn't be saved.
+    const finalPickHeartBtn = document.getElementById('finalPickHeart');
+    const setFinalPickHeartState = () => {
+      const saved = isFavorited(movie.title);
+      finalPickHeartBtn.dataset.saved = saved ? 'true' : 'false';
+      finalPickHeartBtn.setAttribute('aria-label', saved ? t('aria_remove_from_picks') : t('aria_save_to_picks'));
+    };
+    setFinalPickHeartState();
+    finalPickHeartBtn.addEventListener('click', () => {
+      if(isFavorited(movie.title)){
+        removeFromFavorites(movie.title);
+        showToast(t('toast_removed_from_picks'));
+      } else {
+        addToFavorites(movie);
+        showToast(t('toast_added_to_picks'));
+      }
+      setFinalPickHeartState();
+      updateFavoritesButtons();
+    });
 
     const detailsEl = document.getElementById('finalPickDetails');
     const blocks = [];
