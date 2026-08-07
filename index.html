@@ -1500,6 +1500,7 @@
       <div class="final-pick-nav">
         <button class="btn btn-primary" id="btnContinueSwipingTop" data-i18n="btn_continue_swiping">Continue swiping</button>
         <button class="btn btn-ghost" id="btnBackToFavoritesGridTop" data-i18n="btn_back_to_your_picks">Back to your picks</button>
+        <button class="btn btn-ghost" id="btnSeeMyFavoritesFromDetailTop" data-i18n="btn_see_my_picks" style="display:none;">See my picks</button>
         <button class="btn btn-ghost" id="btnFinalRestartTop" data-i18n="btn_start_new_session">Start a new session</button>
       </div>
 
@@ -1532,6 +1533,7 @@
       <button class="btn btn-primary btn-block" id="btnShareThisPick" data-i18n="btn_share_this_pick" style="margin-bottom:.6rem;">Share this pick</button>
       <button class="btn btn-primary btn-block" id="btnContinueSwiping" data-i18n="btn_continue_swiping" style="margin-bottom:.6rem;">Continue swiping</button>
       <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid" data-i18n="btn_back_to_your_picks">Back to your picks</button>
+      <button class="btn btn-ghost btn-block" id="btnSeeMyFavoritesFromDetail" data-i18n="btn_see_my_picks" style="margin-top:.6rem; display:none;">See my picks</button>
       <button class="btn btn-ghost btn-block" id="btnFinalRestart" data-i18n="btn_start_new_session" style="margin-top:.6rem;">Start a new session</button>
     </section>
 
@@ -3533,7 +3535,7 @@ const TRANSLATIONS = {
   // whenever favorites change, including via the heart button on grids.
   function updateFavoritesButtons(){
     const has = state.favorites.length > 0;
-    ['btnGoToFavorites', 'btnGoToFavoritesFromDone', 'btnGoToFavoritesFromSearch'].forEach(id => {
+    ['btnGoToFavorites', 'btnGoToFavoritesFromDone', 'btnGoToFavoritesFromSearch', 'btnSeeMyFavoritesFromDetail', 'btnSeeMyFavoritesFromDetailTop'].forEach(id => {
       const el = document.getElementById(id);
       if(el) el.style.display = has ? 'flex' : 'none';
     });
@@ -4212,6 +4214,14 @@ const TRANSLATIONS = {
     showScreen(favoritesReturnScreen);
   });
   document.getElementById('btnBackToFavoritesGrid').addEventListener('click', () => showScreen(finalPickReturnScreen));
+  // Always jumps straight to the favorites grid, regardless of how this
+  // detail screen was reached — unlike btnBackToFavoritesGrid above, which
+  // is contextual (goes back to wherever the person came from, and is
+  // hidden entirely when that's the swipe deck). Titles opened via "You
+  // might also like" had no reliable way to reach favorites at all, since
+  // finalPickReturnScreen there just carries over whatever it was set to
+  // for the original title. This button doesn't depend on that context.
+  document.getElementById('btnSeeMyFavoritesFromDetail').addEventListener('click', () => showFavoritesGrid('screen-final-pick'));
 
   /* ════════════════════════════════════════════════════════════
      SHARING — since there's no real multiplayer backend, sharing is
@@ -4683,6 +4693,7 @@ const TRANSLATIONS = {
   })();
 
   document.getElementById('btnBackToFavoritesGridTop').addEventListener('click', () => showScreen(finalPickReturnScreen));
+  document.getElementById('btnSeeMyFavoritesFromDetailTop').addEventListener('click', () => showFavoritesGrid('screen-final-pick'));
   document.getElementById('btnFinalRestartTop').addEventListener('click', () => fullRestart());
 
   /* ════════════════════════════════════════════════════════════
