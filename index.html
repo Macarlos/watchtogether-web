@@ -1587,7 +1587,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.29 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.30 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3035,6 +3035,14 @@ const TRANSLATIONS = {
     buildChips(document.getElementById('chipPlatformsAdjust'), state.availablePlatforms, state.platforms);
   }
 
+  rebuildPlatformChips(); // paint FALLBACK_PLATFORMS immediately — don't wait on the fetch below.
+  // Previously chips only appeared once loadPlatformsForRegion's fetch
+  // succeeded with a non-empty result, so FALLBACK_PLATFORMS was never
+  // actually reaching the screen on its own — it just looked like a working
+  // fallback because the live fetch almost always succeeded fast. The one
+  // time the fetch legitimately comes back empty (upstream data issue,
+  // not a bug here), this left the chip containers permanently blank
+  // instead of showing anything at all.
   loadPlatformsForRegion(state.region); // initial load for the US default, refined once detection resolves
   applyStaticTranslations(); // initial English pass — re-run once real language is known
 
