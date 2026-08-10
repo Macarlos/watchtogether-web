@@ -114,7 +114,7 @@
   }
   @keyframes posterScrollUp{
     from{ transform:translateY(0); }
-    to{ transform:translateY(-50%); }
+    to{ transform:translateY(-75%); }
   }
 
   button{ font-family:inherit; cursor:pointer; }
@@ -1587,7 +1587,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.32 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.33 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3442,10 +3442,19 @@ const TRANSLATIONS = {
         tracks.forEach((track, i) => {
           const slice = columns[i];
           if(slice.length < 3) return;
-          // Duplicate the list so the upward scroll loops seamlessly at -50%.
-          const doubled = slice.concat(slice);
+          // Duplicate the list 4x (not 2x) so the upward scroll loops
+          // seamlessly at -75% — see the posterScrollUp keyframe above.
+          // Doubling alone came up short on tall/narrow phone screens: each
+          // column's width (and therefore each poster's height, locked to
+          // a 2:3 aspect ratio) depends only on screen WIDTH, but the loop
+          // needs to cover screen HEIGHT — on a tall aspect-ratio phone the
+          // doubled stack ran out before reaching the bottom of the
+          // viewport, showing a visible gap. Reusing the same source
+          // posters (not re-fetching) costs nothing extra over the network,
+          // since the browser just re-renders the same cached image URLs.
+          const doubled = slice.concat(slice, slice, slice);
           track.innerHTML = doubled.map(src => `<img src="${escapeHtml(src)}" loading="lazy" alt="" />`).join('');
-          const duration = 110 + i * 20; // slow, calm drift — slight stagger per column for a parallax feel
+          const duration = 330 + i * 60; // 3x the original 110+i*20 — the loop now covers 3x the distance per cycle (4 copies at -75% vs 2 copies at -50%), so duration scales up to keep the same calm visual speed rather than scrolling 3x faster
           track.style.animationDuration = `${duration}s`;
         });
 
