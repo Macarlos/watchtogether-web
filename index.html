@@ -114,7 +114,7 @@
   }
   @keyframes posterScrollUp{
     from{ transform:translateY(0); }
-    to{ transform:translateY(-75%); }
+    to{ transform:translateY(-50%); }
   }
 
   button{ font-family:inherit; cursor:pointer; }
@@ -3442,19 +3442,41 @@ const TRANSLATIONS = {
         tracks.forEach((track, i) => {
           const slice = columns[i];
           if(slice.length < 3) return;
-          // Duplicate the list 4x (not 2x) so the upward scroll loops
-          // seamlessly at -75% — see the posterScrollUp keyframe above.
-          // Doubling alone came up short on tall/narrow phone screens: each
-          // column's width (and therefore each poster's height, locked to
-          // a 2:3 aspect ratio) depends only on screen WIDTH, but the loop
-          // needs to cover screen HEIGHT — on a tall aspect-ratio phone the
-          // doubled stack ran out before reaching the bottom of the
-          // viewport, showing a visible gap. Reusing the same source
-          // posters (not re-fetching) costs nothing extra over the network,
-          // since the browser just re-renders the same cached image URLs.
-          const doubled = slice.concat(slice, slice, slice);
+
+          // Build one column's worth of content by measuring the ACTUAL
+          // rendered height on this device, rather than guessing a fixed
+          // multiplier (doubling, quadrupling, etc.) that only holds for
+          // some screen sizes and breaks on others (e.g. tall/narrow
+          // phones, where each poster's height — locked to the column's
+          // width via aspect-ratio — ends up short relative to viewport
+          // height). Posters are reused round-robin once the source list
+          // runs out; that's fine, this is decorative.
+          // aspect-ratio reserves each image's box height from the
+          // column's layout width immediately, before the image itself
+          // has loaded, so scrollHeight is trustworthy right away.
+          let built = [];
+          let guard = 0;
+          while(track.scrollHeight < window.innerHeight && guard < 300){
+            built.push(slice[built.length % slice.length]);
+            track.innerHTML = built.map(src => `<img src="${escapeHtml(src)}" loading="lazy" alt="" />`).join('');
+            guard++;
+          }
+          // Now duplicate that measured-safe set exactly once (2 copies
+          // total) — since one set is already >= the real viewport height
+          // on this device, two sets are always >= 2x viewport height,
+          // which is exactly what the -50% translateY loop trick needs to
+          // stay seamless, on any screen, without guessing.
+          const doubled = built.concat(built);
           track.innerHTML = doubled.map(src => `<img src="${escapeHtml(src)}" loading="lazy" alt="" />`).join('');
-          const duration = 330 + i * 60; // 3x the original 110+i*20 — the loop now covers 3x the distance per cycle (4 copies at -75% vs 2 copies at -50%), so duration scales up to keep the same calm visual speed rather than scrolling 3x faster
+
+          // Keep scroll SPEED constant across devices (not just duration) —
+          // a fixed duration would make a taller measured set (more content
+          // to cover) scroll faster than a shorter one. ~11px/s matches the
+          // original calm pace this app was tuned to; the i*20s stagger
+          // keeps each column drifting at a slightly different rate for
+          // the parallax feel, same as before.
+          const pxPerSecond = 11;
+          const duration = Math.round(track.scrollHeight / 2 / pxPerSecond) + i * 20;
           track.style.animationDuration = `${duration}s`;
         });
 
