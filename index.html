@@ -528,6 +528,24 @@
 
   .similar-titles-wrap{ position:relative; width:100%; min-width:0; }
 
+  /* Wraps the AdSense <ins> unit without touching its own code/attributes
+     (Google's policy prohibits modifying the ad snippet itself). This unit
+     is a fixed 728x90 desktop size — too wide for most phones — so rather
+     than letting it force horizontal overflow on the whole page, the
+     wrapper centers it and scrolls internally on narrow screens. min-height
+     matches the ad's height to reserve the space up front and avoid a
+     layout shift while the ad loads in. */
+  /* Plain block wrapper (not flex) for the responsive ad unit — the
+     data-full-width-responsive ins tag needs a normal block parent to
+     correctly measure and fill 100% of the available width. min-height is
+     a rough placeholder to reduce layout shift while it loads; actual
+     rendered height varies by ad. */
+  .ad-slot-responsive{
+    width:100%;
+    min-height:90px;
+    margin-bottom:1.2rem;
+  }
+
   .similar-scroll-btn{
     display:none; /* desktop-only — see the min-width:700px block below */
     position:absolute; top:0; bottom:.3rem;
@@ -1551,6 +1569,17 @@
         <p class="region-disclosure" data-i18n-template="region_disclosure_prices_template" style="color:var(--muted); font-size:.72rem; margin-top:.9rem; line-height:1.5;">Prices and availability shown reflect the US catalog, regardless of where you are.</p>
       </div>
 
+      <!-- Ad_2 — before "You might also like" -->
+      <div class="ad-slot-responsive">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2115703553093825"
+             data-ad-slot="1873653121"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+
       <div id="similarTitlesSection" style="display:none; margin-bottom:1.2rem; width:100%; min-width:0;">
         <div class="section-head" style="text-align:left; margin-bottom:.7rem;">
           <h2 style="font-size:1.05rem;" id="similarTitlesHeading" data-i18n="similar_titles_heading">You might also like</h2>
@@ -1587,7 +1616,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.33 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.35 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
