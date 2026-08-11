@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mood-Based vs. Genre-Based Recommendations: Why They're Not the Same Thing | Watch2Night Blog</title>
+<meta name="description" content="Genre tells you what a movie is. Mood tells you what you actually want right now. They sound similar, but conflating them is why most recommendation systems keep suggesting the wrong thing." />
+<link rel="canonical" href="https://watch2night.com/blog/mood-vs-genre-recommendations.html" />
+<link rel="icon" type="image/png" href="../icons/favicon-64.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080a10; --bg-soft:#0c101a; --surface:#151a28; --surface-2:#1c2338;
+    --ink:#f4f1e8; --muted:#8a90a6; --amber:#ffb020; --teal:#34d9c0;
+    --border:#282f47; --radius:14px;
+    --font-display:'Bebas Neue', sans-serif; --font-body:'Inter', sans-serif; --font-mono:'JetBrains Mono', monospace;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{-webkit-font-smoothing:antialiased;}
+  body{
+    background:linear-gradient(180deg, #05060a 0%, #060811 22%, #0a1024 55%, #101b3e 82%, #16265a 100%);
+    background-attachment:fixed; color:var(--ink); font-family:var(--font-body);
+    min-height:100vh; padding:3rem 1.25rem 5rem; display:flex; justify-content:center;
+  }
+  .page{ width:100%; max-width:640px; }
+  a.back-link{ display:inline-block; color:var(--teal); text-decoration:none; font-family:var(--font-mono); font-size:.8rem; margin-bottom:2rem; }
+  a.back-link:hover{ text-decoration:underline; }
+  .wordmark{ font-family:var(--font-mono); font-size:1.15rem; letter-spacing:.18em; text-transform:uppercase; color:var(--amber); margin-bottom:.5rem; }
+  .post-date{ color:var(--teal); font-family:var(--font-mono); font-size:.75rem; letter-spacing:.05em; text-transform:uppercase; margin-bottom:1rem; }
+  h1{ font-family:var(--font-display); font-size:clamp(1.9rem, 6vw, 2.6rem); text-transform:uppercase; letter-spacing:.01em; line-height:1.1; margin-bottom:1.8rem; }
+  article p{ font-size:.98rem; line-height:1.75; color:var(--ink); margin-bottom:1.2rem; }
+  article h2{ font-family:var(--font-display); font-size:1.5rem; text-transform:uppercase; letter-spacing:.01em; color:var(--teal); margin:2.2rem 0 .9rem; }
+  article ul{ margin:0 0 1.2rem 1.3rem; font-size:.98rem; line-height:1.75; }
+  article li{ margin-bottom:.5rem; }
+  article a{ color:var(--amber); font-weight:600; }
+  strong{ color:var(--amber); }
+  .cta-box{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.6rem; margin:2.2rem 0; text-align:center; }
+  .cta-box p{ margin-bottom:1rem; color:var(--muted); }
+  .cta-box a.btn{ display:inline-block; background:var(--amber); color:#2b1a00; font-weight:700; padding:.7rem 1.4rem; border-radius:999px; text-decoration:none; font-size:.9rem; }
+  .related{ font-size:.85rem; color:var(--muted); margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border); }
+  .related a{ color:var(--teal); }
+  footer{ margin-top:2rem; text-align:center; color:var(--muted); font-size:.75rem; font-family:var(--font-mono); }
+  footer a{ color:inherit; }
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2115703553093825" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="page">
+    <a class="back-link" href="index.html">← Back to the blog</a>
+    <div class="wordmark">Watch2Night Blog</div>
+    <div class="post-date">Guide</div>
+    <h1>Mood-Based vs. Genre-Based Recommendations: Why They're Not the Same Thing</h1>
+
+    <article>
+      <p>"I want a comedy" and "I want something light" sound like they should point to the same shortlist. They usually don't. Genre describes what a piece of media <em>is</em>. Mood describes what you actually want to feel like watching <em>right now</em>. Most recommendation systems only really do the first one — which is a big part of why "browse by genre" so often leaves you no closer to picking something.</p>
+
+      <h2>Genre is a production category, not a feeling</h2>
+      <p>Genre labels come from how a film was made and marketed, not from how it lands emotionally. "Comedy" covers everything from a gentle, cozy family film to a pitch-black satire that's more uncomfortable than funny. "Drama" covers both a slow, meditative character study and a tense, high-stakes thriller-adjacent story. Two titles can share a genre tag and be almost nothing alike in what watching them actually feels like.</p>
+      <p>That's not a flaw in genre as a concept — it's just not the question genre was ever designed to answer. It tells you the shelf a movie sits on in a video store, not whether it matches your Tuesday-night energy.</p>
+
+      <h2>Mood is closer to what you're actually deciding</h2>
+      <p>When someone says "I just want something easy tonight" or "I'm in the mood for something that'll actually make me think," they're describing an emotional target, not a category. That's a genuinely different — and arguably more useful — axis to filter on, because it maps directly onto the actual decision you're making: not "what kind of movie is this," but "do I want to feel this way for the next two hours."</p>
+      <p>A well-built mood filter has to draw on more than the genre tag alone — pacing, tone, how heavy or light the subject matter is — to group titles the way a person would actually describe them out loud, rather than the way a distributor catalogued them.</p>
+
+      <h2>Why this matters more than it seems</h2>
+      <ul>
+        <li><strong>Genre-only browsing quietly re-introduces choice overload</strong> — "Comedy" can still be a list of hundreds, which puts you right back in paradox-of-choice territory.</li>
+        <li><strong>Mood narrows things the way an actual conversation would</strong> — closer to asking a friend "what should I watch" than searching a category.</li>
+        <li><strong>The two aren't mutually exclusive.</strong> The most useful systems let you combine them — "comedy" and "something light" together is a much sharper filter than either alone.</li>
+      </ul>
+
+      <div class="cta-box">
+        <p>Watch2Night's mood filters sit right alongside genre, platform, and rating — so you can narrow by how you actually want to feel tonight, not just what shelf a title happens to sit on.</p>
+        <a class="btn" href="../index.html">Try Watch2Night →</a>
+      </div>
+
+      <h2>The takeaway</h2>
+      <p>Genre answers "what is this." Mood answers "do I want this right now." Most streaming platforms only really let you filter by the first one, which is a quieter, more specific version of the same problem that makes browsing feel endless in the first place. Filtering by feeling, not just category, is a small change that gets you to a decision a lot faster.</p>
+
+      <div class="related">Related reading: <a href="why-choosing-a-movie-takes-longer-than-watching-one.html">Why You Spend Longer Choosing a Movie Than Watching One</a></div>
+    </article>
+
+    <footer>WATCH2NIGHT · <a href="../legal.html">Legal &amp; Privacy</a></footer>
+  </div>
+</body>
+</html>
