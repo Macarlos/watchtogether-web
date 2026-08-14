@@ -398,6 +398,36 @@
   }
   .path-card p{ color:var(--muted); font-size:.87rem; line-height:1.5; }
 
+  /* "Your picks" tile — same card language as the mode-picker tiles above
+     it, but with real poster thumbnails from state.favorites (not the
+     decorative random-poster fan corner every other card uses) and a
+     static amber border so it reads as a live status card, not just
+     another mode option. Hidden entirely until there's at least one
+     saved pick — see updateFavoritesButtons(). */
+  .picks-tile{
+    border-color:var(--amber);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+  }
+  .picks-tile:hover{ border-color:var(--amber); }
+  .picks-tile:hover h3{ color:var(--amber); }
+  .picks-tile-text h3{ font-size:1.2rem; max-width:none; }
+  .picks-tile-text p{ color:var(--muted); font-size:.8rem; margin-top:.2rem; max-width:none; }
+  .picks-tile-thumbs{ display:flex; flex-shrink:0; }
+  .picks-tile-thumb{
+    width:32px; height:46px;
+    border-radius:5px;
+    background-size:cover;
+    background-position:center;
+    background-color:var(--surface-2);
+    border:1.5px solid var(--bg);
+    margin-left:-10px;
+    box-shadow:0 2px 6px rgba(0,0,0,.4);
+  }
+  .picks-tile-thumb:first-child{ margin-left:0; }
+
   /* ───────────────────────── Buttons ───────────────────────── */
   .btn{
     border:none;
@@ -1435,7 +1465,16 @@
       </div>
 
       <button class="btn btn-ghost" id="btnShowOnboarding" data-i18n="btn_how_to_use" style="margin-top:1.2rem;">How to use W2N</button>
-      <button class="btn btn-ghost" id="btnSeeCurrentChoices" data-i18n="btn_see_current_choices" style="margin-top:.6rem;">See my current choices</button>
+
+      <div class="path-row" id="picksTileRow" style="margin-top:.6rem; display:none;">
+        <button class="path-card picks-tile" id="btnSeeCurrentChoices">
+          <div class="picks-tile-text">
+            <h3 data-i18n="picks_tile_title">Your picks</h3>
+            <p id="picksTileCount"></p>
+          </div>
+          <div class="picks-tile-thumbs" id="picksTileThumbs"></div>
+        </button>
+      </div>
     </section>
 
     <!-- ═══════════════ SCREEN 2 — SETUP ═══════════════ -->
@@ -1616,7 +1655,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.35 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.36 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1689,7 +1728,8 @@ const TRANSLATIONS = {
     card_recently_added_title: "Recently added",
     card_recently_added_desc: "Just landed on your platforms.",
     btn_how_to_use: "How to use W2N",
-    btn_see_current_choices: "See my current choices",
+    picks_tile_title: "Your picks",
+    picks_tile_count: "{count} saved titles",
     onboarding_title: "How Watch2Night works",
     onboarding_step1: "Pick your streaming platforms and a mood",
     onboarding_step2: "Swipe through real movies and shows",
@@ -1865,7 +1905,8 @@ const TRANSLATIONS = {
     card_recently_added_title: "Recién añadidos",
     card_recently_added_desc: "Recién llegados a tus plataformas.",
     btn_how_to_use: "Cómo usar W2N",
-    btn_see_current_choices: "Ver mis elecciones actuales",
+    picks_tile_title: "Tus elecciones",
+    picks_tile_count: "{count} títulos guardados",
     onboarding_title: "Cómo funciona Watch2Night",
     onboarding_step1: "Elige tus plataformas de streaming y un estado de ánimo",
     onboarding_step2: "Desliza entre películas y series reales",
@@ -2041,7 +2082,8 @@ const TRANSLATIONS = {
     card_recently_added_title: "Adicionados recentemente",
     card_recently_added_desc: "Acabaram de chegar às suas plataformas.",
     btn_how_to_use: "Como usar o W2N",
-    btn_see_current_choices: "Ver minhas escolhas atuais",
+    picks_tile_title: "Suas escolhas",
+    picks_tile_count: "{count} títulos salvos",
     onboarding_title: "Como o Watch2Night funciona",
     onboarding_step1: "Escolha suas plataformas de streaming e um clima",
     onboarding_step2: "Deslize por filmes e séries de verdade",
@@ -2217,7 +2259,8 @@ const TRANSLATIONS = {
     card_recently_added_title: "Ajoutés récemment",
     card_recently_added_desc: "Tout juste arrivés sur vos plateformes.",
     btn_how_to_use: "Comment utiliser W2N",
-    btn_see_current_choices: "Voir mes choix actuels",
+    picks_tile_title: "Vos choix",
+    picks_tile_count: "{count} titres enregistrés",
     onboarding_title: "Comment fonctionne Watch2Night",
     onboarding_step1: "Choisissez vos plateformes de streaming et une ambiance",
     onboarding_step2: "Parcourez de vrais films et séries",
@@ -2393,7 +2436,8 @@ const TRANSLATIONS = {
     card_recently_added_title: "Kürzlich hinzugefügt",
     card_recently_added_desc: "Gerade erst auf deinen Plattformen gelandet.",
     btn_how_to_use: "So funktioniert W2N",
-    btn_see_current_choices: "Meine aktuellen Favoriten ansehen",
+    picks_tile_title: "Deine Auswahl",
+    picks_tile_count: "{count} gespeicherte Titel",
     onboarding_title: "So funktioniert Watch2Night",
     onboarding_step1: "Wähle deine Streaming-Plattformen und eine Stimmung",
     onboarding_step2: "Wische durch echte Filme und Serien",
@@ -2569,7 +2613,8 @@ const TRANSLATIONS = {
     card_recently_added_title: "हाल ही में जोड़े गए",
     card_recently_added_desc: "अभी-अभी आपके प्लेटफ़ॉर्म पर आए।",
     btn_how_to_use: "W2N कैसे उपयोग करें",
-    btn_see_current_choices: "मेरी मौजूदा पसंद देखें",
+    picks_tile_title: "आपकी पसंद",
+    picks_tile_count: "{count} सहेजे गए टाइटल",
     onboarding_title: "Watch2Night कैसे काम करता है",
     onboarding_step1: "अपने स्ट्रीमिंग प्लेटफ़ॉर्म और एक मूड चुनें",
     onboarding_step2: "असली फ़िल्मों और शो में स्वाइप करें",
@@ -2745,7 +2790,8 @@ const TRANSLATIONS = {
     card_recently_added_title: "Ostatnio dodane",
     card_recently_added_desc: "Właśnie pojawiły się na twoich platformach.",
     btn_how_to_use: "Jak korzystać z W2N",
-    btn_see_current_choices: "Zobacz moje obecne wybory",
+    picks_tile_title: "Twoje wybory",
+    picks_tile_count: "{count} zapisanych tytułów",
     onboarding_title: "Jak działa Watch2Night",
     onboarding_step1: "Wybierz swoje platformy streamingowe i nastrój",
     onboarding_step2: "Przesuwaj po prawdziwych filmach i serialach",
@@ -3065,6 +3111,7 @@ const TRANSLATIONS = {
   }
 
   rebuildPlatformChips(); // paint FALLBACK_PLATFORMS immediately — don't wait on the fetch below.
+  updateFavoritesButtons(); // paint the "Your picks" tile (and related buttons) immediately for returning visitors with existing saved picks — same reasoning as the platform-chips fix above: loaded state alone doesn't render anything without an explicit call.
   // Previously chips only appeared once loadPlatformsForRegion's fetch
   // succeeded with a non-empty result, so FALLBACK_PLATFORMS was never
   // actually reaching the screen on its own — it just looked like a working
@@ -3646,6 +3693,22 @@ const TRANSLATIONS = {
       const el = document.getElementById(id);
       if(el) el.style.display = has ? 'flex' : 'none';
     });
+
+    const picksRow = document.getElementById('picksTileRow');
+    if(picksRow){
+      picksRow.style.display = has ? 'flex' : 'none';
+      if(has){
+        document.getElementById('picksTileCount').textContent = t('picks_tile_count', { count: state.favorites.length });
+        const thumbsEl = document.getElementById('picksTileThumbs');
+        // Most recently saved first, capped at 3 — matches the approved
+        // mockup's overlapping-thumbnail treatment, not meant to show
+        // every single pick, just enough to read as "these are real".
+        thumbsEl.innerHTML = state.favorites.slice(-3).reverse()
+          .filter(f => f.poster_url)
+          .map(f => `<div class="picks-tile-thumb" style="background-image:url('${escapeHtml(f.poster_url)}')"></div>`)
+          .join('');
+      }
+    }
   }
 
   document.getElementById('btnExploreAllCategories').addEventListener('click', () => {
