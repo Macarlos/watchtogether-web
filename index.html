@@ -980,53 +980,111 @@
     line-height:1.5;
   }
 
-  .onboarding-overlay{
-    position:fixed; inset:0;
-    background:rgba(5,7,14,.85);
-    backdrop-filter:blur(4px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:96;
-    padding:1.5rem;
+  /* Guided setup tour — replaces the old static "how it works" popup.
+     Two pieces: (1) .tour-spotlight-target, toggled onto whatever element
+     is the current step's target. Uses the classic giant-box-shadow
+     spotlight trick — no separate dimming overlay or clip-path math
+     needed, since a huge box-shadow spread naturally paints "outward"
+     from the element's own edges to cover the rest of the viewport. The
+     real element stays exactly where it is and stays fully interactive
+     (someone can tap a platform chip mid-tour and it just works).
+     (2) .tour-tooltip, a single floating card repositioned via JS to sit
+     near whichever element is currently spotlighted. */
+  .tour-spotlight-target{
+    position:relative;
+    z-index:97;
+    box-shadow:0 0 0 9999px rgba(5,6,10,.82);
+    border-radius:inherit;
+    transition:box-shadow .3s ease;
+  }
+  .tour-tooltip{
+    position:fixed;
+    z-index:98;
+    max-width:300px;
+    background:var(--surface);
+    border:1px solid var(--amber);
+    border-radius:var(--radius);
+    padding:1.1rem 2.2rem 1.1rem 1.2rem;
+    box-shadow:0 8px 28px rgba(0,0,0,.5);
     opacity:0;
     pointer-events:none;
-    transition:opacity .4s ease;
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  .tour-tooltip.visible{ opacity:1; pointer-events:auto; }
+  .tour-tooltip-close{
+    position:absolute;
+    top:.6rem; right:.6rem;
+    width:26px; height:26px;
+    display:flex; align-items:center; justify-content:center;
+    background:none;
+    border:none;
+    border-radius:50%;
+    color:var(--muted);
+    font-size:1rem;
     cursor:pointer;
+    touch-action:manipulation;
+    transition:background .15s, color .15s;
   }
-  .onboarding-overlay.visible{
-    opacity:1;
-    pointer-events:auto;
+  .tour-tooltip-close:hover{ background:var(--surface-2); color:var(--ink); }
+  .tour-tooltip h4{
+    font-family:var(--font-display);
+    font-size:1.15rem;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+    color:var(--amber);
+    margin-bottom:.4rem;
   }
-  .onboarding-steps{
-    display:flex;
-    flex-direction:column;
-    gap:1.1rem;
-    text-align:left;
-    margin-bottom:1rem;
+  .tour-tooltip p{
+    font-size:.87rem;
+    line-height:1.5;
+    color:var(--ink);
+    margin-bottom:.9rem;
   }
-  .onboarding-step{
+  .tour-tooltip-footer{
     display:flex;
     align-items:center;
-    gap:.9rem;
+    justify-content:space-between;
+    gap:.75rem;
   }
-  .onboarding-step .onboarding-icon{
-    font-size:1.6rem;
-    flex-shrink:0;
-    width:2rem;
-    text-align:center;
+  .tour-tooltip-progress-bar-track{
+    width:100%;
+    height:4px;
+    background:var(--border);
+    border-radius:999px;
+    overflow:hidden;
+    margin-bottom:.7rem;
   }
-  .onboarding-step p{
-    margin:0;
-    font-size:.92rem;
-    line-height:1.4;
-    color:var(--ink);
+  .tour-tooltip-progress-bar-fill{
+    height:100%;
+    background:var(--amber);
+    border-radius:999px;
+    transition:width .3s ease;
   }
-  .onboarding-dismiss-hint{
-    text-align:center;
+  .tour-tooltip-step-count{
+    font-family:var(--font-mono);
+    font-size:.68rem;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:.3rem;
+  }
+  .tour-tooltip-actions{ display:flex; gap:.5rem; align-items:center; }
+  .tour-tooltip-skip{
+    background:none; border:none;
     color:var(--muted);
     font-size:.78rem;
-    line-height:1.4;
+    cursor:pointer;
+    padding:.4rem;
+  }
+  .tour-tooltip-next{
+    background:var(--amber);
+    color:#1a1305;
+    border:none;
+    border-radius:8px;
+    padding:.5rem 1rem;
+    font-weight:700;
+    font-size:.82rem;
+    cursor:pointer;
   }
   .share-icons-row{
     display:flex;
@@ -1384,24 +1442,17 @@
   </div>
 
   <!-- ═══════════════ FIRST-TIME ONBOARDING HINT ═══════════════ -->
-  <div class="onboarding-overlay" id="onboardingOverlay">
-    <div class="share-dialog" id="onboardingDialogCard" role="dialog" aria-modal="true" aria-labelledby="onboardingDialogTitle" tabindex="-1" style="max-width:380px;">
-      <h3 id="onboardingDialogTitle" data-i18n="onboarding_title">How Watch2Night works</h3>
-      <div class="onboarding-steps">
-        <div class="onboarding-step">
-          <span class="onboarding-icon">🎛️</span>
-          <p data-i18n="onboarding_step1">Pick your streaming platforms and a mood</p>
-        </div>
-        <div class="onboarding-step">
-          <span class="onboarding-icon">👉</span>
-          <p data-i18n="onboarding_step2">Swipe through real movies and shows</p>
-        </div>
-        <div class="onboarding-step">
-          <span class="onboarding-icon">❤️</span>
-          <p data-i18n="onboarding_step3">Save your favorites, then share them with anyone</p>
-        </div>
-      </div>
-      <div class="onboarding-dismiss-hint" data-i18n="onboarding_dismiss">Tap anywhere to dismiss</div>
+  <div class="tour-tooltip" id="tourTooltip" role="dialog" aria-modal="false" aria-labelledby="tourTooltipTitle">
+    <button class="tour-tooltip-close" id="tourCloseBtn" type="button" data-i18n-aria="tour_close" aria-label="Close tour"><i class="ti ti-x" aria-hidden="true"></i></button>
+    <div class="tour-tooltip-step-count" id="tourTooltipStepCount"></div>
+    <div class="tour-tooltip-progress-bar-track">
+      <div class="tour-tooltip-progress-bar-fill" id="tourTooltipProgressBar"></div>
+    </div>
+    <h4 id="tourTooltipTitle"></h4>
+    <p id="tourTooltipBody"></p>
+    <div class="tour-tooltip-footer">
+      <button class="tour-tooltip-skip" id="tourSkipBtn" type="button" data-i18n="tour_skip">Skip tour</button>
+      <button class="tour-tooltip-next" id="tourNextBtn" type="button" data-i18n="tour_next">Next</button>
     </div>
   </div>
 
@@ -1688,7 +1739,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.39 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.42 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1763,11 +1814,17 @@ const TRANSLATIONS = {
     btn_how_to_use: "How to use W2N",
     picks_tile_title: "Your picks",
     picks_tile_count: "{count} saved titles",
-    onboarding_title: "How Watch2Night works",
-    onboarding_step1: "Pick your streaming platforms and a mood",
-    onboarding_step2: "Swipe through real movies and shows",
-    onboarding_step3: "Save your favorites, then share them with anyone",
-    onboarding_dismiss: "Tap anywhere to dismiss",
+    tour_platforms_title: "Pick your platforms",
+    tour_platforms_body: "Choose everything you actually subscribe to — we'll only show what's really available to you.",
+    tour_mood_title: "Set the mood",
+    tour_mood_body: "Pick a vibe, or tap \"Surprise me — any mood\" to skip this step entirely.",
+    tour_start_title: "Ready when you are",
+    tour_start_body: "Tap Start swiping whenever you're happy with your choices above.",
+    tour_skip: "Skip tour",
+    tour_close: "Close tour",
+    tour_step_count: "Step {current} of {total}",
+    tour_next: "Next",
+    tour_done: "Got it",
     setup_step1_label: "Step 1 of 2",
     setup_family_mode_label: "Family mode",
     setup_recently_added_mode_label: "Recently added",
@@ -1939,11 +1996,17 @@ const TRANSLATIONS = {
     btn_how_to_use: "Cómo usar W2N",
     picks_tile_title: "Tus elecciones",
     picks_tile_count: "{count} títulos guardados",
-    onboarding_title: "Cómo funciona Watch2Night",
-    onboarding_step1: "Elige tus plataformas de streaming y un estado de ánimo",
-    onboarding_step2: "Desliza entre películas y series reales",
-    onboarding_step3: "Guarda tus favoritos y compártelos con quien quieras",
-    onboarding_dismiss: "Toca en cualquier lugar para cerrar",
+    tour_platforms_title: "Elige tus plataformas",
+    tour_platforms_body: "Elige todo lo que tengas realmente contratado — solo te mostraremos lo que de verdad está disponible para ti.",
+    tour_mood_title: "Elige el ambiente",
+    tour_mood_body: "Elige un estado de ánimo, o toca \"Sorpréndeme — cualquier ambiente\" para saltarte este paso.",
+    tour_start_title: "Listo cuando quieras",
+    tour_start_body: "Toca Empezar a deslizar cuando estés conforme con tus elecciones de arriba.",
+    tour_skip: "Saltar tutorial",
+    tour_close: "Cerrar tutorial",
+    tour_step_count: "Paso {current} de {total}",
+    tour_next: "Siguiente",
+    tour_done: "Entendido",
     setup_step1_label: "Paso 1 de 2",
     setup_family_mode_label: "Modo familiar",
     setup_recently_added_mode_label: "Recién añadidos",
@@ -2115,11 +2178,17 @@ const TRANSLATIONS = {
     btn_how_to_use: "Como usar o W2N",
     picks_tile_title: "Suas escolhas",
     picks_tile_count: "{count} títulos salvos",
-    onboarding_title: "Como o Watch2Night funciona",
-    onboarding_step1: "Escolha suas plataformas de streaming e um clima",
-    onboarding_step2: "Deslize por filmes e séries de verdade",
-    onboarding_step3: "Salve seus favoritos e compartilhe com qualquer pessoa",
-    onboarding_dismiss: "Toque em qualquer lugar para fechar",
+    tour_platforms_title: "Escolha suas plataformas",
+    tour_platforms_body: "Escolha tudo que você realmente assina — só mostraremos o que está de fato disponível para você.",
+    tour_mood_title: "Escolha o clima",
+    tour_mood_body: "Escolha um clima, ou toque em \"Me surpreenda — qualquer clima\" para pular esta etapa.",
+    tour_start_title: "Pronto quando você quiser",
+    tour_start_body: "Toque em Começar a deslizar quando estiver satisfeito com suas escolhas acima.",
+    tour_skip: "Pular tutorial",
+    tour_close: "Fechar tutorial",
+    tour_step_count: "Passo {current} de {total}",
+    tour_next: "Próximo",
+    tour_done: "Entendi",
     setup_step1_label: "Passo 1 de 2",
     setup_family_mode_label: "Modo família",
     setup_recently_added_mode_label: "Adicionados recentemente",
@@ -2291,11 +2360,17 @@ const TRANSLATIONS = {
     btn_how_to_use: "Comment utiliser W2N",
     picks_tile_title: "Vos choix",
     picks_tile_count: "{count} titres enregistrés",
-    onboarding_title: "Comment fonctionne Watch2Night",
-    onboarding_step1: "Choisissez vos plateformes de streaming et une ambiance",
-    onboarding_step2: "Parcourez de vrais films et séries",
-    onboarding_step3: "Enregistrez vos favoris, puis partagez-les avec qui vous voulez",
-    onboarding_dismiss: "Touchez n'importe où pour fermer",
+    tour_platforms_title: "Choisissez vos plateformes",
+    tour_platforms_body: "Choisissez tout ce à quoi vous êtes réellement abonné — nous ne montrerons que ce qui est vraiment disponible pour vous.",
+    tour_mood_title: "Choisissez l'ambiance",
+    tour_mood_body: "Choisissez une ambiance, ou touchez \"Surprenez-moi — n'importe quelle ambiance\" pour passer cette étape.",
+    tour_start_title: "Prêt quand vous voulez",
+    tour_start_body: "Touchez Commencer à parcourir dès que vos choix ci-dessus vous conviennent.",
+    tour_skip: "Passer le tutoriel",
+    tour_close: "Fermer le tutoriel",
+    tour_step_count: "Étape {current} sur {total}",
+    tour_next: "Suivant",
+    tour_done: "Compris",
     setup_step1_label: "Étape 1 sur 2",
     setup_family_mode_label: "Mode famille",
     setup_recently_added_mode_label: "Ajoutés récemment",
@@ -2467,11 +2542,17 @@ const TRANSLATIONS = {
     btn_how_to_use: "So funktioniert W2N",
     picks_tile_title: "Deine Auswahl",
     picks_tile_count: "{count} gespeicherte Titel",
-    onboarding_title: "So funktioniert Watch2Night",
-    onboarding_step1: "Wähle deine Streaming-Plattformen und eine Stimmung",
-    onboarding_step2: "Wische durch echte Filme und Serien",
-    onboarding_step3: "Speichere deine Favoriten und teile sie mit jedem",
-    onboarding_dismiss: "Zum Schließen irgendwo tippen",
+    tour_platforms_title: "Wähle deine Plattformen",
+    tour_platforms_body: "Wähle alles, was du wirklich abonniert hast — wir zeigen dir nur, was wirklich verfügbar ist.",
+    tour_mood_title: "Wähle die Stimmung",
+    tour_mood_body: "Wähle eine Stimmung oder tippe auf \"Überrasch mich — egal welche Stimmung\", um diesen Schritt zu überspringen.",
+    tour_start_title: "Bereit, wann du willst",
+    tour_start_body: "Tippe auf Swipen starten, sobald du mit deiner Auswahl oben zufrieden bist.",
+    tour_skip: "Tour überspringen",
+    tour_close: "Tour schließen",
+    tour_step_count: "Schritt {current} von {total}",
+    tour_next: "Weiter",
+    tour_done: "Verstanden",
     setup_step1_label: "Schritt 1 von 2",
     setup_family_mode_label: "Familienmodus",
     setup_recently_added_mode_label: "Kürzlich hinzugefügt",
@@ -2643,11 +2724,17 @@ const TRANSLATIONS = {
     btn_how_to_use: "W2N कैसे उपयोग करें",
     picks_tile_title: "आपकी पसंद",
     picks_tile_count: "{count} सहेजे गए टाइटल",
-    onboarding_title: "Watch2Night कैसे काम करता है",
-    onboarding_step1: "अपने स्ट्रीमिंग प्लेटफ़ॉर्म और एक मूड चुनें",
-    onboarding_step2: "असली फ़िल्मों और शो में स्वाइप करें",
-    onboarding_step3: "अपने पसंदीदा सेव करें, फिर किसी के साथ भी शेयर करें",
-    onboarding_dismiss: "बंद करने के लिए कहीं भी टैप करें",
+    tour_platforms_title: "अपने प्लेटफ़ॉर्म चुनें",
+    tour_platforms_body: "वही चुनें जिसकी आपने वाकई सदस्यता ली है — हम बस वही दिखाएंगे जो सच में आपके लिए उपलब्ध है।",
+    tour_mood_title: "मूड चुनें",
+    tour_mood_body: "एक मूड चुनें, या इस चरण को छोड़ने के लिए \"मुझे चौंकाएं — कोई भी मूड\" पर टैप करें।",
+    tour_start_title: "जब आप तैयार हों",
+    tour_start_body: "ऊपर अपनी पसंद से संतुष्ट होने पर स्वाइपिंग शुरू करें पर टैप करें।",
+    tour_skip: "टूर छोड़ें",
+    tour_close: "टूर बंद करें",
+    tour_step_count: "चरण {current} / {total}",
+    tour_next: "अगला",
+    tour_done: "समझ गया",
     setup_step1_label: "चरण 1 का 2",
     setup_family_mode_label: "फ़ैमिली मोड",
     setup_recently_added_mode_label: "हाल ही में जोड़े गए",
@@ -2819,11 +2906,17 @@ const TRANSLATIONS = {
     btn_how_to_use: "Jak korzystać z W2N",
     picks_tile_title: "Twoje wybory",
     picks_tile_count: "{count} zapisanych tytułów",
-    onboarding_title: "Jak działa Watch2Night",
-    onboarding_step1: "Wybierz swoje platformy streamingowe i nastrój",
-    onboarding_step2: "Przesuwaj po prawdziwych filmach i serialach",
-    onboarding_step3: "Zapisuj ulubione, a potem udostępniaj je komukolwiek",
-    onboarding_dismiss: "Dotknij w dowolnym miejscu, aby zamknąć",
+    tour_platforms_title: "Wybierz swoje platformy",
+    tour_platforms_body: "Wybierz wszystko, co naprawdę subskrybujesz — pokażemy tylko to, co faktycznie jest dla Ciebie dostępne.",
+    tour_mood_title: "Wybierz nastrój",
+    tour_mood_body: "Wybierz nastrój albo dotknij \"Zaskocz mnie — dowolny nastrój\", żeby pominąć ten krok.",
+    tour_start_title: "Gotowe, kiedy chcesz",
+    tour_start_body: "Dotknij Rozpocznij przesuwanie, gdy Twój wybór powyżej Ci odpowiada.",
+    tour_skip: "Pomiń samouczek",
+    tour_close: "Zamknij samouczek",
+    tour_step_count: "Krok {current} z {total}",
+    tour_next: "Dalej",
+    tour_done: "Rozumiem",
     setup_step1_label: "Krok 1 z 2",
     setup_family_mode_label: "Tryb rodzinny",
     setup_recently_added_mode_label: "Ostatnio dodane",
@@ -3193,6 +3286,17 @@ const TRANSLATIONS = {
     if(!fromPopState && id !== current){
       history.pushState({screen: id}, '', location.pathname + location.search);
     }
+
+    // First-time visitors get the guided setup tour automatically the
+    // moment they actually reach this screen — not on page load, since the
+    // front screen comes first and platforms/mood chips don't exist yet.
+    // Skipped on popstate (back/forward shouldn't re-trigger it) and if
+    // it's already been seen (tracked separately from the general "seen
+    // this screen" concept, since the tour can also be replayed on demand
+    // via the repurposed "How to use W2N" button regardless of this flag).
+    if(id === 'screen-setup' && !fromPopState && !tourHasBeenSeen()){
+      setTimeout(startTour, 350);
+    }
   }
 
   // Restores the screen recorded in a history entry when the user hits the
@@ -3207,13 +3311,12 @@ const TRANSLATIONS = {
     const openOverlay = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay']
       .map(id => document.getElementById(id))
       .find(el => el && el.classList.contains('active'));
-    const openOnboarding = document.getElementById('onboardingOverlay');
     if(openOverlay){
       closeDialogVisual(openOverlay, 'active');
       return;
     }
-    if(openOnboarding && openOnboarding.classList.contains('visible')){
-      closeDialogVisual(openOnboarding, 'visible');
+    if(document.getElementById('tourTooltip').classList.contains('visible')){
+      endTour(true);
       return;
     }
 
@@ -4270,13 +4373,13 @@ const TRANSLATIONS = {
     const platform = document.getElementById('platformOverlay');
     const family = document.getElementById('familyTypeOverlay');
     const recentlyAdded = document.getElementById('recentlyAddedTypeOverlay');
-    const onboarding = document.getElementById('onboardingOverlay');
+    const tour = document.getElementById('tourTooltip');
     if(share.classList.contains('active')) closeDialog(share, 'active');
     else if(category.classList.contains('active')) closeDialog(category, 'active');
     else if(platform.classList.contains('active')) closeDialog(platform, 'active');
     else if(family.classList.contains('active')) closeDialog(family, 'active');
     else if(recentlyAdded.classList.contains('active')) closeDialog(recentlyAdded, 'active');
-    else if(onboarding.classList.contains('visible')) closeDialog(onboarding, 'visible');
+    else if(tour.classList.contains('visible')) endTour();
   });
 
   /* ════════════════════════════════════════════════════════════
@@ -4950,28 +5053,124 @@ const TRANSLATIONS = {
     });
   }
 
-  // "How to use W2N" hint dialog — shown only on demand via the button,
-  // not automatically on first run. Stays until the user taps anywhere to dismiss it.
-  (function initOnboardingHint(){
-    const overlay = document.getElementById('onboardingOverlay');
-    if (!overlay) return;
+  // Guided setup tour — spotlights platforms, mood, and the start button
+  // one at a time. Auto-shows once for first-time visitors the moment
+  // they reach screen-setup (see the hook in showScreen()); the repurposed
+  // "How to use W2N" button on the front screen replays it on demand any
+  // time, regardless of whether it's been seen before.
+  const TOUR_STEPS = [
+    { targetId: 'chipPlatforms', titleKey: 'tour_platforms_title', bodyKey: 'tour_platforms_body' },
+    { targetId: 'chipMoods', titleKey: 'tour_mood_title', bodyKey: 'tour_mood_body',
+      skip: () => document.getElementById('moodStepSection').style.display === 'none' },
+    { targetId: 'btnCreateRoom', titleKey: 'tour_start_title', bodyKey: 'tour_start_body' },
+  ];
+  let tourActiveList = [];
+  let tourIndex = 0;
+  let tourHistoryPushed = false;
 
-    function showOnboardingHint(){
-      let dismissed = false;
-      function dismiss(){
-        if (dismissed) return;
-        dismissed = true;
-        closeDialog(overlay, 'visible');
-        overlay.removeEventListener('click', dismiss);
-      }
+  function tourHasBeenSeen(){
+    // Storage key inlined here (not read from the TOUR_STORAGE_KEY const
+    // above) so this function has zero dependency on script execution
+    // order — it's called from inside showScreen(), which in principle
+    // could run before a later top-level const has initialized. Same class
+    // of bug as the PICKS_TILES crash in v4.37; fixing it the same way.
+    try { return localStorage.getItem('w2n_setup_tour_seen_v1') === '1'; }
+    catch(e){ return false; }
+  }
 
-      openDialog(overlay, 'visible');
-      overlay.addEventListener('click', dismiss);
+  function markTourSeen(){
+    try { localStorage.setItem('w2n_setup_tour_seen_v1', '1'); } catch(e){}
+  }
+
+  function positionTourTooltip(target){
+    const tooltip = document.getElementById('tourTooltip');
+    const rect = target.getBoundingClientRect();
+    const tooltipHeight = tooltip.offsetHeight || 150;
+    const margin = 12;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const top = spaceBelow > tooltipHeight + margin
+      ? rect.bottom + margin
+      : Math.max(margin, rect.top - tooltipHeight - margin);
+    const left = Math.min(
+      Math.max(margin, rect.left),
+      window.innerWidth - tooltip.offsetWidth - margin
+    );
+    tooltip.style.top = `${top}px`;
+    tooltip.style.left = `${left}px`;
+  }
+
+  function showTourStep(i){
+    // Clear the previous step's spotlight before applying the next one —
+    // otherwise two elements would stay highlighted at once.
+    document.querySelectorAll('.tour-spotlight-target').forEach(el => el.classList.remove('tour-spotlight-target'));
+
+    const step = tourActiveList[i];
+    const target = document.getElementById(step.targetId);
+    if(!target){ endTour(); return; } // target genuinely missing — bail cleanly rather than showing a tooltip pointing at nothing
+
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    target.classList.add('tour-spotlight-target');
+
+    const tooltip = document.getElementById('tourTooltip');
+    document.getElementById('tourTooltipTitle').textContent = t(step.titleKey);
+    document.getElementById('tourTooltipBody').textContent = t(step.bodyKey);
+    document.getElementById('tourNextBtn').textContent = (i === tourActiveList.length - 1) ? t('tour_done') : t('tour_next');
+
+    document.getElementById('tourTooltipStepCount').textContent = t('tour_step_count', { current: i + 1, total: tourActiveList.length });
+    document.getElementById('tourTooltipProgressBar').style.width = `${((i + 1) / tourActiveList.length) * 100}%`;
+
+    tooltip.classList.add('visible');
+    // Position after the browser's had a chance to lay out the newly-set
+    // text (affects tooltip height, which the positioning math depends on).
+    requestAnimationFrame(() => positionTourTooltip(target));
+  }
+
+  function startTour(){
+    tourActiveList = TOUR_STEPS.filter(s => !s.skip || !s.skip());
+    if(tourActiveList.length === 0) return;
+    tourIndex = 0;
+    // Same history-entry pattern as openDialog() — makes the back
+    // button/Android back gesture close the tour instead of leaving it
+    // stuck open while the screen underneath navigates away.
+    history.pushState({tourOpen: true}, '', location.pathname + location.search);
+    tourHistoryPushed = true;
+    showTourStep(tourIndex);
+  }
+
+  function endTour(fromPopState){
+    document.querySelectorAll('.tour-spotlight-target').forEach(el => el.classList.remove('tour-spotlight-target'));
+    document.getElementById('tourTooltip').classList.remove('visible');
+    markTourSeen();
+    if(tourHistoryPushed && !fromPopState){
+      history.replaceState({}, '', location.pathname + location.search);
     }
+    tourHistoryPushed = false;
+  }
 
-    const btn = document.getElementById('btnShowOnboarding');
-    if (btn) btn.addEventListener('click', showOnboardingHint);
-  })();
+  document.getElementById('tourNextBtn').addEventListener('click', () => {
+    if(tourIndex >= tourActiveList.length - 1){ endTour(); return; }
+    tourIndex++;
+    showTourStep(tourIndex);
+  });
+  document.getElementById('tourSkipBtn').addEventListener('click', () => endTour());
+  document.getElementById('tourCloseBtn').addEventListener('click', () => endTour());
+  window.addEventListener('resize', () => {
+    if(document.getElementById('tourTooltip').classList.contains('visible')){
+      positionTourTooltip(document.getElementById(tourActiveList[tourIndex].targetId));
+    }
+  });
+
+  // Repurposed "How to use W2N" button — always replays the tour on
+  // demand, regardless of whether it's been auto-shown before. Lives on
+  // the front screen, so navigate to screen-setup first if needed.
+  document.getElementById('btnShowOnboarding').addEventListener('click', () => {
+    const needsNavigation = getActiveScreenId() !== 'screen-setup';
+    if(needsNavigation) showScreen('screen-setup');
+    // A short delay when navigating first — showScreen() triggers a smooth
+    // scroll-to-top and the chips need a paint cycle before their
+    // getBoundingClientRect() (used to position the tooltip) is accurate.
+    setTimeout(startTour, needsNavigation ? 400 : 0);
+  });
 
   // Cookie/local-storage notice — shown once, dismissal remembered via its
   // own (equally strictly-necessary) local storage flag. Never blocks use
