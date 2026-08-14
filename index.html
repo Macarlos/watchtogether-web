@@ -1530,7 +1530,7 @@
       <p class="demo-note" id="deckHint" data-i18n="deck_hint">Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.</p>
       <div style="width:100%; max-width:230px; display:flex; flex-direction:column; gap:.6rem; margin-top:1rem;">
         <button class="btn btn-ghost" id="btnAdjustCategories" style="width:100%; display:flex; align-items:center; justify-content:center; gap:.5rem;"><i class="ti ti-adjustments" aria-hidden="true"></i><span data-i18n="btn_adjust_categories">Adjust categories</span></button>
-        <button class="btn btn-ghost" id="btnGoToFavorites" style="width:100%; display:none; align-items:center; justify-content:center; gap:.5rem;"><i class="ti ti-list-check" aria-hidden="true"></i><span data-i18n="btn_see_picks_so_far">See my picks so far</span></button>
+        <button class="btn btn-ghost" id="btnGoToFavorites" style="width:100%; display:none; align-items:center; justify-content:center; gap:.5rem;"><i class="ti ti-list-check" aria-hidden="true"></i><span id="btnGoToFavoritesLabel"></span></button>
       </div>
     </section>
 
@@ -1563,7 +1563,15 @@
       <div class="favorites-grid" id="searchResultsGrid"></div>
 
       <button class="btn btn-primary btn-block" id="btnContinueSwipingFromSearch" data-i18n="btn_continue_swiping" style="margin-top:1.5rem;">Continue swiping</button>
-      <button class="btn btn-ghost" id="btnGoToFavoritesFromSearch" data-i18n="btn_see_my_picks" style="margin-top:.6rem; display:none;">See my picks</button>
+      <div class="path-row" id="picksTileRowSearch" style="margin-top:.6rem; display:none;">
+        <button class="path-card picks-tile" id="btnGoToFavoritesFromSearch">
+          <div class="picks-tile-text">
+            <h3 data-i18n="picks_tile_title">Your picks</h3>
+            <p id="picksTileCountSearch"></p>
+          </div>
+          <div class="picks-tile-thumbs" id="picksTileThumbsSearch"></div>
+        </button>
+      </div>
       <button class="btn btn-ghost" id="btnBackFromSearch" data-i18n="btn_back" style="margin-top:.6rem;">Back</button>
     </section>
 
@@ -1633,7 +1641,15 @@
       <button class="btn btn-primary btn-block" id="btnShareThisPick" data-i18n="btn_share_this_pick" style="margin-bottom:.6rem;">Share this pick</button>
       <button class="btn btn-primary btn-block" id="btnContinueSwiping" data-i18n="btn_continue_swiping" style="margin-bottom:.6rem;">Continue swiping</button>
       <button class="btn btn-ghost btn-block" id="btnBackToFavoritesGrid" data-i18n="btn_back_to_your_picks">Back to your picks</button>
-      <button class="btn btn-ghost btn-block" id="btnSeeMyFavoritesFromDetail" data-i18n="btn_see_my_picks" style="margin-top:.6rem; display:none;">See my picks</button>
+      <div class="path-row" id="picksTileRowDetail" style="margin-top:.6rem; display:none;">
+        <button class="path-card picks-tile" id="btnSeeMyFavoritesFromDetail">
+          <div class="picks-tile-text">
+            <h3 data-i18n="picks_tile_title">Your picks</h3>
+            <p id="picksTileCountDetail"></p>
+          </div>
+          <div class="picks-tile-thumbs" id="picksTileThumbsDetail"></div>
+        </button>
+      </div>
       <button class="btn btn-ghost btn-block" id="btnFinalRestart" data-i18n="btn_start_new_session" style="margin-top:.6rem;">Start a new session</button>
     </section>
 
@@ -1646,7 +1662,15 @@
         <button class="btn btn-primary btn-block" id="btnExploreAllCategories" data-i18n="btn_explore_all_categories" style="display:none; margin-bottom:.6rem;">Explore all categories</button>
         <button class="btn btn-primary btn-block" id="btnAddCategoryFromDone" data-i18n="btn_add_another_category" style="display:none; margin-bottom:.6rem;">+ Add another category</button>
         <button class="btn btn-primary btn-block" id="btnAddPlatformFromDone" data-i18n="btn_add_another_platform" style="display:none; margin-bottom:.6rem;">+ Add another platform</button>
-        <button class="btn btn-primary btn-block" id="btnGoToFavoritesFromDone" data-i18n="btn_see_my_picks" style="display:none; margin-bottom:.6rem;">See my picks</button>
+        <div class="path-row" id="picksTileRowDone" style="margin-bottom:.6rem; display:none;">
+          <button class="path-card picks-tile" id="btnGoToFavoritesFromDone">
+            <div class="picks-tile-text">
+              <h3 data-i18n="picks_tile_title">Your picks</h3>
+              <p id="picksTileCountDone"></p>
+            </div>
+            <div class="picks-tile-thumbs" id="picksTileThumbsDone"></div>
+          </button>
+        </div>
         <button class="btn btn-ghost btn-block" id="btnRestart" data-i18n="btn_start_new_session">Start a new session</button>
       </div>
     </section>
@@ -1655,7 +1679,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.36 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.37 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1773,7 +1797,7 @@ const TRANSLATIONS = {
     like_label: "Like",
     deck_hint: 'Drag a card, or use the buttons. Tap "Plot summary" to read more about a title.',
     btn_adjust_categories: "Adjust categories",
-    btn_see_picks_so_far: "See my picks so far",
+    btn_see_picks_so_far: "See my picks so far ({count})",
     deck_loading: "Finding what you can watch…",
     deck_loading_more: "Finding more titles…",
     couldnt_load_title: "Couldn't load movies",
@@ -1950,7 +1974,7 @@ const TRANSLATIONS = {
     like_label: "Me gusta",
     deck_hint: 'Arrastra una tarjeta o usa los botones. Toca "Resumen" para saber más sobre un título.',
     btn_adjust_categories: "Ajustar categorías",
-    btn_see_picks_so_far: "Ver mis elecciones hasta ahora",
+    btn_see_picks_so_far: "Ver mis elecciones hasta ahora ({count})",
     deck_loading: "Buscando qué puedes ver…",
     deck_loading_more: "Buscando más títulos…",
     couldnt_load_title: "No se pudieron cargar las películas",
@@ -2127,7 +2151,7 @@ const TRANSLATIONS = {
     like_label: "Curtir",
     deck_hint: 'Arraste um cartão ou use os botões. Toque em "Resumo" para saber mais sobre um título.',
     btn_adjust_categories: "Ajustar categorias",
-    btn_see_picks_so_far: "Ver minhas escolhas até agora",
+    btn_see_picks_so_far: "Ver minhas escolhas até agora ({count})",
     deck_loading: "Procurando o que você pode assistir…",
     deck_loading_more: "Procurando mais títulos…",
     couldnt_load_title: "Não foi possível carregar os filmes",
@@ -2304,7 +2328,7 @@ const TRANSLATIONS = {
     like_label: "J'aime",
     deck_hint: 'Faites glisser une carte ou utilisez les boutons. Touchez « Résumé » pour en savoir plus sur un titre.',
     btn_adjust_categories: "Ajuster les catégories",
-    btn_see_picks_so_far: "Voir mes choix jusqu'ici",
+    btn_see_picks_so_far: "Voir mes choix jusqu'ici ({count})",
     deck_loading: "Recherche de ce que vous pouvez regarder…",
     deck_loading_more: "Recherche d'autres titres…",
     couldnt_load_title: "Impossible de charger les films",
@@ -2481,7 +2505,7 @@ const TRANSLATIONS = {
     like_label: "Gefällt mir",
     deck_hint: 'Ziehe eine Karte oder nutze die Buttons. Tippe auf „Zusammenfassung", um mehr über einen Titel zu erfahren.',
     btn_adjust_categories: "Kategorien anpassen",
-    btn_see_picks_so_far: "Meine bisherige Auswahl ansehen",
+    btn_see_picks_so_far: "Meine bisherige Auswahl ansehen ({count})",
     deck_loading: "Suche, was du schauen kannst…",
     deck_loading_more: "Suche nach weiteren Titeln…",
     couldnt_load_title: "Filme konnten nicht geladen werden",
@@ -2658,7 +2682,7 @@ const TRANSLATIONS = {
     like_label: "पसंद",
     deck_hint: 'कार्ड को खींचें, या बटन का उपयोग करें। किसी टाइटल के बारे में और पढ़ने के लिए "प्लॉट सारांश" पर टैप करें।',
     btn_adjust_categories: "श्रेणियाँ समायोजित करें",
-    btn_see_picks_so_far: "अब तक की मेरी पसंद देखें",
+    btn_see_picks_so_far: "अब तक की मेरी पसंद देखें ({count})",
     deck_loading: "आप क्या देख सकते हैं यह ढूंढा जा रहा है…",
     deck_loading_more: "और टाइटल ढूंढे जा रहे हैं…",
     couldnt_load_title: "फ़िल्में लोड नहीं हो सकीं",
@@ -2835,7 +2859,7 @@ const TRANSLATIONS = {
     like_label: "Podoba mi się",
     deck_hint: 'Przeciągnij kartę lub użyj przycisków. Dotknij „Streszczenie fabuły", aby dowiedzieć się więcej o tytule.',
     btn_adjust_categories: "Dostosuj kategorie",
-    btn_see_picks_so_far: "Zobacz moje dotychczasowe wybory",
+    btn_see_picks_so_far: "Zobacz moje dotychczasowe wybory ({count})",
     deck_loading: "Szukamy, co możesz obejrzeć…",
     deck_loading_more: "Szukamy kolejnych tytułów…",
     couldnt_load_title: "Nie udało się wczytać filmów",
@@ -3685,21 +3709,33 @@ const TRANSLATIONS = {
     showScreen('screen-done');
   }
 
-  // Keeps every "See my picks" button in sync wherever it appears — called
-  // whenever favorites change, including via the heart button on grids.
+  // Keeps every "See my picks" entry point in sync wherever it appears —
+  // called whenever favorites change, including via the heart button on
+  // grids. Two treatments, chosen per available space: a full tile (real
+  // poster thumbnails + live count) wherever there's room for its own row,
+  // and a light-touch inline count where space is genuinely constrained
+  // (the narrow column under the swipe deck) or where a full tile would
+  // break a symmetric row of equal-sized buttons (the 2x2 top nav on the
+  // full-details screen — btnSeeMyFavoritesFromDetailTop deliberately
+  // stays a plain compact button, unchanged, for that reason).
+  const PICKS_TILES = [
+    { row: 'picksTileRow', count: 'picksTileCount', thumbs: 'picksTileThumbs' },
+    { row: 'picksTileRowSearch', count: 'picksTileCountSearch', thumbs: 'picksTileThumbsSearch' },
+    { row: 'picksTileRowDetail', count: 'picksTileCountDetail', thumbs: 'picksTileThumbsDetail' },
+    { row: 'picksTileRowDone', count: 'picksTileCountDone', thumbs: 'picksTileThumbsDone' },
+  ];
+
   function updateFavoritesButtons(){
     const has = state.favorites.length > 0;
-    ['btnGoToFavorites', 'btnGoToFavoritesFromDone', 'btnGoToFavoritesFromSearch', 'btnSeeMyFavoritesFromDetail', 'btnSeeMyFavoritesFromDetailTop'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.style.display = has ? 'flex' : 'none';
-    });
 
-    const picksRow = document.getElementById('picksTileRow');
-    if(picksRow){
-      picksRow.style.display = has ? 'flex' : 'none';
+    // Full-tile locations.
+    PICKS_TILES.forEach(({ row, count, thumbs }) => {
+      const rowEl = document.getElementById(row);
+      if(!rowEl) return;
+      rowEl.style.display = has ? 'flex' : 'none';
       if(has){
-        document.getElementById('picksTileCount').textContent = t('picks_tile_count', { count: state.favorites.length });
-        const thumbsEl = document.getElementById('picksTileThumbs');
+        document.getElementById(count).textContent = t('picks_tile_count', { count: state.favorites.length });
+        const thumbsEl = document.getElementById(thumbs);
         // Most recently saved first, capped at 3 — matches the approved
         // mockup's overlapping-thumbnail treatment, not meant to show
         // every single pick, just enough to read as "these are real".
@@ -3708,7 +3744,19 @@ const TRANSLATIONS = {
           .map(f => `<div class="picks-tile-thumb" style="background-image:url('${escapeHtml(f.poster_url)}')"></div>`)
           .join('');
       }
+    });
+
+    // Light-touch: narrow swipe-deck column, live count in the label text,
+    // no room for a full tile in a 230px-wide column.
+    const btnGoToFavorites = document.getElementById('btnGoToFavorites');
+    if(btnGoToFavorites){
+      btnGoToFavorites.style.display = has ? 'flex' : 'none';
+      if(has) document.getElementById('btnGoToFavoritesLabel').textContent = t('btn_see_picks_so_far', { count: state.favorites.length });
     }
+
+    // Unchanged, compact — part of the symmetric 2x2 top nav grid.
+    const topGridBtn = document.getElementById('btnSeeMyFavoritesFromDetailTop');
+    if(topGridBtn) topGridBtn.style.display = has ? 'flex' : 'none';
   }
 
   document.getElementById('btnExploreAllCategories').addEventListener('click', () => {
