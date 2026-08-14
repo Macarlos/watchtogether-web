@@ -1679,7 +1679,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.37 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.38 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3718,15 +3718,18 @@ const TRANSLATIONS = {
   // break a symmetric row of equal-sized buttons (the 2x2 top nav on the
   // full-details screen — btnSeeMyFavoritesFromDetailTop deliberately
   // stays a plain compact button, unchanged, for that reason).
-  const PICKS_TILES = [
-    { row: 'picksTileRow', count: 'picksTileCount', thumbs: 'picksTileThumbs' },
-    { row: 'picksTileRowSearch', count: 'picksTileCountSearch', thumbs: 'picksTileThumbsSearch' },
-    { row: 'picksTileRowDetail', count: 'picksTileCountDetail', thumbs: 'picksTileThumbsDetail' },
-    { row: 'picksTileRowDone', count: 'picksTileCountDone', thumbs: 'picksTileThumbsDone' },
-  ];
-
   function updateFavoritesButtons(){
     const has = state.favorites.length > 0;
+
+    // Declared here (not as a top-level const) deliberately — this
+    // function is called during initial page setup, before a top-level
+    // const declared further down the script would yet be initialized.
+    const PICKS_TILES = [
+      { row: 'picksTileRow', count: 'picksTileCount', thumbs: 'picksTileThumbs' },
+      { row: 'picksTileRowSearch', count: 'picksTileCountSearch', thumbs: 'picksTileThumbsSearch' },
+      { row: 'picksTileRowDetail', count: 'picksTileCountDetail', thumbs: 'picksTileThumbsDetail' },
+      { row: 'picksTileRowDone', count: 'picksTileCountDone', thumbs: 'picksTileThumbsDone' },
+    ];
 
     // Full-tile locations.
     PICKS_TILES.forEach(({ row, count, thumbs }) => {
