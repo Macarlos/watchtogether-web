@@ -1741,7 +1741,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.43 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.44 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -4896,7 +4896,8 @@ const TRANSLATIONS = {
         trailerBtn.textContent = t('loading_trailer');
         trailerBtn.disabled = true;
         const yearParam = movie.year ? `&year=${encodeURIComponent(movie.year)}` : '';
-        fetch(`${BACKEND_URL}/api/trailer?title=${encodeURIComponent(movie.title)}${yearParam}`)
+        const originalTitleParam = movie.original_title ? `&original_title=${encodeURIComponent(movie.original_title)}` : '';
+        fetch(`${BACKEND_URL}/api/trailer?title=${encodeURIComponent(movie.title)}${yearParam}${originalTitleParam}`)
           .then(r => r.ok ? r.json() : null)
           .then(data => {
             const block = document.getElementById('trailerBlock');
