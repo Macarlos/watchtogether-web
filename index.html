@@ -1476,43 +1476,45 @@
       <h1 class="hero"><span data-i18n="hero_title_line1">Tonight you're</span><br><span class="accent" data-i18n="hero_title_accent">watching.</span></h1>
       <p class="hero-sub" data-i18n="hero_subtitle">Swipe through what's actually available on your platforms. Save what you like, then share your picks with anyone.</p>
 
-      <div class="path-row">
-        <button class="path-card" id="btnPickRecentlyAdded">
-          <div class="fan-poster fan-1" data-fan></div>
-          <div class="fan-poster fan-2" data-fan></div>
-          <h3 data-i18n="card_recently_added_title">Recently added</h3>
-          <p data-i18n="card_recently_added_desc">Just landed on your platforms — newest first.</p>
-        </button>
-      </div>
+      <div id="modePickerWrap">
+        <div class="path-row">
+          <button class="path-card" id="btnPickRecentlyAdded">
+            <div class="fan-poster fan-1" data-fan></div>
+            <div class="fan-poster fan-2" data-fan></div>
+            <h3 data-i18n="card_recently_added_title">Recently added</h3>
+            <p data-i18n="card_recently_added_desc">Just landed on your platforms — newest first.</p>
+          </button>
+        </div>
 
-      <div class="path-row" style="margin-top:.85rem;">
-        <button class="path-card" id="btnPickMovies">
-          <div class="fan-poster fan-1" data-fan></div>
-          <div class="fan-poster fan-2" data-fan></div>
-          <h3 data-i18n="card_movies_title">Movies</h3>
-          <p data-i18n="card_movies_desc">A complete story in one sitting.</p>
-        </button>
-        <button class="path-card" id="btnPickSeries">
-          <div class="fan-poster fan-1" data-fan></div>
-          <div class="fan-poster fan-2" data-fan></div>
-          <h3 data-i18n="card_series_title">Series</h3>
-          <p data-i18n="card_series_desc">Something to binge over multiple episodes.</p>
-        </button>
-      </div>
+        <div class="path-row" style="margin-top:.85rem;">
+          <button class="path-card" id="btnPickMovies">
+            <div class="fan-poster fan-1" data-fan></div>
+            <div class="fan-poster fan-2" data-fan></div>
+            <h3 data-i18n="card_movies_title">Movies</h3>
+            <p data-i18n="card_movies_desc">A complete story in one sitting.</p>
+          </button>
+          <button class="path-card" id="btnPickSeries">
+            <div class="fan-poster fan-1" data-fan></div>
+            <div class="fan-poster fan-2" data-fan></div>
+            <h3 data-i18n="card_series_title">Series</h3>
+            <p data-i18n="card_series_desc">Something to binge over multiple episodes.</p>
+          </button>
+        </div>
 
-      <div class="path-row" style="margin-top:.85rem;">
-        <button class="path-card family-card" id="btnPickFamily">
-          <div class="fan-poster fan-1" data-fan></div>
-          <div class="fan-poster fan-2" data-fan></div>
-          <h3 data-i18n="card_family_title">Watch with your Family</h3>
-          <p data-i18n="card_family_desc">Family-friendly picks everyone can enjoy together.</p>
-        </button>
-        <button class="path-card surprise-card" id="btnSurpriseMeFirst">
-          <div class="fan-poster fan-1" data-fan></div>
-          <div class="fan-poster fan-2" data-fan></div>
-          <h3 data-i18n="card_surprise_title">Surprise me</h3>
-          <p data-i18n="card_surprise_desc">Skip the choices — get a random pick instantly.</p>
-        </button>
+        <div class="path-row" style="margin-top:.85rem;">
+          <button class="path-card family-card" id="btnPickFamily">
+            <div class="fan-poster fan-1" data-fan></div>
+            <div class="fan-poster fan-2" data-fan></div>
+            <h3 data-i18n="card_family_title">Watch with your Family</h3>
+            <p data-i18n="card_family_desc">Family-friendly picks everyone can enjoy together.</p>
+          </button>
+          <button class="path-card surprise-card" id="btnSurpriseMeFirst">
+            <div class="fan-poster fan-1" data-fan></div>
+            <div class="fan-poster fan-2" data-fan></div>
+            <h3 data-i18n="card_surprise_title">Surprise me</h3>
+            <p data-i18n="card_surprise_desc">Skip the choices — get a random pick instantly.</p>
+          </button>
+        </div>
       </div>
 
       <button class="btn btn-ghost" id="btnShowOnboarding" data-i18n="btn_how_to_use" style="margin-top:1.2rem;">How to use W2N</button>
@@ -1739,7 +1741,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.42 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.43 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1814,6 +1816,8 @@ const TRANSLATIONS = {
     btn_how_to_use: "How to use W2N",
     picks_tile_title: "Your picks",
     picks_tile_count: "{count} saved titles",
+    tour_intro_title: "Pick how you want to browse",
+    tour_intro_body: "Movies, series, recently added, or let us pick something for you — start with whichever fits tonight.",
     tour_platforms_title: "Pick your platforms",
     tour_platforms_body: "Choose everything you actually subscribe to — we'll only show what's really available to you.",
     tour_mood_title: "Set the mood",
@@ -1996,6 +2000,8 @@ const TRANSLATIONS = {
     btn_how_to_use: "Cómo usar W2N",
     picks_tile_title: "Tus elecciones",
     picks_tile_count: "{count} títulos guardados",
+    tour_intro_title: "Elige cómo quieres explorar",
+    tour_intro_body: "Películas, series, novedades, o deja que elijamos algo por ti — empieza con lo que te apetezca esta noche.",
     tour_platforms_title: "Elige tus plataformas",
     tour_platforms_body: "Elige todo lo que tengas realmente contratado — solo te mostraremos lo que de verdad está disponible para ti.",
     tour_mood_title: "Elige el ambiente",
@@ -2178,6 +2184,8 @@ const TRANSLATIONS = {
     btn_how_to_use: "Como usar o W2N",
     picks_tile_title: "Suas escolhas",
     picks_tile_count: "{count} títulos salvos",
+    tour_intro_title: "Escolha como quer navegar",
+    tour_intro_body: "Filmes, séries, recém-chegados, ou deixe a gente escolher por você — comece com o que combinar com hoje.",
     tour_platforms_title: "Escolha suas plataformas",
     tour_platforms_body: "Escolha tudo que você realmente assina — só mostraremos o que está de fato disponível para você.",
     tour_mood_title: "Escolha o clima",
@@ -2360,6 +2368,8 @@ const TRANSLATIONS = {
     btn_how_to_use: "Comment utiliser W2N",
     picks_tile_title: "Vos choix",
     picks_tile_count: "{count} titres enregistrés",
+    tour_intro_title: "Choisissez comment parcourir",
+    tour_intro_body: "Films, séries, nouveautés, ou laissez-nous choisir pour vous — commencez par ce qui vous tente ce soir.",
     tour_platforms_title: "Choisissez vos plateformes",
     tour_platforms_body: "Choisissez tout ce à quoi vous êtes réellement abonné — nous ne montrerons que ce qui est vraiment disponible pour vous.",
     tour_mood_title: "Choisissez l'ambiance",
@@ -2542,6 +2552,8 @@ const TRANSLATIONS = {
     btn_how_to_use: "So funktioniert W2N",
     picks_tile_title: "Deine Auswahl",
     picks_tile_count: "{count} gespeicherte Titel",
+    tour_intro_title: "Wähle, wie du stöbern möchtest",
+    tour_intro_body: "Filme, Serien, Neuzugänge, oder lass uns etwas für dich aussuchen — starte mit dem, was heute Abend passt.",
     tour_platforms_title: "Wähle deine Plattformen",
     tour_platforms_body: "Wähle alles, was du wirklich abonniert hast — wir zeigen dir nur, was wirklich verfügbar ist.",
     tour_mood_title: "Wähle die Stimmung",
@@ -2724,6 +2736,8 @@ const TRANSLATIONS = {
     btn_how_to_use: "W2N कैसे उपयोग करें",
     picks_tile_title: "आपकी पसंद",
     picks_tile_count: "{count} सहेजे गए टाइटल",
+    tour_intro_title: "चुनें कि कैसे ब्राउज़ करना है",
+    tour_intro_body: "फ़िल्में, सीरीज़, हाल में जोड़ी गईं, या हमें आपके लिए कुछ चुनने दें — आज रात जो सही लगे उससे शुरू करें।",
     tour_platforms_title: "अपने प्लेटफ़ॉर्म चुनें",
     tour_platforms_body: "वही चुनें जिसकी आपने वाकई सदस्यता ली है — हम बस वही दिखाएंगे जो सच में आपके लिए उपलब्ध है।",
     tour_mood_title: "मूड चुनें",
@@ -2906,6 +2920,8 @@ const TRANSLATIONS = {
     btn_how_to_use: "Jak korzystać z W2N",
     picks_tile_title: "Twoje wybory",
     picks_tile_count: "{count} zapisanych tytułów",
+    tour_intro_title: "Wybierz, jak chcesz przeglądać",
+    tour_intro_body: "Filmy, seriale, ostatnio dodane, albo pozwól nam coś dla Ciebie wybrać — zacznij od tego, na co masz dziś ochotę.",
     tour_platforms_title: "Wybierz swoje platformy",
     tour_platforms_body: "Wybierz wszystko, co naprawdę subskrybujesz — pokażemy tylko to, co faktycznie jest dla Ciebie dostępne.",
     tour_mood_title: "Wybierz nastrój",
@@ -3231,6 +3247,16 @@ const TRANSLATIONS = {
 
   rebuildPlatformChips(); // paint FALLBACK_PLATFORMS immediately — don't wait on the fetch below.
   updateFavoritesButtons(); // paint the "Your picks" tile (and related buttons) immediately for returning visitors with existing saved picks — same reasoning as the platform-chips fix above: loaded state alone doesn't render anything without an explicit call.
+
+  // First-time visitors get the guided tour automatically, starting on
+  // this front screen — it's active by default straight from the initial
+  // HTML (never via a showScreen() call), so this can't be hooked into
+  // showScreen() the way a later screen could be. Deferred via setTimeout
+  // (not called directly) so it runs after the rest of this script's
+  // top-level declarations — including TOUR_STEPS further down — have
+  // finished initializing; calling it synchronously from here would hit
+  // the same kind of ordering bug the v4.37 crash did.
+  if(!tourHasBeenSeen()) setTimeout(startTour, 600);
   // Previously chips only appeared once loadPlatformsForRegion's fetch
   // succeeded with a non-empty result, so FALLBACK_PLATFORMS was never
   // actually reaching the screen on its own — it just looked like a working
@@ -3285,17 +3311,6 @@ const TRANSLATIONS = {
     // re-call showScreen with the same id on re-render).
     if(!fromPopState && id !== current){
       history.pushState({screen: id}, '', location.pathname + location.search);
-    }
-
-    // First-time visitors get the guided setup tour automatically the
-    // moment they actually reach this screen — not on page load, since the
-    // front screen comes first and platforms/mood chips don't exist yet.
-    // Skipped on popstate (back/forward shouldn't re-trigger it) and if
-    // it's already been seen (tracked separately from the general "seen
-    // this screen" concept, since the tour can also be replayed on demand
-    // via the repurposed "How to use W2N" button regardless of this flag).
-    if(id === 'screen-setup' && !fromPopState && !tourHasBeenSeen()){
-      setTimeout(startTour, 350);
     }
   }
 
@@ -5059,10 +5074,11 @@ const TRANSLATIONS = {
   // "How to use W2N" button on the front screen replays it on demand any
   // time, regardless of whether it's been seen before.
   const TOUR_STEPS = [
-    { targetId: 'chipPlatforms', titleKey: 'tour_platforms_title', bodyKey: 'tour_platforms_body' },
-    { targetId: 'chipMoods', titleKey: 'tour_mood_title', bodyKey: 'tour_mood_body',
+    { targetId: 'modePickerWrap', titleKey: 'tour_intro_title', bodyKey: 'tour_intro_body', screen: 'screen-content-type' },
+    { targetId: 'chipPlatforms', titleKey: 'tour_platforms_title', bodyKey: 'tour_platforms_body', screen: 'screen-setup' },
+    { targetId: 'chipMoods', titleKey: 'tour_mood_title', bodyKey: 'tour_mood_body', screen: 'screen-setup',
       skip: () => document.getElementById('moodStepSection').style.display === 'none' },
-    { targetId: 'btnCreateRoom', titleKey: 'tour_start_title', bodyKey: 'tour_start_body' },
+    { targetId: 'btnCreateRoom', titleKey: 'tour_start_title', bodyKey: 'tour_start_body', screen: 'screen-setup' },
   ];
   let tourActiveList = [];
   let tourIndex = 0;
@@ -5103,26 +5119,52 @@ const TRANSLATIONS = {
     // Clear the previous step's spotlight before applying the next one —
     // otherwise two elements would stay highlighted at once.
     document.querySelectorAll('.tour-spotlight-target').forEach(el => el.classList.remove('tour-spotlight-target'));
+    // Hidden during any screen transition — avoids a flash of the tooltip
+    // sitting in its old (now wrong) position for a frame before repositioning.
+    document.getElementById('tourTooltip').classList.remove('visible');
 
     const step = tourActiveList[i];
+    const needsScreenChange = getActiveScreenId() !== step.screen;
+
+    if(needsScreenChange){
+      if(step.screen === 'screen-setup'){
+        // Same state a real click on the "Movies" mode-picker card sets —
+        // so the tour's own transition into screen-setup looks exactly
+        // like a genuine visit (mood step genuinely visible, correct
+        // eyebrow label) regardless of whatever a previous session might
+        // have left in state.
+        state.contentType = 'movie';
+        state.mode = 'discover';
+        state.skipMoodStep = false;
+        state.skipMoodReason = null;
+        updateSetupStepVisibility();
+      }
+      showScreen(step.screen);
+    }
+
     const target = document.getElementById(step.targetId);
     if(!target){ endTour(); return; } // target genuinely missing — bail cleanly rather than showing a tooltip pointing at nothing
 
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    target.classList.add('tour-spotlight-target');
+    // A screen change needs a moment — showScreen() triggers a smooth
+    // scroll-to-top, and the new screen's layout needs a paint cycle
+    // before getBoundingClientRect() is trustworthy. A same-screen step
+    // change (e.g. platforms -> mood) can proceed immediately.
+    setTimeout(() => {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('tour-spotlight-target');
 
-    const tooltip = document.getElementById('tourTooltip');
-    document.getElementById('tourTooltipTitle').textContent = t(step.titleKey);
-    document.getElementById('tourTooltipBody').textContent = t(step.bodyKey);
-    document.getElementById('tourNextBtn').textContent = (i === tourActiveList.length - 1) ? t('tour_done') : t('tour_next');
+      const tooltip = document.getElementById('tourTooltip');
+      document.getElementById('tourTooltipTitle').textContent = t(step.titleKey);
+      document.getElementById('tourTooltipBody').textContent = t(step.bodyKey);
+      document.getElementById('tourNextBtn').textContent = (i === tourActiveList.length - 1) ? t('tour_done') : t('tour_next');
+      document.getElementById('tourTooltipStepCount').textContent = t('tour_step_count', { current: i + 1, total: tourActiveList.length });
+      document.getElementById('tourTooltipProgressBar').style.width = `${((i + 1) / tourActiveList.length) * 100}%`;
 
-    document.getElementById('tourTooltipStepCount').textContent = t('tour_step_count', { current: i + 1, total: tourActiveList.length });
-    document.getElementById('tourTooltipProgressBar').style.width = `${((i + 1) / tourActiveList.length) * 100}%`;
-
-    tooltip.classList.add('visible');
-    // Position after the browser's had a chance to lay out the newly-set
-    // text (affects tooltip height, which the positioning math depends on).
-    requestAnimationFrame(() => positionTourTooltip(target));
+      tooltip.classList.add('visible');
+      // Position after the browser's had a chance to lay out the newly-set
+      // text (affects tooltip height, which the positioning math depends on).
+      requestAnimationFrame(() => positionTourTooltip(target));
+    }, needsScreenChange ? 400 : 0);
   }
 
   function startTour(){
@@ -5161,16 +5203,9 @@ const TRANSLATIONS = {
   });
 
   // Repurposed "How to use W2N" button — always replays the tour on
-  // demand, regardless of whether it's been auto-shown before. Lives on
-  // the front screen, so navigate to screen-setup first if needed.
-  document.getElementById('btnShowOnboarding').addEventListener('click', () => {
-    const needsNavigation = getActiveScreenId() !== 'screen-setup';
-    if(needsNavigation) showScreen('screen-setup');
-    // A short delay when navigating first — showScreen() triggers a smooth
-    // scroll-to-top and the chips need a paint cycle before their
-    // getBoundingClientRect() (used to position the tooltip) is accurate.
-    setTimeout(startTour, needsNavigation ? 400 : 0);
-  });
+  // demand, regardless of whether it's been auto-shown before. showTourStep
+  // handles navigating to whichever screen each step needs on its own.
+  document.getElementById('btnShowOnboarding').addEventListener('click', startTour);
 
   // Cookie/local-storage notice — shown once, dismissal remembered via its
   // own (equally strictly-necessary) local storage flag. Never blocks use
