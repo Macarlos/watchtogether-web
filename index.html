@@ -1741,7 +1741,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.44 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.45 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -5105,9 +5105,15 @@ const TRANSLATIONS = {
     const tooltipHeight = tooltip.offsetHeight || 150;
     const margin = 12;
     const spaceBelow = window.innerHeight - rect.bottom;
-    const top = spaceBelow > tooltipHeight + margin
+    let top = spaceBelow > tooltipHeight + margin
       ? rect.bottom + margin
       : Math.max(margin, rect.top - tooltipHeight - margin);
+    // Defensive clamp — whatever the two branches above computed, never let
+    // the tooltip's bottom edge exceed the viewport. Belt-and-suspenders on
+    // top of the scroll-timing fix, for any edge case neither branch
+    // anticipated (a very short viewport, an unusually tall tooltip, etc.).
+    top = Math.min(top, window.innerHeight - tooltipHeight - margin);
+    top = Math.max(top, margin);
     const left = Math.min(
       Math.max(margin, rect.left),
       window.innerWidth - tooltip.offsetWidth - margin
@@ -5151,7 +5157,15 @@ const TRANSLATIONS = {
     // before getBoundingClientRect() is trustworthy. A same-screen step
     // change (e.g. platforms -> mood) can proceed immediately.
     setTimeout(() => {
-      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Instant, not smooth — a smooth scroll animation (300-500ms,
+      // varies by device/distance) was still running when positioning
+      // measured the target's position just one frame later, capturing a
+      // stale mid-animation location instead of where it actually settles.
+      // That's what caused the tooltip to be badly mispositioned on some
+      // devices (worse on slower ones or longer scroll distances) — not a
+      // one-off, a real timing race. Instant scroll removes the race
+      // entirely: the position is final by the time it's measured.
+      target.scrollIntoView({ behavior: 'auto', block: 'center' });
       target.classList.add('tour-spotlight-target');
 
       const tooltip = document.getElementById('tourTooltip');
@@ -5180,7 +5194,7 @@ const TRANSLATIONS = {
     showTourStep(tourIndex);
   }
 
-  function endTour(fromPopState){
+  function endTour(fromPopState, goHome){
     document.querySelectorAll('.tour-spotlight-target').forEach(el => el.classList.remove('tour-spotlight-target'));
     document.getElementById('tourTooltip').classList.remove('visible');
     markTourSeen();
@@ -5188,15 +5202,22 @@ const TRANSLATIONS = {
       history.replaceState({}, '', location.pathname + location.search);
     }
     tourHistoryPushed = false;
+    // Only on genuine completion or the explicit X close — not on Escape,
+    // the back button/gesture (fromPopState already means the browser
+    // moved through history on its own), or "Skip tour", which just closes
+    // wherever the person currently is.
+    if(goHome && !fromPopState && getActiveScreenId() !== 'screen-content-type'){
+      showScreen('screen-content-type');
+    }
   }
 
   document.getElementById('tourNextBtn').addEventListener('click', () => {
-    if(tourIndex >= tourActiveList.length - 1){ endTour(); return; }
+    if(tourIndex >= tourActiveList.length - 1){ endTour(false, true); return; }
     tourIndex++;
     showTourStep(tourIndex);
   });
   document.getElementById('tourSkipBtn').addEventListener('click', () => endTour());
-  document.getElementById('tourCloseBtn').addEventListener('click', () => endTour());
+  document.getElementById('tourCloseBtn').addEventListener('click', () => endTour(false, true));
   window.addEventListener('resize', () => {
     if(document.getElementById('tourTooltip').classList.contains('visible')){
       positionTourTooltip(document.getElementById(tourActiveList[tourIndex].targetId));
