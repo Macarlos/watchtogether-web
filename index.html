@@ -826,6 +826,41 @@
     line-height:1.05;
     color:var(--ink);
   }
+  .original-title{
+    font-family:var(--font-body);
+    font-size:.78rem;
+    font-style:italic;
+    color:var(--muted);
+    margin-top:.15rem;
+    line-height:1.3;
+  }
+  .top10-platform-option{
+    display:flex;
+    align-items:center;
+    gap:.7rem;
+    width:100%;
+    background:var(--surface-2);
+    border:1.5px solid var(--border);
+    border-radius:10px;
+    padding:.7rem .9rem;
+    margin-bottom:.6rem;
+    color:var(--ink);
+    font-weight:600;
+    font-size:.92rem;
+    font-family:var(--font-body);
+    cursor:pointer;
+    touch-action:manipulation;
+    transition:border-color .15s, background .15s;
+  }
+  .top10-platform-option:hover{ border-color:var(--amber); }
+  .top10-platform-option img{
+    height:24px;
+    width:auto;
+    max-width:64px;
+    object-fit:contain;
+    border-radius:4px;
+    flex-shrink:0;
+  }
   .card .meta-row{
     display:flex;
     align-items:center;
@@ -1449,6 +1484,15 @@
     </div>
   </div>
 
+  <div class="share-overlay" id="top10PlatformOverlay">
+    <div class="share-dialog" id="top10PlatformDialogCard" role="dialog" aria-modal="true" aria-labelledby="top10PlatformDialogTitle" tabindex="-1" style="max-width:380px;">
+      <h3 id="top10PlatformDialogTitle" data-i18n="card_top10_title">Top 10</h3>
+      <p data-i18n="top10_platform_question">Which platform?</p>
+      <div id="top10PlatformList"></div>
+      <button class="btn btn-ghost btn-block" id="btnCloseTop10PlatformDialog" data-i18n="btn_close" style="margin-top:.6rem;">Close</button>
+    </div>
+  </div>
+
   <!-- ═══════════════ FIRST-TIME ONBOARDING HINT ═══════════════ -->
   <div class="tour-tooltip" id="tourTooltip" role="dialog" aria-modal="false" aria-labelledby="tourTooltipTitle">
     <button class="tour-tooltip-close" id="tourCloseBtn" type="button" data-i18n-aria="tour_close" aria-label="Close tour"><i class="ti ti-x" aria-hidden="true"></i></button>
@@ -1521,6 +1565,15 @@
             <div class="fan-poster fan-2" data-fan></div>
             <h3 data-i18n="card_surprise_title">Surprise me</h3>
             <p data-i18n="card_surprise_desc">Skip the choices — get a random pick instantly.</p>
+          </button>
+        </div>
+
+        <div class="path-row" style="margin-top:.85rem;">
+          <button class="path-card" id="btnPickTop10">
+            <div class="fan-poster fan-1" data-fan></div>
+            <div class="fan-poster fan-2" data-fan></div>
+            <h3 data-i18n="card_top10_title">Top 10</h3>
+            <p data-i18n="card_top10_desc">The most popular picks on one platform right now.</p>
           </button>
         </div>
       </div>
@@ -1749,7 +1802,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.46 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.47 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1807,6 +1860,7 @@ const TRANSLATIONS = {
     contact_link: "Contact",
     blog_link: "Blog",
     search_placeholder: "Search for a title…",
+    original_title_prefix: "Original title: {title}",
     aria_clear_search: "Clear search",
     hero_title_line1: "Tonight you're",
     hero_title_accent: "watching.",
@@ -1819,6 +1873,9 @@ const TRANSLATIONS = {
     card_family_desc: "Family-friendly picks everyone can enjoy together.",
     card_surprise_title: "Surprise me",
     card_surprise_desc: "Skip the choices — get a random pick instantly.",
+    card_top10_title: "Top 10",
+    card_top10_desc: "The most popular picks on one platform right now.",
+    top10_platform_question: "Which platform?",
     card_recently_added_title: "Recently added",
     card_recently_added_desc: "Just landed on your platforms.",
     btn_how_to_use: "How to use W2N",
@@ -1991,6 +2048,7 @@ const TRANSLATIONS = {
     contact_link: "Contacto",
     blog_link: "Blog",
     search_placeholder: "Busca un título…",
+    original_title_prefix: "Título original: {title}",
     aria_clear_search: "Borrar búsqueda",
     hero_title_line1: "Esta noche vas",
     hero_title_accent: "a ver algo.",
@@ -2003,6 +2061,9 @@ const TRANSLATIONS = {
     card_family_desc: "Selecciones aptas para toda la familia.",
     card_surprise_title: "Sorpréndeme",
     card_surprise_desc: "Sin elegir nada — obtén una recomendación al instante.",
+    card_top10_title: "Top 10",
+    card_top10_desc: "Lo más popular en una plataforma ahora mismo.",
+    top10_platform_question: "¿Qué plataforma?",
     card_recently_added_title: "Recién añadidos",
     card_recently_added_desc: "Recién llegados a tus plataformas.",
     btn_how_to_use: "Cómo usar W2N",
@@ -2175,6 +2236,7 @@ const TRANSLATIONS = {
     contact_link: "Contato",
     blog_link: "Blog",
     search_placeholder: "Procure um título…",
+    original_title_prefix: "Título original: {title}",
     aria_clear_search: "Limpar busca",
     hero_title_line1: "Hoje à noite você vai",
     hero_title_accent: "assistir algo.",
@@ -2187,6 +2249,9 @@ const TRANSLATIONS = {
     card_family_desc: "Escolhas para toda a família aproveitar junto.",
     card_surprise_title: "Me surpreenda",
     card_surprise_desc: "Sem escolher nada — receba uma sugestão na hora.",
+    card_top10_title: "Top 10",
+    card_top10_desc: "O que há de mais popular em uma plataforma agora.",
+    top10_platform_question: "Qual plataforma?",
     card_recently_added_title: "Adicionados recentemente",
     card_recently_added_desc: "Acabaram de chegar às suas plataformas.",
     btn_how_to_use: "Como usar o W2N",
@@ -2359,6 +2424,7 @@ const TRANSLATIONS = {
     contact_link: "Contact",
     blog_link: "Blog",
     search_placeholder: "Rechercher un titre…",
+    original_title_prefix: "Titre original : {title}",
     aria_clear_search: "Effacer la recherche",
     hero_title_line1: "Ce soir, vous allez",
     hero_title_accent: "regarder quelque chose.",
@@ -2371,6 +2437,9 @@ const TRANSLATIONS = {
     card_family_desc: "Des choix adaptés à toute la famille.",
     card_surprise_title: "Surprenez-moi",
     card_surprise_desc: "Sans rien choisir — obtenez une suggestion immédiate.",
+    card_top10_title: "Top 10",
+    card_top10_desc: "Les titres les plus populaires sur une plateforme, en ce moment.",
+    top10_platform_question: "Quelle plateforme ?",
     card_recently_added_title: "Ajoutés récemment",
     card_recently_added_desc: "Tout juste arrivés sur vos plateformes.",
     btn_how_to_use: "Comment utiliser W2N",
@@ -2543,6 +2612,7 @@ const TRANSLATIONS = {
     contact_link: "Kontakt",
     blog_link: "Blog",
     search_placeholder: "Titel suchen…",
+    original_title_prefix: "Originaltitel: {title}",
     aria_clear_search: "Suche löschen",
     hero_title_line1: "Heute Abend siehst du",
     hero_title_accent: "etwas.",
@@ -2555,6 +2625,9 @@ const TRANSLATIONS = {
     card_family_desc: "Familienfreundliche Auswahl für alle.",
     card_surprise_title: "Überrasch mich",
     card_surprise_desc: "Ohne Auswahl — sofort einen Vorschlag bekommen.",
+    card_top10_title: "Top 10",
+    card_top10_desc: "Die beliebtesten Titel auf einer Plattform, gerade jetzt.",
+    top10_platform_question: "Welche Plattform?",
     card_recently_added_title: "Kürzlich hinzugefügt",
     card_recently_added_desc: "Gerade erst auf deinen Plattformen gelandet.",
     btn_how_to_use: "So funktioniert W2N",
@@ -2727,6 +2800,7 @@ const TRANSLATIONS = {
     contact_link: "संपर्क करें",
     blog_link: "ब्लॉग",
     search_placeholder: "कोई टाइटल खोजें…",
+    original_title_prefix: "मूल शीर्षक: {title}",
     aria_clear_search: "खोज साफ़ करें",
     hero_title_line1: "आज रात आप",
     hero_title_accent: "कुछ देखने वाले हैं।",
@@ -2739,6 +2813,9 @@ const TRANSLATIONS = {
     card_family_desc: "पूरे परिवार के लिए पसंद आने वाली चीज़ें।",
     card_surprise_title: "मुझे सरप्राइज़ करें",
     card_surprise_desc: "कुछ भी चुने बिना — तुरंत एक सुझाव पाएं।",
+    card_top10_title: "टॉप 10",
+    card_top10_desc: "अभी किसी एक प्लेटफ़ॉर्म पर सबसे लोकप्रिय टाइटल।",
+    top10_platform_question: "कौन सा प्लेटफ़ॉर्म?",
     card_recently_added_title: "हाल ही में जोड़े गए",
     card_recently_added_desc: "अभी-अभी आपके प्लेटफ़ॉर्म पर आए।",
     btn_how_to_use: "W2N कैसे उपयोग करें",
@@ -2911,6 +2988,7 @@ const TRANSLATIONS = {
     contact_link: "Kontakt",
     blog_link: "Blog",
     search_placeholder: "Szukaj tytułu…",
+    original_title_prefix: "Tytuł oryginalny: {title}",
     aria_clear_search: "Wyczyść wyszukiwanie",
     hero_title_line1: "Dziś wieczorem",
     hero_title_accent: "coś obejrzysz.",
@@ -2923,6 +3001,9 @@ const TRANSLATIONS = {
     card_family_desc: "Propozycje, które spodobają się całej rodzinie.",
     card_surprise_title: "Zaskocz mnie",
     card_surprise_desc: "Bez wybierania niczego — od razu otrzymaj propozycję.",
+    card_top10_title: "Top 10",
+    card_top10_desc: "Najpopularniejsze tytuły na jednej platformie w tej chwili.",
+    top10_platform_question: "Która platforma?",
     card_recently_added_title: "Ostatnio dodane",
     card_recently_added_desc: "Właśnie pojawiły się na twoich platformach.",
     btn_how_to_use: "Jak korzystać z W2N",
@@ -3140,7 +3221,8 @@ const TRANSLATIONS = {
     availablePlatforms: FALLBACK_PLATFORMS, // replaced with the real per-region list once it loads
     language: 'en', // auto-detected from region; see REGION_TO_LANGUAGE below
     minRating: 0, // optional filter, 0 = off; set to 7 when the "7.0+ only" toggle is active
-    mode: 'discover', // 'discover' (default) or 'recently_added'
+    mode: 'discover', // 'discover' (default), 'recently_added', or 'top10'
+    top10Platform: null, // set right before entering top10 mode — which single platform's top 10 to show
   };
 
   // Must match main.py's MOTN_ORDER_BY_CHOICES exactly.
@@ -3331,7 +3413,7 @@ const TRANSLATIONS = {
     // navigate the screen underneath. Reuses the same set of overlays
     // already checked by the Escape-key handler above, so any new dialog
     // added there gets this behavior automatically.
-    const openOverlay = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay']
+    const openOverlay = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay', 'top10PlatformOverlay']
       .map(id => document.getElementById(id))
       .find(el => el && el.classList.contains('active'));
     if(openOverlay){
@@ -3477,6 +3559,43 @@ const TRANSLATIONS = {
     showScreen('screen-setup');
   });
 
+  // "Top 10" — a fixed, single-platform, popularity-sorted list. Skips the
+  // usual platform/mood setup screen entirely: pick one platform in this
+  // dialog, then go straight to the deck. Reuses state.availablePlatforms
+  // (already loaded, already carrying real logo_urls from MOTN) rather than
+  // fetching anything new here.
+  function populateTop10PlatformList(){
+    const list = document.getElementById('top10PlatformList');
+    list.innerHTML = '';
+    state.availablePlatforms.forEach(p => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'top10-platform-option';
+      btn.innerHTML = p.logo_url
+        ? `<img src="${escapeHtml(p.logo_url)}" alt="" />${escapeHtml(p.label)}`
+        : `<span class="dot"></span>${escapeHtml(p.label)}`;
+      btn.addEventListener('click', () => enterTop10Mode(p.id));
+      list.appendChild(btn);
+    });
+  }
+
+  function enterTop10Mode(platformId){
+    closeDialog(document.getElementById('top10PlatformOverlay'), 'active');
+    state.mode = 'top10';
+    state.top10Platform = platformId;
+    state.contentType = 'movie'; // v1 scope: movies only, no separate content-type choice for this mode
+    buildDeck();
+    showScreen('screen-deck');
+  }
+
+  document.getElementById('btnPickTop10').addEventListener('click', () => {
+    populateTop10PlatformList();
+    openDialog(document.getElementById('top10PlatformOverlay'), 'active');
+  });
+  document.getElementById('btnCloseTop10PlatformDialog').addEventListener('click', () => {
+    closeDialog(document.getElementById('top10PlatformOverlay'), 'active');
+  });
+
   // "Recently added" — uses a separate MOTN endpoint (catalog changes, not
   // search-by-filters) so mood/genre filtering and the rating filter don't
   // apply here; still asks which platforms, since that's what "added to
@@ -3590,6 +3709,16 @@ const TRANSLATIONS = {
     return div.innerHTML;
   }
 
+  // Shared across every place a title gets rendered (swipe deck card, grid
+  // bricks, full-details screen) — one function so the "Original title:"
+  // line stays visually and behaviorally consistent everywhere, rather than
+  // duplicating this check at each call site. Returns '' when there's
+  // nothing to show, so callers can safely inline it unconditionally.
+  function originalTitleLine(movie){
+    if(!movie.original_title) return '';
+    return `<div class="original-title">${escapeHtml(t('original_title_prefix', { title: movie.original_title }))}</div>`;
+  }
+
   function formatDuration(movie){
     if(movie.runtime){ return t('duration_min_template', { n: movie.runtime }); }
     return t('card_series_title');
@@ -3621,6 +3750,12 @@ const TRANSLATIONS = {
     let url;
     if(state.mode === 'recently_added'){
       url = `${BACKEND_URL}/api/recently-added?platforms=${platformParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&language=${state.language}`;
+    } else if(state.mode === 'top10'){
+      // A fixed, single-platform, popularity-sorted list — deliberately
+      // ignores state.platforms (multi-select) and state.moods entirely,
+      // since "Top 10" is a specific concept (one platform, no filtering),
+      // not a variant of the general discover flow.
+      url = `${BACKEND_URL}/api/discover?platforms=${state.top10Platform}&moods=&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=popularity_1year&language=${state.language}`;
     } else {
       const moodParam = [...state.moods].join(',');
       const ratingParam = state.minRating > 0 ? `&min_rating=${state.minRating}` : '';
@@ -3748,13 +3883,16 @@ const TRANSLATIONS = {
 
     // A smaller first batch enriches faster, so the first card appears sooner.
     // We immediately start pulling more in the background right after, rather
-    // than waiting until the visible stack is almost empty.
-    fetchWithRetries(() => fetchDiscoverPage(1, 8), 2, 1500)
+    // than waiting until the visible stack is almost empty. Top 10 is the
+    // one exception — it's a fixed, capped list (exactly 10, by definition),
+    // so it fetches everything in one go and never paginates further.
+    const isTop10 = state.mode === 'top10';
+    fetchWithRetries(() => fetchDiscoverPage(1, isTop10 ? 10 : 8), 2, 1500)
       .then(mapped => {
         if(mapped.length === 0) throw new Error('empty');
         deck = mapped;
         renderDeck();
-        loadMoreIfNeeded(true);
+        if(!isTop10) loadMoreIfNeeded(true);
       })
       .catch(err => {
         if(err.message === 'budget_paused'){
@@ -3994,6 +4132,7 @@ const TRANSLATIONS = {
     const ratingBit = movie.rating ? `<span>·</span><span>★ ${movie.rating}</span>` : '';
     meta.innerHTML = `
       <div class="meta-title">${escapeHtml(movie.title)}</div>
+      ${originalTitleLine(movie)}
       <div class="meta-row"><span>${movie.year}</span><span>·</span><span>${movie.genre}</span><span>·</span><span>${formatDuration(movie)}</span>${ratingBit}</div>
       <div class="meta-row"><span class="platform-badge">${movie.platform}</span></div>
     `;
@@ -4326,6 +4465,7 @@ const TRANSLATIONS = {
       info.className = 'brick-info';
       info.innerHTML = `
         <div class="brick-title">${escapeHtml(movie.title)}</div>
+        ${originalTitleLine(movie)}
         <div class="brick-meta">${movie.year} · ${formatDuration(movie)}</div>
       `;
       brick.appendChild(info);
@@ -4403,12 +4543,14 @@ const TRANSLATIONS = {
     const platform = document.getElementById('platformOverlay');
     const family = document.getElementById('familyTypeOverlay');
     const recentlyAdded = document.getElementById('recentlyAddedTypeOverlay');
+    const top10Platform = document.getElementById('top10PlatformOverlay');
     const tour = document.getElementById('tourTooltip');
     if(share.classList.contains('active')) closeDialog(share, 'active');
     else if(category.classList.contains('active')) closeDialog(category, 'active');
     else if(platform.classList.contains('active')) closeDialog(platform, 'active');
     else if(family.classList.contains('active')) closeDialog(family, 'active');
     else if(recentlyAdded.classList.contains('active')) closeDialog(recentlyAdded, 'active');
+    else if(top10Platform.classList.contains('active')) closeDialog(top10Platform, 'active');
     else if(tour.classList.contains('visible')) endTour();
   });
 
@@ -4822,7 +4964,8 @@ const TRANSLATIONS = {
       <div style="display:flex; gap:1rem; align-items:center; text-align:left;">
         ${movie.poster_url ? `<img src="${movie.poster_url}" alt="" style="width:72px; border-radius:8px; flex-shrink:0;">` : ''}
         <div style="flex:1; min-width:0;">
-          <div style="font-family:var(--font-display); font-size:1.7rem; text-transform:uppercase; letter-spacing:.01em; line-height:1;">${movie.title}</div>
+          <div style="font-family:var(--font-display); font-size:1.7rem; text-transform:uppercase; letter-spacing:.01em; line-height:1;">${escapeHtml(movie.title)}</div>
+          ${originalTitleLine(movie)}
           <div style="font-family:var(--font-mono); font-size:.75rem; color:var(--muted); margin-top:.4rem;">${yearLabel} · ${movie.genre} · ${formatDuration(movie)}</div>
           <div style="margin-top:.55rem;"><span class="platform-badge" id="finalPickPlatformBadge">${t('checking_ellipsis')}</span></div>
         </div>
