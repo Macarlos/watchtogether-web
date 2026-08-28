@@ -535,6 +535,14 @@
     transition:all .15s;
   }
   .chip .dot{ width:7px; height:7px; border-radius:50%; background:currentColor; opacity:.5; }
+  .chip .chip-logo{
+    height:20px;
+    width:auto;
+    max-width:56px;
+    object-fit:contain;
+    border-radius:3px;
+    flex-shrink:0;
+  }
   .chip[data-active="true"]{
     background:rgba(255,176,32,.12);
     border-color:var(--amber);
@@ -1741,7 +1749,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.45 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.46 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3517,7 +3525,14 @@ const TRANSLATIONS = {
       chip.dataset.moodId = item.id; // language-independent lookup, e.g. for finding the "all" chip
       chip.setAttribute('aria-pressed', 'false');
       chip.dataset.active = 'false';
-      chip.innerHTML = `<span class="dot"></span>${item.label}`;
+      // Platform chips carry a real logo_url (sourced from MOTN, the same
+      // licensed data already safely powering the logos on the movie
+      // details page) — show that instead of the generic dot when it's
+      // available. Mood chips have no logo_url, so they keep the dot
+      // exactly as before; this one function serves both without special-casing.
+      chip.innerHTML = item.logo_url
+        ? `<img class="chip-logo" src="${escapeHtml(item.logo_url)}" alt="" />${item.label}`
+        : `<span class="dot"></span>${item.label}`;
       chip.addEventListener('click', () => {
         const active = chip.dataset.active === 'true';
         if(container.id === 'chipMoods' && item.id === 'all'){
