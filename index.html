@@ -1785,6 +1785,7 @@
         <button class="btn btn-primary btn-block" id="btnExploreAllCategories" data-i18n="btn_explore_all_categories" style="display:none; margin-bottom:.6rem;">Explore all categories</button>
         <button class="btn btn-primary btn-block" id="btnAddCategoryFromDone" data-i18n="btn_add_another_category" style="display:none; margin-bottom:.6rem;">+ Add another category</button>
         <button class="btn btn-primary btn-block" id="btnAddPlatformFromDone" data-i18n="btn_add_another_platform" style="display:none; margin-bottom:.6rem;">+ Add another platform</button>
+        <button class="btn btn-primary btn-block" id="btnSwitchPlatformFromDone" data-i18n="btn_switch_platform" style="display:none; margin-bottom:.6rem;">Switch platform</button>
         <div class="path-row" id="picksTileRowDone" style="margin-bottom:.6rem; display:none;">
           <button class="path-card picks-tile" id="btnGoToFavoritesFromDone">
             <div class="picks-tile-text">
@@ -1794,7 +1795,7 @@
             <div class="picks-tile-thumbs" id="picksTileThumbsDone"></div>
           </button>
         </div>
-        <button class="btn btn-ghost btn-block" id="btnRestart" data-i18n="btn_start_new_session">Start a new session</button>
+        <button class="btn btn-ghost btn-block" id="btnRestart">Start a new session</button>
       </div>
     </section>
 
@@ -1802,7 +1803,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.49 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.51 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1964,6 +1965,9 @@ const TRANSLATIONS = {
     tonight_watching_heading: "Tonight you're watching",
     btn_back_to_your_picks: "Back to your picks",
     btn_start_new_session: "Start a new session",
+    btn_back_to_main_page: "Back to main page",
+    done_title_top10: "You've seen today's Top 10!",
+    done_text_top10: "Check back another day for an updated list, or explore something else.",
     btn_back_to_main: "Back to main page",
     btn_home_short: "Home",
     checking_where_to_watch: "Checking where to watch…",
@@ -1980,6 +1984,7 @@ const TRANSLATIONS = {
     btn_explore_all_categories: "Explore all categories",
     btn_add_another_category: "+ Add another category",
     btn_add_another_platform: "+ Add another platform",
+    btn_switch_platform: "Switch platform",
     toast_categories_updated: "Categories updated — new picks coming up",
     toast_platforms_updated: "Platforms updated — new picks coming up",
     toast_link_copied: "Link copied — paste it anywhere",
@@ -2152,6 +2157,9 @@ const TRANSLATIONS = {
     tonight_watching_heading: "Esta noche vas a ver",
     btn_back_to_your_picks: "Volver a tus elecciones",
     btn_start_new_session: "Empezar una nueva sesión",
+    btn_back_to_main_page: "Volver a la página principal",
+    done_title_top10: "¡Ya viste el Top 10 de hoy!",
+    done_text_top10: "Vuelve otro día para ver la lista actualizada, o explora algo distinto.",
     btn_back_to_main: "Volver a la página principal",
     btn_home_short: "Inicio",
     checking_where_to_watch: "Buscando dónde verlo…",
@@ -2168,6 +2176,7 @@ const TRANSLATIONS = {
     btn_explore_all_categories: "Explorar todas las categorías",
     btn_add_another_category: "+ Añadir otra categoría",
     btn_add_another_platform: "+ Añadir otra plataforma",
+    btn_switch_platform: "Cambiar de plataforma",
     toast_categories_updated: "Categorías actualizadas — llegan nuevas elecciones",
     toast_platforms_updated: "Plataformas actualizadas — llegan nuevas elecciones",
     toast_link_copied: "Enlace copiado — pégalo donde quieras",
@@ -2340,6 +2349,9 @@ const TRANSLATIONS = {
     tonight_watching_heading: "Hoje à noite você vai assistir",
     btn_back_to_your_picks: "Voltar às suas escolhas",
     btn_start_new_session: "Começar uma nova sessão",
+    btn_back_to_main_page: "Voltar à página principal",
+    done_title_top10: "Você já viu o Top 10 de hoje!",
+    done_text_top10: "Volte outro dia para uma lista atualizada, ou explore outra coisa.",
     btn_back_to_main: "Voltar à página principal",
     btn_home_short: "Início",
     checking_where_to_watch: "Verificando onde assistir…",
@@ -2356,6 +2368,7 @@ const TRANSLATIONS = {
     btn_explore_all_categories: "Explorar todas as categorias",
     btn_add_another_category: "+ Adicionar outra categoria",
     btn_add_another_platform: "+ Adicionar outra plataforma",
+    btn_switch_platform: "Trocar de plataforma",
     toast_categories_updated: "Categorias atualizadas — novas escolhas a caminho",
     toast_platforms_updated: "Plataformas atualizadas — novas escolhas a caminho",
     toast_link_copied: "Link copiado — cole onde quiser",
@@ -2528,6 +2541,9 @@ const TRANSLATIONS = {
     tonight_watching_heading: "Ce soir, vous allez regarder",
     btn_back_to_your_picks: "Retour à vos choix",
     btn_start_new_session: "Démarrer une nouvelle session",
+    btn_back_to_main_page: "Retour à la page principale",
+    done_title_top10: "Vous avez vu le Top 10 du jour !",
+    done_text_top10: "Revenez un autre jour pour une liste actualisée, ou explorez autre chose.",
     btn_back_to_main: "Retour à la page principale",
     btn_home_short: "Accueil",
     checking_where_to_watch: "Vérification d'où regarder…",
@@ -2544,6 +2560,7 @@ const TRANSLATIONS = {
     btn_explore_all_categories: "Explorer toutes les catégories",
     btn_add_another_category: "+ Ajouter une autre catégorie",
     btn_add_another_platform: "+ Ajouter une autre plateforme",
+    btn_switch_platform: "Changer de plateforme",
     toast_categories_updated: "Catégories mises à jour — de nouveaux choix arrivent",
     toast_platforms_updated: "Plateformes mises à jour — de nouveaux choix arrivent",
     toast_link_copied: "Lien copié — collez-le où vous voulez",
@@ -2716,6 +2733,9 @@ const TRANSLATIONS = {
     tonight_watching_heading: "Heute Abend siehst du",
     btn_back_to_your_picks: "Zurück zu deiner Auswahl",
     btn_start_new_session: "Neue Sitzung starten",
+    btn_back_to_main_page: "Zurück zur Startseite",
+    done_title_top10: "Du hast die heutigen Top 10 gesehen!",
+    done_text_top10: "Schau ein anderes Mal für eine aktualisierte Liste vorbei, oder entdecke etwas anderes.",
     btn_back_to_main: "Zurück zur Startseite",
     btn_home_short: "Start",
     checking_where_to_watch: "Prüfe, wo du schauen kannst…",
@@ -2732,6 +2752,7 @@ const TRANSLATIONS = {
     btn_explore_all_categories: "Alle Kategorien erkunden",
     btn_add_another_category: "+ Weitere Kategorie hinzufügen",
     btn_add_another_platform: "+ Weitere Plattform hinzufügen",
+    btn_switch_platform: "Plattform wechseln",
     toast_categories_updated: "Kategorien aktualisiert — neue Auswahl kommt gleich",
     toast_platforms_updated: "Plattformen aktualisiert — neue Auswahl kommt gleich",
     toast_link_copied: "Link kopiert — füge ihn überall ein",
@@ -2904,6 +2925,9 @@ const TRANSLATIONS = {
     tonight_watching_heading: "आज रात आप देख रहे हैं",
     btn_back_to_your_picks: "अपनी पसंद पर वापस जाएं",
     btn_start_new_session: "नया सेशन शुरू करें",
+    btn_back_to_main_page: "मुख्य पृष्ठ पर वापस जाएं",
+    done_title_top10: "आपने आज का टॉप 10 देख लिया!",
+    done_text_top10: "अपडेटेड लिस्ट के लिए किसी और दिन वापस आएं, या कुछ और एक्सप्लोर करें।",
     btn_back_to_main: "मुख्य पेज पर वापस जाएं",
     btn_home_short: "होम",
     checking_where_to_watch: "कहाँ देखें यह जाँचा जा रहा है…",
@@ -2920,6 +2944,7 @@ const TRANSLATIONS = {
     btn_explore_all_categories: "सभी श्रेणियाँ देखें",
     btn_add_another_category: "+ एक और श्रेणी जोड़ें",
     btn_add_another_platform: "+ एक और प्लेटफ़ॉर्म जोड़ें",
+    btn_switch_platform: "प्लेटफ़ॉर्म बदलें",
     toast_categories_updated: "श्रेणियाँ अपडेट हुईं — नई पसंद आ रही हैं",
     toast_platforms_updated: "प्लेटफ़ॉर्म अपडेट हुए — नई पसंद आ रही हैं",
     toast_link_copied: "लिंक कॉपी हुआ — इसे कहीं भी पेस्ट करें",
@@ -3092,6 +3117,9 @@ const TRANSLATIONS = {
     tonight_watching_heading: "Dziś wieczorem oglądasz",
     btn_back_to_your_picks: "Wróć do swoich wyborów",
     btn_start_new_session: "Rozpocznij nową sesję",
+    btn_back_to_main_page: "Wróć do strony głównej",
+    done_title_top10: "Zobaczyłeś/aś dzisiejszy Top 10!",
+    done_text_top10: "Wróć innego dnia po zaktualizowaną listę albo sprawdź coś innego.",
     btn_back_to_main: "Powrót do strony głównej",
     btn_home_short: "Strona główna",
     checking_where_to_watch: "Sprawdzamy, gdzie obejrzeć…",
@@ -3108,6 +3136,7 @@ const TRANSLATIONS = {
     btn_explore_all_categories: "Przeglądaj wszystkie kategorie",
     btn_add_another_category: "+ Dodaj kolejną kategorię",
     btn_add_another_platform: "+ Dodaj kolejną platformę",
+    btn_switch_platform: "Zmień platformę",
     toast_categories_updated: "Kategorie zaktualizowane — nowe propozycje w drodze",
     toast_platforms_updated: "Platformy zaktualizowane — nowe propozycje w drodze",
     toast_link_copied: "Link skopiowany — wklej go, gdzie chcesz",
@@ -3601,6 +3630,13 @@ const TRANSLATIONS = {
   document.getElementById('btnPickTop10').addEventListener('click', () => {
     openSinglePlatformPicker('card_top10_title', 'single_platform_question', enterTop10Mode);
   });
+  // Lets someone go straight from "you've seen today's Top 10" into another
+  // platform's Top 10, without bouncing all the way back to the main page
+  // first — reuses the exact same picker dialog and entry function as the
+  // original "Top 10" mode card.
+  document.getElementById('btnSwitchPlatformFromDone').addEventListener('click', () => {
+    openSinglePlatformPicker('card_top10_title', 'single_platform_question', enterTop10Mode);
+  });
   document.getElementById('btnCloseSinglePlatformDialog').addEventListener('click', () => {
     closeDialog(document.getElementById('singlePlatformOverlay'), 'active');
   });
@@ -3981,8 +4017,15 @@ const TRANSLATIONS = {
   function showScreenDone(){
     const hasFavorites = state.favorites.length > 0;
     const hasMoodFilter = state.moods.size > 0;
+    const isTop10 = state.mode === 'top10';
 
-    if(hasMoodFilter){
+    if(isTop10){
+      // A fixed, finite list — "widen the mood" or "add another platform"
+      // (the other branches below) make no sense here, since Top 10 is
+      // deliberately single-platform with no mood/genre concept at all.
+      document.getElementById('doneTitle').textContent = t('done_title_top10');
+      document.getElementById('doneText').textContent = t('done_text_top10');
+    } else if(hasMoodFilter){
       document.getElementById('doneTitle').textContent = t('done_title_mood');
       document.getElementById('doneText').textContent = t('done_text_mood');
     } else {
@@ -3992,10 +4035,19 @@ const TRANSLATIONS = {
         : t('done_text_no_mood_no_favorites');
     }
 
-    document.getElementById('btnExploreAllCategories').style.display = hasMoodFilter ? 'block' : 'none';
-    document.getElementById('btnAddCategoryFromDone').style.display = hasMoodFilter ? 'block' : 'none';
+    document.getElementById('btnExploreAllCategories').style.display = (!isTop10 && hasMoodFilter) ? 'block' : 'none';
+    document.getElementById('btnAddCategoryFromDone').style.display = (!isTop10 && hasMoodFilter) ? 'block' : 'none';
+    // Real bug fix: this used to show for Top 10 too, since state.platforms
+    // (the multi-select set) is never populated in that mode at all —
+    // "0 < availablePlatforms.length" was always true, offering to "add a
+    // platform" for a mode that's deliberately single-platform by design.
     document.getElementById('btnAddPlatformFromDone').style.display =
-      (state.platforms.size < state.availablePlatforms.length) ? 'block' : 'none';
+      (!isTop10 && state.platforms.size < state.availablePlatforms.length) ? 'block' : 'none';
+    document.getElementById('btnSwitchPlatformFromDone').style.display = isTop10 ? 'block' : 'none';
+    // Set explicitly every time (not left as a static default) so it's
+    // always correct for the mode that actually just finished, regardless
+    // of what ran before.
+    document.getElementById('btnRestart').textContent = isTop10 ? t('btn_back_to_main_page') : t('btn_start_new_session');
     updateFavoritesButtons();
     showScreen('screen-done');
   }
