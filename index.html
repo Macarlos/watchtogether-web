@@ -834,7 +834,7 @@
     margin-top:.15rem;
     line-height:1.3;
   }
-  .top10-platform-option{
+  .single-platform-option{
     display:flex;
     align-items:center;
     gap:.7rem;
@@ -852,8 +852,8 @@
     touch-action:manipulation;
     transition:border-color .15s, background .15s;
   }
-  .top10-platform-option:hover{ border-color:var(--amber); }
-  .top10-platform-option img{
+  .single-platform-option:hover{ border-color:var(--amber); }
+  .single-platform-option img{
     height:24px;
     width:auto;
     max-width:64px;
@@ -1484,12 +1484,12 @@
     </div>
   </div>
 
-  <div class="share-overlay" id="top10PlatformOverlay">
-    <div class="share-dialog" id="top10PlatformDialogCard" role="dialog" aria-modal="true" aria-labelledby="top10PlatformDialogTitle" tabindex="-1" style="max-width:380px;">
-      <h3 id="top10PlatformDialogTitle" data-i18n="card_top10_title">Top 10</h3>
-      <p data-i18n="top10_platform_question">Which platform?</p>
-      <div id="top10PlatformList"></div>
-      <button class="btn btn-ghost btn-block" id="btnCloseTop10PlatformDialog" data-i18n="btn_close" style="margin-top:.6rem;">Close</button>
+  <div class="share-overlay" id="singlePlatformOverlay">
+    <div class="share-dialog" id="singlePlatformDialogCard" role="dialog" aria-modal="true" aria-labelledby="singlePlatformDialogTitle" tabindex="-1" style="max-width:380px;">
+      <h3 id="singlePlatformDialogTitle">Top 10</h3>
+      <p>Which platform?</p>
+      <div id="singlePlatformList"></div>
+      <button class="btn btn-ghost btn-block" id="btnCloseSinglePlatformDialog" data-i18n="btn_close" style="margin-top:.6rem;">Close</button>
     </div>
   </div>
 
@@ -1539,6 +1539,15 @@
         </div>
 
         <div class="path-row" style="margin-top:.85rem;">
+          <button class="path-card" id="btnPickTop10">
+            <div class="fan-poster fan-1" data-fan></div>
+            <div class="fan-poster fan-2" data-fan></div>
+            <h3 data-i18n="card_top10_title">Top 10 in your country</h3>
+            <p data-i18n="card_top10_desc">The most popular picks on one platform right now.</p>
+          </button>
+        </div>
+
+        <div class="path-row" style="margin-top:.85rem;">
           <button class="path-card" id="btnPickMovies">
             <div class="fan-poster fan-1" data-fan></div>
             <div class="fan-poster fan-2" data-fan></div>
@@ -1565,15 +1574,6 @@
             <div class="fan-poster fan-2" data-fan></div>
             <h3 data-i18n="card_surprise_title">Surprise me</h3>
             <p data-i18n="card_surprise_desc">Skip the choices — get a random pick instantly.</p>
-          </button>
-        </div>
-
-        <div class="path-row" style="margin-top:.85rem;">
-          <button class="path-card" id="btnPickTop10">
-            <div class="fan-poster fan-1" data-fan></div>
-            <div class="fan-poster fan-2" data-fan></div>
-            <h3 data-i18n="card_top10_title">Top 10</h3>
-            <p data-i18n="card_top10_desc">The most popular picks on one platform right now.</p>
           </button>
         </div>
       </div>
@@ -1802,7 +1802,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.47 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.49 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1873,9 +1873,9 @@ const TRANSLATIONS = {
     card_family_desc: "Family-friendly picks everyone can enjoy together.",
     card_surprise_title: "Surprise me",
     card_surprise_desc: "Skip the choices — get a random pick instantly.",
-    card_top10_title: "Top 10",
+    card_top10_title: "Top 10 in your country",
     card_top10_desc: "The most popular picks on one platform right now.",
-    top10_platform_question: "Which platform?",
+    single_platform_question: "Which platform?",
     card_recently_added_title: "Recently added",
     card_recently_added_desc: "Just landed on your platforms.",
     btn_how_to_use: "How to use W2N",
@@ -2061,9 +2061,9 @@ const TRANSLATIONS = {
     card_family_desc: "Selecciones aptas para toda la familia.",
     card_surprise_title: "Sorpréndeme",
     card_surprise_desc: "Sin elegir nada — obtén una recomendación al instante.",
-    card_top10_title: "Top 10",
+    card_top10_title: "Top 10 en tu país",
     card_top10_desc: "Lo más popular en una plataforma ahora mismo.",
-    top10_platform_question: "¿Qué plataforma?",
+    single_platform_question: "¿Qué plataforma?",
     card_recently_added_title: "Recién añadidos",
     card_recently_added_desc: "Recién llegados a tus plataformas.",
     btn_how_to_use: "Cómo usar W2N",
@@ -2249,9 +2249,9 @@ const TRANSLATIONS = {
     card_family_desc: "Escolhas para toda a família aproveitar junto.",
     card_surprise_title: "Me surpreenda",
     card_surprise_desc: "Sem escolher nada — receba uma sugestão na hora.",
-    card_top10_title: "Top 10",
+    card_top10_title: "Top 10 no seu país",
     card_top10_desc: "O que há de mais popular em uma plataforma agora.",
-    top10_platform_question: "Qual plataforma?",
+    single_platform_question: "Qual plataforma?",
     card_recently_added_title: "Adicionados recentemente",
     card_recently_added_desc: "Acabaram de chegar às suas plataformas.",
     btn_how_to_use: "Como usar o W2N",
@@ -2437,9 +2437,9 @@ const TRANSLATIONS = {
     card_family_desc: "Des choix adaptés à toute la famille.",
     card_surprise_title: "Surprenez-moi",
     card_surprise_desc: "Sans rien choisir — obtenez une suggestion immédiate.",
-    card_top10_title: "Top 10",
+    card_top10_title: "Top 10 dans votre pays",
     card_top10_desc: "Les titres les plus populaires sur une plateforme, en ce moment.",
-    top10_platform_question: "Quelle plateforme ?",
+    single_platform_question: "Quelle plateforme ?",
     card_recently_added_title: "Ajoutés récemment",
     card_recently_added_desc: "Tout juste arrivés sur vos plateformes.",
     btn_how_to_use: "Comment utiliser W2N",
@@ -2625,9 +2625,9 @@ const TRANSLATIONS = {
     card_family_desc: "Familienfreundliche Auswahl für alle.",
     card_surprise_title: "Überrasch mich",
     card_surprise_desc: "Ohne Auswahl — sofort einen Vorschlag bekommen.",
-    card_top10_title: "Top 10",
+    card_top10_title: "Top 10 in deinem Land",
     card_top10_desc: "Die beliebtesten Titel auf einer Plattform, gerade jetzt.",
-    top10_platform_question: "Welche Plattform?",
+    single_platform_question: "Welche Plattform?",
     card_recently_added_title: "Kürzlich hinzugefügt",
     card_recently_added_desc: "Gerade erst auf deinen Plattformen gelandet.",
     btn_how_to_use: "So funktioniert W2N",
@@ -2813,9 +2813,9 @@ const TRANSLATIONS = {
     card_family_desc: "पूरे परिवार के लिए पसंद आने वाली चीज़ें।",
     card_surprise_title: "मुझे सरप्राइज़ करें",
     card_surprise_desc: "कुछ भी चुने बिना — तुरंत एक सुझाव पाएं।",
-    card_top10_title: "टॉप 10",
+    card_top10_title: "आपके देश में टॉप 10",
     card_top10_desc: "अभी किसी एक प्लेटफ़ॉर्म पर सबसे लोकप्रिय टाइटल।",
-    top10_platform_question: "कौन सा प्लेटफ़ॉर्म?",
+    single_platform_question: "कौन सा प्लेटफ़ॉर्म?",
     card_recently_added_title: "हाल ही में जोड़े गए",
     card_recently_added_desc: "अभी-अभी आपके प्लेटफ़ॉर्म पर आए।",
     btn_how_to_use: "W2N कैसे उपयोग करें",
@@ -3001,9 +3001,9 @@ const TRANSLATIONS = {
     card_family_desc: "Propozycje, które spodobają się całej rodzinie.",
     card_surprise_title: "Zaskocz mnie",
     card_surprise_desc: "Bez wybierania niczego — od razu otrzymaj propozycję.",
-    card_top10_title: "Top 10",
+    card_top10_title: "Top 10 w Twoim kraju",
     card_top10_desc: "Najpopularniejsze tytuły na jednej platformie w tej chwili.",
-    top10_platform_question: "Która platforma?",
+    single_platform_question: "Która platforma?",
     card_recently_added_title: "Ostatnio dodane",
     card_recently_added_desc: "Właśnie pojawiły się na twoich platformach.",
     btn_how_to_use: "Jak korzystać z W2N",
@@ -3222,7 +3222,7 @@ const TRANSLATIONS = {
     language: 'en', // auto-detected from region; see REGION_TO_LANGUAGE below
     minRating: 0, // optional filter, 0 = off; set to 7 when the "7.0+ only" toggle is active
     mode: 'discover', // 'discover' (default), 'recently_added', or 'top10'
-    top10Platform: null, // set right before entering top10 mode — which single platform's top 10 to show
+    singlePlatform: null, // set right before entering a single-platform-picker flow (top10, recently-added) — which one platform was chosen
   };
 
   // Must match main.py's MOTN_ORDER_BY_CHOICES exactly.
@@ -3413,7 +3413,7 @@ const TRANSLATIONS = {
     // navigate the screen underneath. Reuses the same set of overlays
     // already checked by the Escape-key handler above, so any new dialog
     // added there gets this behavior automatically.
-    const openOverlay = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay', 'top10PlatformOverlay']
+    const openOverlay = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay', 'singlePlatformOverlay']
       .map(id => document.getElementById(id))
       .find(el => el && el.classList.contains('active'));
     if(openOverlay){
@@ -3564,43 +3564,54 @@ const TRANSLATIONS = {
   // dialog, then go straight to the deck. Reuses state.availablePlatforms
   // (already loaded, already carrying real logo_urls from MOTN) rather than
   // fetching anything new here.
-  function populateTop10PlatformList(){
-    const list = document.getElementById('top10PlatformList');
+  // Shared by every mode that needs "pick exactly one platform, then go
+  // straight to the deck" (Top 10, Recently Added) — one dialog, one
+  // population function, parameterized by which i18n strings to show and
+  // what to do once a platform is actually chosen, rather than duplicating
+  // this dialog per mode.
+  function openSinglePlatformPicker(titleKey, questionKey, onSelect){
+    document.getElementById('singlePlatformDialogTitle').textContent = t(titleKey);
+    document.querySelector('#singlePlatformDialogCard p').textContent = t(questionKey);
+    const list = document.getElementById('singlePlatformList');
     list.innerHTML = '';
     state.availablePlatforms.forEach(p => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'top10-platform-option';
+      btn.className = 'single-platform-option';
       btn.innerHTML = p.logo_url
         ? `<img src="${escapeHtml(p.logo_url)}" alt="" />${escapeHtml(p.label)}`
         : `<span class="dot"></span>${escapeHtml(p.label)}`;
-      btn.addEventListener('click', () => enterTop10Mode(p.id));
+      btn.addEventListener('click', () => {
+        closeDialog(document.getElementById('singlePlatformOverlay'), 'active');
+        onSelect(p.id);
+      });
       list.appendChild(btn);
     });
+    openDialog(document.getElementById('singlePlatformOverlay'), 'active');
   }
 
   function enterTop10Mode(platformId){
-    closeDialog(document.getElementById('top10PlatformOverlay'), 'active');
     state.mode = 'top10';
-    state.top10Platform = platformId;
+    state.singlePlatform = platformId;
     state.contentType = 'movie'; // v1 scope: movies only, no separate content-type choice for this mode
     buildDeck();
     showScreen('screen-deck');
   }
 
   document.getElementById('btnPickTop10').addEventListener('click', () => {
-    populateTop10PlatformList();
-    openDialog(document.getElementById('top10PlatformOverlay'), 'active');
+    openSinglePlatformPicker('card_top10_title', 'single_platform_question', enterTop10Mode);
   });
-  document.getElementById('btnCloseTop10PlatformDialog').addEventListener('click', () => {
-    closeDialog(document.getElementById('top10PlatformOverlay'), 'active');
+  document.getElementById('btnCloseSinglePlatformDialog').addEventListener('click', () => {
+    closeDialog(document.getElementById('singlePlatformOverlay'), 'active');
   });
 
   // "Recently added" — uses a separate MOTN endpoint (catalog changes, not
   // search-by-filters) so mood/genre filtering and the rating filter don't
-  // apply here; still asks which platforms, since that's what "added to
-  // your platforms" means. Also asks movies vs series first, via a small
-  // dialog, same pattern as "Watch with your Family".
+  // apply here. Asks movies vs series first (a genuinely distinct choice,
+  // unlike Top 10), then which single platform, via the same shared
+  // platform-picker dialog used by Top 10 — goes straight to the deck
+  // rather than through the multi-select screen-setup, for a consistent
+  // "pick one platform, then swipe" feel across both modes.
   document.getElementById('btnPickRecentlyAdded').addEventListener('click', () => {
     openDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
   });
@@ -3608,15 +3619,12 @@ const TRANSLATIONS = {
   function enterRecentlyAddedMode(contentType){
     closeDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
     state.contentType = contentType;
-    state.mode = 'recently_added';
-    state.moods.clear();
-    clearMoodFilterVisual();
-    state.minRating = 0;
-    document.querySelectorAll('#chipMinRating .chip').forEach(c => setChipActive(c, false));
-    state.skipMoodStep = true;
-    state.skipMoodReason = 'recently_added';
-    updateSetupStepVisibility();
-    showScreen('screen-setup');
+    openSinglePlatformPicker('card_recently_added_title', 'single_platform_question', (platformId) => {
+      state.mode = 'recently_added';
+      state.singlePlatform = platformId;
+      buildDeck();
+      showScreen('screen-deck');
+    });
   }
 
   document.getElementById('btnRecentlyAddedMovies').addEventListener('click', () => enterRecentlyAddedMode('movie'));
@@ -3728,6 +3736,7 @@ const TRANSLATIONS = {
     return results.map((m) => ({
       watchmodeId: m.watchmode_id,
       title: m.title,
+      original_title: m.original_title,
       year: m.year,
       endYear: m.end_year,
       genre: (m.genres || []).slice(0,2).join(' · ') || 'Movie',
@@ -3749,13 +3758,16 @@ const TRANSLATIONS = {
     const platformParam = [...state.platforms].join(',');
     let url;
     if(state.mode === 'recently_added'){
-      url = `${BACKEND_URL}/api/recently-added?platforms=${platformParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&language=${state.language}`;
+      // Now a single chosen platform (state.singlePlatform), same
+      // one-platform-then-swipe flow as Top 10 — no longer the multi-select
+      // state.platforms set from the old screen-setup-based flow.
+      url = `${BACKEND_URL}/api/recently-added?platforms=${state.singlePlatform}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&language=${state.language}`;
     } else if(state.mode === 'top10'){
       // A fixed, single-platform, popularity-sorted list — deliberately
       // ignores state.platforms (multi-select) and state.moods entirely,
       // since "Top 10" is a specific concept (one platform, no filtering),
       // not a variant of the general discover flow.
-      url = `${BACKEND_URL}/api/discover?platforms=${state.top10Platform}&moods=&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=popularity_1year&language=${state.language}`;
+      url = `${BACKEND_URL}/api/discover?platforms=${state.singlePlatform}&moods=&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=popularity_1year&language=${state.language}`;
     } else {
       const moodParam = [...state.moods].join(',');
       const ratingParam = state.minRating > 0 ? `&min_rating=${state.minRating}` : '';
@@ -3924,6 +3936,12 @@ const TRANSLATIONS = {
   // `eager=true` to prefetch immediately regardless of remaining count (used
   // right after the first small batch loads, so more is ready ahead of time).
   function loadMoreIfNeeded(eager){
+    // Top 10 is a fixed, capped list — never fetch additional pages for it,
+    // no matter which call site triggers this (renderDeck calls it
+    // unconditionally on every render, including after every swipe, so
+    // guarding only the initial buildDeck() call wasn't enough — this was
+    // a real bug: the deck kept growing past 10 as the visible stack ran low).
+    if(state.mode === 'top10') return;
     if(state.loadingMore) return;
     if(!eager && deck.length - state.deckIndex > 4) return;
     state.loadingMore = true;
@@ -4543,14 +4561,14 @@ const TRANSLATIONS = {
     const platform = document.getElementById('platformOverlay');
     const family = document.getElementById('familyTypeOverlay');
     const recentlyAdded = document.getElementById('recentlyAddedTypeOverlay');
-    const top10Platform = document.getElementById('top10PlatformOverlay');
+    const singlePlatform = document.getElementById('singlePlatformOverlay');
     const tour = document.getElementById('tourTooltip');
     if(share.classList.contains('active')) closeDialog(share, 'active');
     else if(category.classList.contains('active')) closeDialog(category, 'active');
     else if(platform.classList.contains('active')) closeDialog(platform, 'active');
     else if(family.classList.contains('active')) closeDialog(family, 'active');
     else if(recentlyAdded.classList.contains('active')) closeDialog(recentlyAdded, 'active');
-    else if(top10Platform.classList.contains('active')) closeDialog(top10Platform, 'active');
+    else if(singlePlatform.classList.contains('active')) closeDialog(singlePlatform, 'active');
     else if(tour.classList.contains('visible')) endTour();
   });
 
