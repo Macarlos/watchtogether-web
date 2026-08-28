@@ -1803,7 +1803,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.51 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.52 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -4112,6 +4112,15 @@ const TRANSLATIONS = {
 
     if(state.deckIndex >= deck.length){
       updateSwipeButtonsEnabled(false);
+      if(state.mode === 'top10'){
+        // Top 10 deliberately never fetches more (see loadMoreIfNeeded's
+        // early return for this mode) — once exhausted, it's definitively
+        // done. The retry logic below exists for modes where more titles
+        // genuinely might still be coming; for Top 10 that's never true,
+        // so waiting on it here just loops forever without this check.
+        showScreenDone();
+        return;
+      }
       if(state.loadingMore){
         wrap.innerHTML = `<div class="empty-state" style="padding-top:6rem;"><div class="icon">🎬</div><p>${t('deck_loading_more')}</p></div>`;
         return;
