@@ -834,7 +834,7 @@
     margin-top:.15rem;
     line-height:1.3;
   }
-  .single-platform-option{
+  .platform-option{
     display:flex;
     align-items:center;
     gap:.7rem;
@@ -852,8 +852,13 @@
     touch-action:manipulation;
     transition:border-color .15s, background .15s;
   }
-  .single-platform-option:hover{ border-color:var(--amber); }
-  .single-platform-option img{
+  .platform-option:hover{ border-color:var(--amber); }
+  .platform-option.selected{
+    background:rgba(255,176,32,.12);
+    border-color:var(--amber);
+    color:var(--amber);
+  }
+  .platform-option img{
     height:24px;
     width:auto;
     max-width:64px;
@@ -1232,6 +1237,42 @@
   }
   .favorite-brick .brick-heart:hover{ background:rgba(11,14,20,.9); }
 
+  /* "Mark as watched" toggle — same circular convention as brick-heart,
+     positioned directly to its left so both sit in one row. Only used on
+     the favorites grid specifically, not search results or shared picks. */
+  .favorite-brick .brick-eye{
+    position:absolute; top:8px; right:44px; z-index:2;
+    width:30px; height:30px;
+    border-radius:50%;
+    background:rgba(11,14,20,.65);
+    border:1px solid rgba(255,255,255,.25);
+    color:var(--ink);
+    font-size:1.05rem;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .15s, color .15s;
+    touch-action:manipulation;
+  }
+  .favorite-brick .brick-eye[data-watched="true"]{
+    color:var(--amber);
+    background:rgba(11,14,20,.8);
+    border-color:var(--amber);
+  }
+  .favorite-brick .brick-eye:hover{ background:rgba(11,14,20,.9); }
+  .favorite-brick .brick-poster.watched{ filter:grayscale(1); }
+  .favorite-brick .watched-overlay{
+    position:absolute; inset:0; z-index:1;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(5,6,10,.55);
+    color:var(--ink);
+    font-family:var(--font-display);
+    font-size:1rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    text-align:center;
+    padding:.5rem;
+    pointer-events:none;
+  }
+
   /* Save/heart toggle on the full-details screen (screen-final-pick) — same
      visual language as .brick-heart, but sits inline in the header row
      rather than absolutely positioned over a poster, since this screen's
@@ -1489,6 +1530,7 @@
       <h3 id="singlePlatformDialogTitle">Top 10</h3>
       <p>Which platform?</p>
       <div id="singlePlatformList"></div>
+      <button class="btn btn-primary btn-block" id="btnConfirmPlatformSelection" data-i18n="btn_start_swiping" style="margin-top:.6rem; display:none;">Start swiping</button>
       <button class="btn btn-ghost btn-block" id="btnCloseSinglePlatformDialog" data-i18n="btn_close" style="margin-top:.6rem;">Close</button>
     </div>
   </div>
@@ -1803,7 +1845,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.52 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.53 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1877,6 +1919,7 @@ const TRANSLATIONS = {
     card_top10_title: "Top 10 in your country",
     card_top10_desc: "The most popular picks on one platform right now.",
     single_platform_question: "Which platform?",
+    recently_added_platform_question: "Which platforms?",
     card_recently_added_title: "Recently added",
     card_recently_added_desc: "Just landed on your platforms.",
     btn_how_to_use: "How to use W2N",
@@ -2028,6 +2071,9 @@ const TRANSLATIONS = {
     toast_added_to_picks: "Added to your picks",
     toast_removed_from_picks: "Removed from your picks",
     aria_save_to_picks: "Save to your picks",
+    already_watched: "Already watched",
+    aria_mark_watched: "Mark as watched",
+    aria_mark_unwatched: "Mark as not watched",
     aria_remove_from_picks: "Remove from your picks",
     cookie_notice_text: "We only use essential local storage to remember your saved picks. No tracking, no ads.",
     cookie_notice_learn_more: "Learn more",
@@ -2069,6 +2115,7 @@ const TRANSLATIONS = {
     card_top10_title: "Top 10 en tu país",
     card_top10_desc: "Lo más popular en una plataforma ahora mismo.",
     single_platform_question: "¿Qué plataforma?",
+    recently_added_platform_question: "¿Qué plataformas?",
     card_recently_added_title: "Recién añadidos",
     card_recently_added_desc: "Recién llegados a tus plataformas.",
     btn_how_to_use: "Cómo usar W2N",
@@ -2220,6 +2267,9 @@ const TRANSLATIONS = {
     toast_added_to_picks: "Añadido a tus selecciones",
     toast_removed_from_picks: "Eliminado de tus selecciones",
     aria_save_to_picks: "Guardar en tus selecciones",
+    already_watched: "Ya visto",
+    aria_mark_watched: "Marcar como visto",
+    aria_mark_unwatched: "Marcar como no visto",
     aria_remove_from_picks: "Quitar de tus selecciones",
     cookie_notice_text: "Solo usamos almacenamiento local esencial para recordar tus elecciones guardadas. Sin rastreo, sin anuncios.",
     cookie_notice_learn_more: "Saber más",
@@ -2261,6 +2311,7 @@ const TRANSLATIONS = {
     card_top10_title: "Top 10 no seu país",
     card_top10_desc: "O que há de mais popular em uma plataforma agora.",
     single_platform_question: "Qual plataforma?",
+    recently_added_platform_question: "Quais plataformas?",
     card_recently_added_title: "Adicionados recentemente",
     card_recently_added_desc: "Acabaram de chegar às suas plataformas.",
     btn_how_to_use: "Como usar o W2N",
@@ -2412,6 +2463,9 @@ const TRANSLATIONS = {
     toast_added_to_picks: "Adicionado às suas escolhas",
     toast_removed_from_picks: "Removido das suas escolhas",
     aria_save_to_picks: "Salvar nas suas escolhas",
+    already_watched: "Já assistido",
+    aria_mark_watched: "Marcar como assistido",
+    aria_mark_unwatched: "Marcar como não assistido",
     aria_remove_from_picks: "Remover das suas escolhas",
     cookie_notice_text: "Usamos apenas armazenamento local essencial para lembrar suas escolhas salvas. Sem rastreamento, sem anúncios.",
     cookie_notice_learn_more: "Saiba mais",
@@ -2453,6 +2507,7 @@ const TRANSLATIONS = {
     card_top10_title: "Top 10 dans votre pays",
     card_top10_desc: "Les titres les plus populaires sur une plateforme, en ce moment.",
     single_platform_question: "Quelle plateforme ?",
+    recently_added_platform_question: "Quelles plateformes ?",
     card_recently_added_title: "Ajoutés récemment",
     card_recently_added_desc: "Tout juste arrivés sur vos plateformes.",
     btn_how_to_use: "Comment utiliser W2N",
@@ -2604,6 +2659,9 @@ const TRANSLATIONS = {
     toast_added_to_picks: "Ajouté à vos choix",
     toast_removed_from_picks: "Retiré de vos choix",
     aria_save_to_picks: "Enregistrer dans vos choix",
+    already_watched: "Déjà vu",
+    aria_mark_watched: "Marquer comme vu",
+    aria_mark_unwatched: "Marquer comme non vu",
     aria_remove_from_picks: "Retirer de vos choix",
     cookie_notice_text: "Nous utilisons uniquement un stockage local essentiel pour retenir vos choix enregistrés. Pas de suivi, pas de publicité.",
     cookie_notice_learn_more: "En savoir plus",
@@ -2645,6 +2703,7 @@ const TRANSLATIONS = {
     card_top10_title: "Top 10 in deinem Land",
     card_top10_desc: "Die beliebtesten Titel auf einer Plattform, gerade jetzt.",
     single_platform_question: "Welche Plattform?",
+    recently_added_platform_question: "Welche Plattformen?",
     card_recently_added_title: "Kürzlich hinzugefügt",
     card_recently_added_desc: "Gerade erst auf deinen Plattformen gelandet.",
     btn_how_to_use: "So funktioniert W2N",
@@ -2796,6 +2855,9 @@ const TRANSLATIONS = {
     toast_added_to_picks: "Zu deinen Favoriten hinzugefügt",
     toast_removed_from_picks: "Aus deinen Favoriten entfernt",
     aria_save_to_picks: "Zu Favoriten speichern",
+    already_watched: "Bereits gesehen",
+    aria_mark_watched: "Als gesehen markieren",
+    aria_mark_unwatched: "Als ungesehen markieren",
     aria_remove_from_picks: "Aus Favoriten entfernen",
     cookie_notice_text: "Wir verwenden nur unbedingt notwendigen lokalen Speicher, um deine gespeicherte Auswahl zu merken. Kein Tracking, keine Werbung.",
     cookie_notice_learn_more: "Mehr erfahren",
@@ -2837,6 +2899,7 @@ const TRANSLATIONS = {
     card_top10_title: "आपके देश में टॉप 10",
     card_top10_desc: "अभी किसी एक प्लेटफ़ॉर्म पर सबसे लोकप्रिय टाइटल।",
     single_platform_question: "कौन सा प्लेटफ़ॉर्म?",
+    recently_added_platform_question: "कौन से प्लेटफ़ॉर्म?",
     card_recently_added_title: "हाल ही में जोड़े गए",
     card_recently_added_desc: "अभी-अभी आपके प्लेटफ़ॉर्म पर आए।",
     btn_how_to_use: "W2N कैसे उपयोग करें",
@@ -2988,6 +3051,9 @@ const TRANSLATIONS = {
     toast_added_to_picks: "आपकी पसंद में जोड़ा गया",
     toast_removed_from_picks: "आपकी पसंद से हटाया गया",
     aria_save_to_picks: "अपनी पसंद में सहेजें",
+    already_watched: "पहले ही देखा जा चुका है",
+    aria_mark_watched: "देखा हुआ चिह्नित करें",
+    aria_mark_unwatched: "न देखा हुआ चिह्नित करें",
     aria_remove_from_picks: "अपनी पसंद से हटाएं",
     cookie_notice_text: "हम सिर्य़ आपकी सेव की गई पसंद याद रखने के लिए जरूरी लोकल स्टोरेज का उपयोग करते हैं। कोई ट्रैकिंग नहीं, कोई विज्ञापन नहीं।",
     cookie_notice_learn_more: "और जानें",
@@ -3029,6 +3095,7 @@ const TRANSLATIONS = {
     card_top10_title: "Top 10 w Twoim kraju",
     card_top10_desc: "Najpopularniejsze tytuły na jednej platformie w tej chwili.",
     single_platform_question: "Która platforma?",
+    recently_added_platform_question: "Które platformy?",
     card_recently_added_title: "Ostatnio dodane",
     card_recently_added_desc: "Właśnie pojawiły się na twoich platformach.",
     btn_how_to_use: "Jak korzystać z W2N",
@@ -3180,6 +3247,9 @@ const TRANSLATIONS = {
     toast_added_to_picks: "Dodano do Twoich wyborów",
     toast_removed_from_picks: "Usunięto z Twoich wyborów",
     aria_save_to_picks: "Zapisz w swoich wyborach",
+    already_watched: "Już obejrzane",
+    aria_mark_watched: "Oznacz jako obejrzane",
+    aria_mark_unwatched: "Oznacz jako nieobejrzane",
     aria_remove_from_picks: "Usuń ze swoich wyborów",
     cookie_notice_text: "Używamy wyłącznie niezbędnego przechowywania lokalnego, aby zapamiętać Twoje zapisane wybory. Bez śledzenia, bez reklam.",
     cookie_notice_learn_more: "Dowiedz się więcej",
@@ -3213,6 +3283,7 @@ const TRANSLATIONS = {
      STATE
      ════════════════════════════════════════════════════════════ */
   const FAVORITES_STORAGE_KEY = 'reel_favorites_v1';
+  const WATCHED_STORAGE_KEY = 'w2n_watched_titles_v1';
   const COOKIE_NOTICE_STORAGE_KEY = 'w2n_cookie_notice_dismissed_v1';
 
   function loadSavedFavorites(){
@@ -3234,12 +3305,32 @@ const TRANSLATIONS = {
     }
   }
 
+  // "Already watched" — a Set (not an array like favorites) since only
+  // membership ever matters here, never order. Same fail-soft pattern as
+  // favorites: a storage problem means it just doesn't persist, not a
+  // broken feature.
+  function loadSavedWatched(){
+    try{
+      const raw = localStorage.getItem(WATCHED_STORAGE_KEY);
+      return raw ? new Set(JSON.parse(raw)) : new Set();
+    } catch(e){
+      return new Set();
+    }
+  }
+
+  function persistWatched(){
+    try{
+      localStorage.setItem(WATCHED_STORAGE_KEY, JSON.stringify([...state.watchedTitles]));
+    } catch(e){}
+  }
+
   const state = {
     contentType: 'movie', // 'movie' | 'tv_series'
     platforms: new Set(),
     moods: new Set(),
     deckIndex: 0,
     favorites: loadSavedFavorites(), // persists across visits — see FAVORITES_STORAGE_KEY
+    watchedTitles: loadSavedWatched(), // "already watched" toggle on the favorites grid — see WATCHED_STORAGE_KEY
     backendPage: 1,        // our own sequential page counter — backend walks MOTN's cursor chain to match
     loadingMore: false,
     noMoreResultsStreak: 0, // consecutive load-more attempts that added nothing
@@ -3598,24 +3689,53 @@ const TRANSLATIONS = {
   // population function, parameterized by which i18n strings to show and
   // what to do once a platform is actually chosen, rather than duplicating
   // this dialog per mode.
-  function openSinglePlatformPicker(titleKey, questionKey, onSelect){
+  // Selections made so far in the currently-open picker (multi-select mode
+  // only) — scoped at this level rather than per-call so the confirm
+  // button's click handler (assigned fresh each time the dialog opens) can
+  // read it without needing its own separate closure plumbing.
+  let platformPickerSelection = new Set();
+
+  function openPlatformPicker(titleKey, questionKey, { multi = false, onSelect }){
     document.getElementById('singlePlatformDialogTitle').textContent = t(titleKey);
     document.querySelector('#singlePlatformDialogCard p').textContent = t(questionKey);
     const list = document.getElementById('singlePlatformList');
+    const confirmBtn = document.getElementById('btnConfirmPlatformSelection');
     list.innerHTML = '';
+    platformPickerSelection = new Set();
+    confirmBtn.style.display = multi ? 'flex' : 'none';
+    confirmBtn.disabled = multi; // multi mode starts disabled until at least one platform is picked
+
     state.availablePlatforms.forEach(p => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'single-platform-option';
+      btn.className = 'platform-option';
       btn.innerHTML = p.logo_url
         ? `<img src="${escapeHtml(p.logo_url)}" alt="" />${escapeHtml(p.label)}`
         : `<span class="dot"></span>${escapeHtml(p.label)}`;
       btn.addEventListener('click', () => {
-        closeDialog(document.getElementById('singlePlatformOverlay'), 'active');
-        onSelect(p.id);
+        if(multi){
+          const nowSelected = !btn.classList.contains('selected');
+          btn.classList.toggle('selected', nowSelected);
+          if(nowSelected) platformPickerSelection.add(p.id);
+          else platformPickerSelection.delete(p.id);
+          confirmBtn.disabled = platformPickerSelection.size === 0;
+        } else {
+          closeDialog(document.getElementById('singlePlatformOverlay'), 'active');
+          onSelect(p.id);
+        }
       });
       list.appendChild(btn);
     });
+
+    // Reassigned (not addEventListener'd) each time this function runs —
+    // this dialog gets reopened many times across a session, and .onclick
+    // cleanly replaces the previous handler instead of accumulating a new
+    // listener on every open.
+    confirmBtn.onclick = () => {
+      closeDialog(document.getElementById('singlePlatformOverlay'), 'active');
+      onSelect(Array.from(platformPickerSelection));
+    };
+
     openDialog(document.getElementById('singlePlatformOverlay'), 'active');
   }
 
@@ -3628,14 +3748,14 @@ const TRANSLATIONS = {
   }
 
   document.getElementById('btnPickTop10').addEventListener('click', () => {
-    openSinglePlatformPicker('card_top10_title', 'single_platform_question', enterTop10Mode);
+    openPlatformPicker('card_top10_title', 'single_platform_question', { onSelect: enterTop10Mode });
   });
   // Lets someone go straight from "you've seen today's Top 10" into another
   // platform's Top 10, without bouncing all the way back to the main page
   // first — reuses the exact same picker dialog and entry function as the
   // original "Top 10" mode card.
   document.getElementById('btnSwitchPlatformFromDone').addEventListener('click', () => {
-    openSinglePlatformPicker('card_top10_title', 'single_platform_question', enterTop10Mode);
+    openPlatformPicker('card_top10_title', 'single_platform_question', { onSelect: enterTop10Mode });
   });
   document.getElementById('btnCloseSinglePlatformDialog').addEventListener('click', () => {
     closeDialog(document.getElementById('singlePlatformOverlay'), 'active');
@@ -3644,10 +3764,9 @@ const TRANSLATIONS = {
   // "Recently added" — uses a separate MOTN endpoint (catalog changes, not
   // search-by-filters) so mood/genre filtering and the rating filter don't
   // apply here. Asks movies vs series first (a genuinely distinct choice,
-  // unlike Top 10), then which single platform, via the same shared
-  // platform-picker dialog used by Top 10 — goes straight to the deck
-  // rather than through the multi-select screen-setup, for a consistent
-  // "pick one platform, then swipe" feel across both modes.
+  // unlike Top 10), then which platform(s) — multi-select here, unlike Top
+  // 10's single-select, since "recently added on my platforms" naturally
+  // means potentially several at once.
   document.getElementById('btnPickRecentlyAdded').addEventListener('click', () => {
     openDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
   });
@@ -3655,11 +3774,14 @@ const TRANSLATIONS = {
   function enterRecentlyAddedMode(contentType){
     closeDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
     state.contentType = contentType;
-    openSinglePlatformPicker('card_recently_added_title', 'single_platform_question', (platformId) => {
-      state.mode = 'recently_added';
-      state.singlePlatform = platformId;
-      buildDeck();
-      showScreen('screen-deck');
+    openPlatformPicker('card_recently_added_title', 'recently_added_platform_question', {
+      multi: true,
+      onSelect: (platformIds) => {
+        state.mode = 'recently_added';
+        state.platforms = new Set(platformIds);
+        buildDeck();
+        showScreen('screen-deck');
+      },
     });
   }
 
@@ -3794,10 +3916,10 @@ const TRANSLATIONS = {
     const platformParam = [...state.platforms].join(',');
     let url;
     if(state.mode === 'recently_added'){
-      // Now a single chosen platform (state.singlePlatform), same
-      // one-platform-then-swipe flow as Top 10 — no longer the multi-select
-      // state.platforms set from the old screen-setup-based flow.
-      url = `${BACKEND_URL}/api/recently-added?platforms=${state.singlePlatform}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&language=${state.language}`;
+      // Back to multiple platforms (state.platforms) as of the "let me pick
+      // several platforms, then Start swiping" request — Top 10 below is
+      // the one that stays single-platform.
+      url = `${BACKEND_URL}/api/recently-added?platforms=${platformParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&language=${state.language}`;
     } else if(state.mode === 'top10'){
       // A fixed, single-platform, popularity-sorted list — deliberately
       // ignores state.platforms (multi-select) and state.moods entirely,
@@ -4378,6 +4500,16 @@ const TRANSLATIONS = {
     return state.favorites.some(f => f.title === movieTitle);
   }
 
+  function isWatched(movieTitle){
+    return state.watchedTitles.has(movieTitle);
+  }
+
+  function toggleWatched(movieTitle){
+    if(state.watchedTitles.has(movieTitle)) state.watchedTitles.delete(movieTitle);
+    else state.watchedTitles.add(movieTitle);
+    persistWatched();
+  }
+
   function showToast(message){
     const toast = document.createElement('div');
     toast.textContent = message;
@@ -4483,7 +4615,7 @@ const TRANSLATIONS = {
     document.getElementById('favoritesCount').style.display = hasFavorites ? '' : 'none';
 
     if(hasFavorites){
-      renderMovieGrid(document.getElementById('favoritesGrid'), state.favorites);
+      renderMovieGrid(document.getElementById('favoritesGrid'), state.favorites, true);
       document.getElementById('favoritesCount').textContent = t('picks_count', { n: state.favorites.length });
     }
 
@@ -4499,8 +4631,10 @@ const TRANSLATIONS = {
   }
 
   // Shared by the favorites grid, search results, and the "someone shared a
-  // link with you" grid.
-  function renderMovieGrid(grid, movies){
+  // link with you" grid. showWatchedToggle is only ever true for the
+  // favorites grid specifically — search results and shared picks don't
+  // get the eye/watched button at all.
+  function renderMovieGrid(grid, movies, showWatchedToggle){
     grid.innerHTML = '';
     movies.forEach(movie => {
       const brick = document.createElement('div');
@@ -4537,6 +4671,31 @@ const TRANSLATIONS = {
         updateFavoritesButtons();
       });
       poster.appendChild(heartBtn);
+
+      let watchedOverlay = null;
+      if(showWatchedToggle){
+        const eyeBtn = document.createElement('button');
+        eyeBtn.className = 'brick-eye';
+        eyeBtn.innerHTML = '<i class="ti ti-eye" aria-hidden="true"></i>';
+        watchedOverlay = document.createElement('div');
+        watchedOverlay.className = 'watched-overlay';
+        watchedOverlay.textContent = t('already_watched');
+        const setWatchedState = () => {
+          const watched = isWatched(movie.title);
+          eyeBtn.dataset.watched = watched ? 'true' : 'false';
+          eyeBtn.setAttribute('aria-label', watched ? t('aria_mark_unwatched') : t('aria_mark_watched'));
+          poster.classList.toggle('watched', watched);
+          watchedOverlay.style.display = watched ? 'flex' : 'none';
+        };
+        setWatchedState();
+        eyeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleWatched(movie.title);
+          setWatchedState();
+        });
+        poster.appendChild(eyeBtn);
+        poster.appendChild(watchedOverlay);
+      }
 
       brick.appendChild(poster);
 
