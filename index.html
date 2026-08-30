@@ -1258,6 +1258,35 @@
     border-color:var(--amber);
   }
   .favorite-brick .brick-eye:hover{ background:rgba(11,14,20,.9); }
+
+  .favorites-tip{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:1rem 2.4rem 1rem 1.1rem;
+    margin-bottom:1.2rem;
+    font-size:.85rem;
+    line-height:1.5;
+    text-align:left;
+  }
+  .favorites-tip p{ display:flex; align-items:center; gap:.55rem; margin-bottom:.5rem; }
+  .favorites-tip p:last-child{ margin-bottom:0; }
+  .favorites-tip i{ font-size:1.1rem; flex-shrink:0; }
+  .favorites-tip-close{
+    position:absolute; top:.5rem; right:.5rem;
+    width:26px; height:26px;
+    border-radius:50%;
+    background:none;
+    border:none;
+    color:var(--muted);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem;
+    cursor:pointer;
+    touch-action:manipulation;
+    transition:background .15s, color .15s;
+  }
+  .favorites-tip-close:hover{ background:var(--surface-2); color:var(--ink); }
   .favorite-brick .brick-poster.watched{ filter:grayscale(1); }
   .favorite-brick .watched-overlay{
     position:absolute; inset:0; z-index:1;
@@ -1706,6 +1735,12 @@
         <h2 data-i18n="favorites_heading">Everything you liked</h2>
       </div>
 
+      <div class="favorites-tip" id="favoritesTip" style="display:none;">
+        <button class="favorites-tip-close" id="btnCloseFavoritesTip" data-i18n-aria="btn_close" aria-label="Close">&times;</button>
+        <p><i class="ti ti-thumb-up" aria-hidden="true" style="color:var(--amber);"></i> <span data-i18n="favorites_tip_heart">Tap the heart again to remove a title from your picks.</span></p>
+        <p><i class="ti ti-eye" aria-hidden="true" style="color:var(--amber);"></i> <span data-i18n="favorites_tip_eye">Tap the eye to mark a title as already watched.</span></p>
+      </div>
+
       <div class="empty-state" id="favoritesEmptyState" style="display:none;">
         <div class="icon">🎬</div>
         <h3 data-i18n="favorites_empty">There is nothing here yet.</h3>
@@ -1845,7 +1880,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.53 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.56 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -1933,6 +1968,8 @@ const TRANSLATIONS = {
     tour_mood_body: "Pick a vibe, or tap \"Surprise me — any mood\" to skip this step entirely.",
     tour_start_title: "Ready when you are",
     tour_start_body: "Tap Start swiping whenever you're happy with your choices above.",
+    tour_favorites_title: "Manage your saved picks",
+    tour_favorites_body: "Tap the heart again to remove a title, or the eye to mark it as already watched.",
     tour_skip: "Skip tour",
     tour_close: "Close tour",
     tour_step_count: "Step {current} of {total}",
@@ -1989,6 +2026,8 @@ const TRANSLATIONS = {
     platform_dialog_title: "Add another platform",
     platform_dialog_body: "More platforms means more titles to swipe through. This starts a fresh deck with your updated platforms.",
     favorites_heading: "Everything you liked",
+    favorites_tip_heart: "Tap the heart again to remove a title from your picks.",
+    favorites_tip_eye: "Tap the eye to mark a title as already watched.",
     favorites_empty: "There is nothing here yet.",
     btn_share_my_picks: "Share my picks",
     btn_back_to_swiping: "Back to swiping",
@@ -2129,6 +2168,8 @@ const TRANSLATIONS = {
     tour_mood_body: "Elige un estado de ánimo, o toca \"Sorpréndeme — cualquier ambiente\" para saltarte este paso.",
     tour_start_title: "Listo cuando quieras",
     tour_start_body: "Toca Empezar a deslizar cuando estés conforme con tus elecciones de arriba.",
+    tour_favorites_title: "Gestiona tus elecciones guardadas",
+    tour_favorites_body: "Toca el corazón de nuevo para quitar un título, o el ojo para marcarlo como ya visto.",
     tour_skip: "Saltar tutorial",
     tour_close: "Cerrar tutorial",
     tour_step_count: "Paso {current} de {total}",
@@ -2185,6 +2226,8 @@ const TRANSLATIONS = {
     platform_dialog_title: "Añadir otra plataforma",
     platform_dialog_body: "Más plataformas significan más títulos para deslizar. Esto empieza un mazo nuevo con tus plataformas actualizadas.",
     favorites_heading: "Todo lo que te gustó",
+    favorites_tip_heart: "Toca el corazón de nuevo para quitar un título de tus elecciones.",
+    favorites_tip_eye: "Toca el ojo para marcar un título como ya visto.",
     favorites_empty: "Todavía no hay nada aquí.",
     btn_share_my_picks: "Compartir mis elecciones",
     btn_back_to_swiping: "Volver a deslizar",
@@ -2325,6 +2368,8 @@ const TRANSLATIONS = {
     tour_mood_body: "Escolha um clima, ou toque em \"Me surpreenda — qualquer clima\" para pular esta etapa.",
     tour_start_title: "Pronto quando você quiser",
     tour_start_body: "Toque em Começar a deslizar quando estiver satisfeito com suas escolhas acima.",
+    tour_favorites_title: "Gerencie suas escolhas salvas",
+    tour_favorites_body: "Toque no coração novamente para remover um título, ou no olho para marcá-lo como já assistido.",
     tour_skip: "Pular tutorial",
     tour_close: "Fechar tutorial",
     tour_step_count: "Passo {current} de {total}",
@@ -2381,6 +2426,8 @@ const TRANSLATIONS = {
     platform_dialog_title: "Adicionar outra plataforma",
     platform_dialog_body: "Mais plataformas significam mais títulos para deslizar. Isso começa um baralho novo com suas plataformas atualizadas.",
     favorites_heading: "Tudo que você curtiu",
+    favorites_tip_heart: "Toque no coração novamente para remover um título das suas escolhas.",
+    favorites_tip_eye: "Toque no olho para marcar um título como já assistido.",
     favorites_empty: "Ainda não há nada aqui.",
     btn_share_my_picks: "Compartilhar minhas escolhas",
     btn_back_to_swiping: "Voltar a deslizar",
@@ -2521,6 +2568,8 @@ const TRANSLATIONS = {
     tour_mood_body: "Choisissez une ambiance, ou touchez \"Surprenez-moi — n'importe quelle ambiance\" pour passer cette étape.",
     tour_start_title: "Prêt quand vous voulez",
     tour_start_body: "Touchez Commencer à parcourir dès que vos choix ci-dessus vous conviennent.",
+    tour_favorites_title: "Gérez vos choix enregistrés",
+    tour_favorites_body: "Retouchez le cœur pour retirer un titre, ou l'œil pour le marquer comme déjà vu.",
     tour_skip: "Passer le tutoriel",
     tour_close: "Fermer le tutoriel",
     tour_step_count: "Étape {current} sur {total}",
@@ -2577,6 +2626,8 @@ const TRANSLATIONS = {
     platform_dialog_title: "Ajouter une autre plateforme",
     platform_dialog_body: "Plus de plateformes veut dire plus de titres à parcourir. Cela démarre un nouveau paquet avec vos plateformes mises à jour.",
     favorites_heading: "Tout ce que vous avez aimé",
+    favorites_tip_heart: "Retouchez le cœur pour retirer un titre de vos choix.",
+    favorites_tip_eye: "Touchez l'œil pour marquer un titre comme déjà vu.",
     favorites_empty: "Il n'y a encore rien ici.",
     btn_share_my_picks: "Partager mes choix",
     btn_back_to_swiping: "Retour au défilement",
@@ -2717,6 +2768,8 @@ const TRANSLATIONS = {
     tour_mood_body: "Wähle eine Stimmung oder tippe auf \"Überrasch mich — egal welche Stimmung\", um diesen Schritt zu überspringen.",
     tour_start_title: "Bereit, wann du willst",
     tour_start_body: "Tippe auf Swipen starten, sobald du mit deiner Auswahl oben zufrieden bist.",
+    tour_favorites_title: "Verwalte deine gespeicherte Auswahl",
+    tour_favorites_body: "Tippe erneut auf das Herz, um einen Titel zu entfernen, oder auf das Auge, um ihn als bereits gesehen zu markieren.",
     tour_skip: "Tour überspringen",
     tour_close: "Tour schließen",
     tour_step_count: "Schritt {current} von {total}",
@@ -2773,6 +2826,8 @@ const TRANSLATIONS = {
     platform_dialog_title: "Weitere Plattform hinzufügen",
     platform_dialog_body: "Mehr Plattformen bedeuten mehr Titel zum Wischen. Das startet einen neuen Stapel mit deinen aktualisierten Plattformen.",
     favorites_heading: "Alles, was dir gefallen hat",
+    favorites_tip_heart: "Tippe erneut auf das Herz, um einen Titel aus deiner Auswahl zu entfernen.",
+    favorites_tip_eye: "Tippe auf das Auge, um einen Titel als bereits gesehen zu markieren.",
     favorites_empty: "Hier ist noch nichts.",
     btn_share_my_picks: "Meine Auswahl teilen",
     btn_back_to_swiping: "Zurück zum Wischen",
@@ -2913,6 +2968,8 @@ const TRANSLATIONS = {
     tour_mood_body: "एक मूड चुनें, या इस चरण को छोड़ने के लिए \"मुझे चौंकाएं — कोई भी मूड\" पर टैप करें।",
     tour_start_title: "जब आप तैयार हों",
     tour_start_body: "ऊपर अपनी पसंद से संतुष्ट होने पर स्वाइपिंग शुरू करें पर टैप करें।",
+    tour_favorites_title: "अपनी सहेजी गई पसंद प्रबंधित करें",
+    tour_favorites_body: "किसी टाइटल को हटाने के लिए दिल पर फिर से टैप करें, या उसे पहले से देखा हुआ चिह्नित करने के लिए आंख पर टैप करें।",
     tour_skip: "टूर छोड़ें",
     tour_close: "टूर बंद करें",
     tour_step_count: "चरण {current} / {total}",
@@ -2969,6 +3026,8 @@ const TRANSLATIONS = {
     platform_dialog_title: "एक और प्लेटफ़ॉर्म जोड़ें",
     platform_dialog_body: "ज़्यादा प्लेटफ़ॉर्म का मतलब है स्वाइप करने के लिए ज़्यादा टाइटल। इससे आपके अपडेट किए गए प्लेटफ़ॉर्म के साथ एक नया डेक शुरू होता है।",
     favorites_heading: "आपको जो कुछ पसंद आया",
+    favorites_tip_heart: "किसी टाइटल को अपनी पसंद से हटाने के लिए दिल पर फिर से टैप करें।",
+    favorites_tip_eye: "किसी टाइटल को पहले से देखा हुआ चिह्नित करने के लिए आंख पर टैप करें।",
     favorites_empty: "यहाँ अभी कुछ नहीं है।",
     btn_share_my_picks: "मेरी पसंद शेयर करें",
     btn_back_to_swiping: "स्वाइपिंग पर वापस जाएं",
@@ -3109,6 +3168,8 @@ const TRANSLATIONS = {
     tour_mood_body: "Wybierz nastrój albo dotknij \"Zaskocz mnie — dowolny nastrój\", żeby pominąć ten krok.",
     tour_start_title: "Gotowe, kiedy chcesz",
     tour_start_body: "Dotknij Rozpocznij przesuwanie, gdy Twój wybór powyżej Ci odpowiada.",
+    tour_favorites_title: "Zarządzaj swoimi zapisanymi wyborami",
+    tour_favorites_body: "Dotknij ponownie serca, aby usunąć tytuł, albo oka, aby oznaczyć go jako już obejrzany.",
     tour_skip: "Pomiń samouczek",
     tour_close: "Zamknij samouczek",
     tour_step_count: "Krok {current} z {total}",
@@ -3165,6 +3226,8 @@ const TRANSLATIONS = {
     platform_dialog_title: "Dodaj kolejną platformę",
     platform_dialog_body: "Więcej platform oznacza więcej tytułów do przesuwania. To rozpoczyna nową talię z Twoimi zaktualizowanymi platformami.",
     favorites_heading: "Wszystko, co Ci się spodobało",
+    favorites_tip_heart: "Dotknij ponownie serca, aby usunąć tytuł ze swoich wyborów.",
+    favorites_tip_eye: "Dotknij oka, aby oznaczyć tytuł jako już obejrzany.",
     favorites_empty: "Nic tu jeszcze nie ma.",
     btn_share_my_picks: "Udostępnij moje wybory",
     btn_back_to_swiping: "Wróć do przesuwania",
@@ -3285,6 +3348,7 @@ const TRANSLATIONS = {
   const FAVORITES_STORAGE_KEY = 'reel_favorites_v1';
   const WATCHED_STORAGE_KEY = 'w2n_watched_titles_v1';
   const COOKIE_NOTICE_STORAGE_KEY = 'w2n_cookie_notice_dismissed_v1';
+  const FAVORITES_TIP_STORAGE_KEY = 'w2n_favorites_tip_dismissed_v1';
 
   function loadSavedFavorites(){
     try{
@@ -4619,6 +4683,14 @@ const TRANSLATIONS = {
       document.getElementById('favoritesCount').textContent = t('picks_count', { n: state.favorites.length });
     }
 
+    // One-time explainer for the heart/eye icons — only shown when there's
+    // actually something in the grid to point at, and never again once
+    // dismissed (own storage flag, same fail-soft pattern as everything
+    // else backed by localStorage in this app).
+    let tipAlreadyDismissed = false;
+    try { tipAlreadyDismissed = localStorage.getItem(FAVORITES_TIP_STORAGE_KEY) === 'true'; } catch(e){}
+    document.getElementById('favoritesTip').style.display = (hasFavorites && !tipAlreadyDismissed) ? '' : 'none';
+
     const backLabels = {
       'screen-deck': t('btn_back_to_swiping'),
       'screen-done': t('btn_back'),
@@ -4727,6 +4799,10 @@ const TRANSLATIONS = {
   document.getElementById('btnSeeCurrentChoices').addEventListener('click', () => showFavoritesGrid('screen-content-type'));
   document.getElementById('btnGoToFavoritesFromDone').addEventListener('click', () => showFavoritesGrid('screen-done'));
   document.getElementById('btnBackFromFavorites').addEventListener('click', () => showScreen(favoritesReturnScreen));
+  document.getElementById('btnCloseFavoritesTip').addEventListener('click', () => {
+    document.getElementById('favoritesTip').style.display = 'none';
+    try { localStorage.setItem(FAVORITES_TIP_STORAGE_KEY, 'true'); } catch(e){}
+  });
 
   /* ════════════════════════════════════════════════════════════
      DIALOG ACCESSIBILITY — shared focus handling for all four overlay
@@ -5476,6 +5552,12 @@ const TRANSLATIONS = {
     { targetId: 'chipMoods', titleKey: 'tour_mood_title', bodyKey: 'tour_mood_body', screen: 'screen-setup',
       skip: () => document.getElementById('moodStepSection').style.display === 'none' },
     { targetId: 'btnCreateRoom', titleKey: 'tour_start_title', bodyKey: 'tour_start_body', screen: 'screen-setup' },
+    { targetId: 'favoritesGrid', titleKey: 'tour_favorites_title', bodyKey: 'tour_favorites_body', screen: 'screen-favorites-grid',
+      // Nothing to point at (and nothing meaningful to explain yet) for a
+      // brand-new visitor with zero saved picks — a first-time auto-tour
+      // naturally skips this. Replaying "How to use W2N" later, once
+      // something's actually been saved, picks it up as a real step.
+      skip: () => state.favorites.length === 0 },
   ];
   let tourActiveList = [];
   let tourIndex = 0;
@@ -5541,8 +5623,18 @@ const TRANSLATIONS = {
         state.skipMoodStep = false;
         state.skipMoodReason = null;
         updateSetupStepVisibility();
+        showScreen(step.screen);
+      } else if(step.screen === 'screen-favorites-grid'){
+        // Needs the real setup function, not plain showScreen — that's
+        // what actually populates the grid (renderMovieGrid) and decides
+        // whether the tip banner shows at all. Also reset the tip's
+        // dismissed flag here specifically: a full tutorial replay should
+        // show everything again, even something already dismissed once.
+        try { localStorage.removeItem(FAVORITES_TIP_STORAGE_KEY); } catch(e){}
+        showFavoritesGrid('screen-content-type');
+      } else {
+        showScreen(step.screen);
       }
-      showScreen(step.screen);
     }
 
     const target = document.getElementById(step.targetId);
