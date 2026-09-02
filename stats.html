@@ -156,7 +156,7 @@
       <button id="btnRefresh">↻ Refresh</button>
     </div>
     <h1>Usage stats</h1>
-    <p class="subtitle">Anonymous, aggregate counters from the live backend — <strong>not</strong> unique visitors, and this <strong>resets every time the backend redeploys</strong> (in-memory only, same tradeoff as everything else on the free tier). Meant for a rough read on real interest, not precise analytics.</p>
+    <p class="subtitle">Anonymous, aggregate counters from the live backend — <strong>not</strong> unique visitors. Most of these reset every time the backend redeploys (in-memory only, same tradeoff as everything else on the free tier) — <strong>except "Visits today,"</strong> which is saved to disk and only resets at midnight, so it stays accurate regardless of deploys. Meant for a rough read on real interest, not precise analytics.</p>
 
     <div id="content">
       <div class="state-msg">Loading…</div>
@@ -200,25 +200,38 @@
       if(!res.ok) throw new Error('bad response');
       const data = await res.json();
       const s = data.current_stats || {};
+      const usage = data.usage || {};
 
+      const visitsToday = usage.visits_today || 0;
       const pageLoads = s.total_page_loads || 0;
       const discoverCalls = s.total_discover_calls || 0;
       const searchCalls = s.total_search_calls || 0;
       const providerChecks = s.total_provider_checks || 0;
+      const trailerCalls = s.total_trailer_calls || 0;
+      const top10Calls = s.total_top10_calls || 0;
       const cacheHits = s.cache_hits || 0;
 
       const platformTotal = Object.values(s.platform_counts || {}).reduce((a, b) => a + b, 0);
       const genreTotal = Object.values(s.genre_counts || {}).reduce((a, b) => a + b, 0);
       const typeTotal = Object.values(s.content_type_counts || {}).reduce((a, b) => a + b, 0);
+      const regionTotal = Object.values(s.region_counts || {}).reduce((a, b) => a + b, 0);
 
       contentEl.innerHTML = `
         <div class="grid">
-          <div class="stat-card"><div class="num">${pageLoads}</div><div class="label">Page loads</div></div>
+          <div class="stat-card"><div class="num amber">${visitsToday}</div><div class="label">Visits today</div></div>
+          <div class="stat-card"><div class="num">${pageLoads}</div><div class="label">Page loads (since last deploy)</div></div>
           <div class="stat-card"><div class="num">${discoverCalls}</div><div class="label">Discover calls</div></div>
           <div class="stat-card"><div class="num">${searchCalls}</div><div class="label">Searches</div></div>
           <div class="stat-card"><div class="num">${providerChecks}</div><div class="label">Where-to-watch checks</div></div>
+          <div class="stat-card"><div class="num">${trailerCalls}</div><div class="label">Trailer requests</div></div>
+          <div class="stat-card"><div class="num">${top10Calls}</div><div class="label">Top 10 uses</div></div>
           <div class="stat-card"><div class="num teal">${cacheHits}</div><div class="label">Served from cache (free)</div></div>
         </div>
+
+        <section>
+          <h2>Where visits are coming from</h2>
+          ${barRows(s.region_counts, regionTotal)}
+        </section>
 
         <section>
           <h2>Platforms picked</h2>
