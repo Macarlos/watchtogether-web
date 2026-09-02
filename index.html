@@ -1880,7 +1880,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.61 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.62 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3625,6 +3625,18 @@ const TRANSLATIONS = {
 
     const targetId = event.state?.screen;
     if(targetId && document.getElementById(targetId)){
+      // Back-navigation to screen-deck doesn't re-run any of the logic that
+      // decides "is this deck actually empty, should the done screen show
+      // instead" — showScreen() only toggles visibility. If the deck was
+      // exhausted (common after finishing a Top 10 list) before the user
+      // navigated away and then pressed back, this would otherwise land
+      // them on a blank screen-deck with no cards and no done-screen
+      // content. Send them back to the main page instead, matching exactly
+      // what the "Back to main page" button on the done screen already does.
+      if(targetId === 'screen-deck' && (deck.length === 0 || state.deckIndex >= deck.length)){
+        fullRestart();
+        return;
+      }
       showScreen(targetId, true);
     }
   });
