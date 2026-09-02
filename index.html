@@ -1546,7 +1546,7 @@
 
   <div class="share-overlay" id="recentlyAddedTypeOverlay">
     <div class="share-dialog" id="recentlyAddedTypeDialogCard" role="dialog" aria-modal="true" aria-labelledby="recentlyAddedTypeDialogTitle" tabindex="-1" style="max-width:380px;">
-      <h3 id="recentlyAddedTypeDialogTitle" data-i18n="card_recently_added_title">Recently added</h3>
+      <h3 id="recentlyAddedTypeDialogTitle">Recently added</h3>
       <p data-i18n="family_dialog_question">Movies or series?</p>
       <button class="btn btn-primary btn-block" id="btnRecentlyAddedMovies" data-i18n="card_movies_title" style="margin-bottom:.6rem;">Movies</button>
       <button class="btn btn-primary btn-block" id="btnRecentlyAddedSeries" data-i18n="card_series_title" style="margin-bottom:.6rem;">Series</button>
@@ -1880,7 +1880,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.57 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.58 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3803,21 +3803,42 @@ const TRANSLATIONS = {
     openDialog(document.getElementById('singlePlatformOverlay'), 'active');
   }
 
+  // Shared by every mode that needs a "movies or series?" choice (Recently
+  // Added, and now Top 10) — one dialog, reassigning its handlers each time
+  // rather than duplicating this dialog per mode.
+  function openContentTypeChoice(titleKey, onSelect){
+    document.getElementById('recentlyAddedTypeDialogTitle').textContent = t(titleKey);
+    const moviesBtn = document.getElementById('btnRecentlyAddedMovies');
+    const seriesBtn = document.getElementById('btnRecentlyAddedSeries');
+    moviesBtn.onclick = () => {
+      closeDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
+      onSelect('movie');
+    };
+    seriesBtn.onclick = () => {
+      closeDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
+      onSelect('tv_series');
+    };
+    openDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
+  }
+
   function enterTop10Mode(platformId){
     state.mode = 'top10';
     state.singlePlatform = platformId;
-    state.contentType = 'movie'; // v1 scope: movies only, no separate content-type choice for this mode
     buildDeck();
     showScreen('screen-deck');
   }
 
   document.getElementById('btnPickTop10').addEventListener('click', () => {
-    openPlatformPicker('card_top10_title', 'single_platform_question', { onSelect: enterTop10Mode });
+    openContentTypeChoice('card_top10_title', (contentType) => {
+      state.contentType = contentType;
+      openPlatformPicker('card_top10_title', 'single_platform_question', { onSelect: enterTop10Mode });
+    });
   });
   // Lets someone go straight from "you've seen today's Top 10" into another
   // platform's Top 10, without bouncing all the way back to the main page
-  // first — reuses the exact same picker dialog and entry function as the
-  // original "Top 10" mode card.
+  // first. Keeps whatever content type they already had selected (movies
+  // vs series) rather than asking again — reusing the exact same picker
+  // dialog and entry function as the original "Top 10" mode card.
   document.getElementById('btnSwitchPlatformFromDone').addEventListener('click', () => {
     openPlatformPicker('card_top10_title', 'single_platform_question', { onSelect: enterTop10Mode });
   });
@@ -3832,25 +3853,20 @@ const TRANSLATIONS = {
   // 10's single-select, since "recently added on my platforms" naturally
   // means potentially several at once.
   document.getElementById('btnPickRecentlyAdded').addEventListener('click', () => {
-    openDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
+    openContentTypeChoice('card_recently_added_title', (contentType) => {
+      state.contentType = contentType;
+      openPlatformPicker('card_recently_added_title', 'recently_added_platform_question', {
+        multi: true,
+        onSelect: (platformIds) => {
+          state.mode = 'recently_added';
+          state.platforms = new Set(platformIds);
+          buildDeck();
+          showScreen('screen-deck');
+        },
+      });
+    });
   });
 
-  function enterRecentlyAddedMode(contentType){
-    closeDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
-    state.contentType = contentType;
-    openPlatformPicker('card_recently_added_title', 'recently_added_platform_question', {
-      multi: true,
-      onSelect: (platformIds) => {
-        state.mode = 'recently_added';
-        state.platforms = new Set(platformIds);
-        buildDeck();
-        showScreen('screen-deck');
-      },
-    });
-  }
-
-  document.getElementById('btnRecentlyAddedMovies').addEventListener('click', () => enterRecentlyAddedMode('movie'));
-  document.getElementById('btnRecentlyAddedSeries').addEventListener('click', () => enterRecentlyAddedMode('tv_series'));
   document.getElementById('btnCloseRecentlyAddedTypeDialog').addEventListener('click', () => {
     closeDialog(document.getElementById('recentlyAddedTypeOverlay'), 'active');
   });
@@ -4839,12 +4855,12 @@ const TRANSLATIONS = {
     // sitting on it (i.e. this close came from a button/Escape/Apply, not
     // from the back button itself, which already popped it before this
     // ever runs). Uses replaceState, not back(): back() is asynchronous,
-    // and several callers (e.g. enterRecentlyAddedMode) immediately call
-    // showScreen() right after closing this same dialog — that pushes a
-    // new entry before the scheduled back() actually fires, so by the time
-    // it did, it was popping the wrong entry and landing on the wrong
-    // screen entirely. replaceState is synchronous and doesn't navigate
-    // anywhere, so there's nothing left to race.
+    // and several callers (e.g. openContentTypeChoice's onSelect callbacks)
+    // immediately call showScreen() right after closing this same dialog —
+    // that pushes a new entry before the scheduled back() actually fires,
+    // so by the time it did, it was popping the wrong entry and landing on
+    // the wrong screen entirely. replaceState is synchronous and doesn't
+    // navigate anywhere, so there's nothing left to race.
     if(history.state?.dialogOpen){
       history.replaceState({screen: getActiveScreenId()}, '', location.pathname + location.search);
     }
