@@ -1732,6 +1732,7 @@
     <section class="screen" id="screen-favorites-grid">
       <div class="section-head" style="text-align:center;">
         <span class="eyebrow" id="favoritesCount">3 picks</span>
+        <span class="eyebrow" id="watchedCount" style="display:none; margin-left:.6rem; color:var(--muted);">0 watched</span>
         <h2 data-i18n="favorites_heading">Everything you liked</h2>
       </div>
 
@@ -1744,6 +1745,8 @@
       <div class="empty-state" id="favoritesEmptyState" style="display:none;">
         <div class="icon">🎬</div>
         <h3 data-i18n="favorites_empty">There is nothing here yet.</h3>
+        <p style="color:var(--muted); font-size:.85rem; margin-top:.4rem; margin-bottom:1rem;" data-i18n="favorites_empty_body">Swipe right on something you like, and it'll show up here.</p>
+        <button class="btn btn-primary" id="btnStartSwipingFromEmptyFavorites" data-i18n="btn_start_swiping">Start swiping</button>
       </div>
 
       <div class="favorites-grid" id="favoritesGrid"></div>
@@ -1880,7 +1883,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.65 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.66 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -2031,6 +2034,8 @@ const TRANSLATIONS = {
     favorites_tip_heart: "Tap the heart again to remove a title from your picks.",
     favorites_tip_eye: "Tap the eye to mark a title as already watched.",
     favorites_empty: "There is nothing here yet.",
+    favorites_empty_body: "Swipe right on something you like, and it'll show up here.",
+    watched_count: "{n} watched",
     btn_share_my_picks: "Share my picks",
     btn_back_to_swiping: "Back to swiping",
     btn_clear_all_picks: "Clear all picks",
@@ -2233,6 +2238,8 @@ const TRANSLATIONS = {
     favorites_tip_heart: "Toca el corazón de nuevo para quitar un título de tus elecciones.",
     favorites_tip_eye: "Toca el ojo para marcar un título como ya visto.",
     favorites_empty: "Todavía no hay nada aquí.",
+    favorites_empty_body: "Desliza a la derecha algo que te guste, y aparecerá aquí.",
+    watched_count: "{n} vistos",
     btn_share_my_picks: "Compartir mis elecciones",
     btn_back_to_swiping: "Volver a deslizar",
     btn_clear_all_picks: "Borrar todas las elecciones",
@@ -2435,6 +2442,8 @@ const TRANSLATIONS = {
     favorites_tip_heart: "Toque no coração novamente para remover um título das suas escolhas.",
     favorites_tip_eye: "Toque no olho para marcar um título como já assistido.",
     favorites_empty: "Ainda não há nada aqui.",
+    favorites_empty_body: "Deslize para a direita algo que você goste, e vai aparecer aqui.",
+    watched_count: "{n} assistidos",
     btn_share_my_picks: "Compartilhar minhas escolhas",
     btn_back_to_swiping: "Voltar a deslizar",
     btn_clear_all_picks: "Limpar todas as escolhas",
@@ -2637,6 +2646,8 @@ const TRANSLATIONS = {
     favorites_tip_heart: "Retouchez le cœur pour retirer un titre de vos choix.",
     favorites_tip_eye: "Touchez l'œil pour marquer un titre comme déjà vu.",
     favorites_empty: "Il n'y a encore rien ici.",
+    favorites_empty_body: "Balayez vers la droite quelque chose que vous aimez, et ça apparaîtra ici.",
+    watched_count: "{n} vus",
     btn_share_my_picks: "Partager mes choix",
     btn_back_to_swiping: "Retour au défilement",
     btn_clear_all_picks: "Effacer tous les choix",
@@ -2839,6 +2850,8 @@ const TRANSLATIONS = {
     favorites_tip_heart: "Tippe erneut auf das Herz, um einen Titel aus deiner Auswahl zu entfernen.",
     favorites_tip_eye: "Tippe auf das Auge, um einen Titel als bereits gesehen zu markieren.",
     favorites_empty: "Hier ist noch nichts.",
+    favorites_empty_body: "Wische etwas, das dir gefällt, nach rechts — es erscheint dann hier.",
+    watched_count: "{n} gesehen",
     btn_share_my_picks: "Meine Auswahl teilen",
     btn_back_to_swiping: "Zurück zum Wischen",
     btn_clear_all_picks: "Alle Auswahlen löschen",
@@ -3041,6 +3054,8 @@ const TRANSLATIONS = {
     favorites_tip_heart: "किसी टाइटल को अपनी पसंद से हटाने के लिए दिल पर फिर से टैप करें।",
     favorites_tip_eye: "किसी टाइटल को पहले से देखा हुआ चिह्नित करने के लिए आंख पर टैप करें।",
     favorites_empty: "यहाँ अभी कुछ नहीं है।",
+    favorites_empty_body: "जो पसंद आए उसे दाईं ओर स्वाइप करें, वह यहाँ दिखेगा।",
+    watched_count: "{n} देखी गईं",
     btn_share_my_picks: "मेरी पसंद शेयर करें",
     btn_back_to_swiping: "स्वाइपिंग पर वापस जाएं",
     btn_clear_all_picks: "सभी पसंद साफ़ करें",
@@ -3243,6 +3258,8 @@ const TRANSLATIONS = {
     favorites_tip_heart: "Dotknij ponownie serca, aby usunąć tytuł ze swoich wyborów.",
     favorites_tip_eye: "Dotknij oka, aby oznaczyć tytuł jako już obejrzany.",
     favorites_empty: "Nic tu jeszcze nie ma.",
+    favorites_empty_body: "Przesuń w prawo coś, co Ci się podoba, a pojawi się tutaj.",
+    watched_count: "{n} obejrzane",
     btn_share_my_picks: "Udostępnij moje wybory",
     btn_back_to_swiping: "Wróć do przesuwania",
     btn_clear_all_picks: "Wyczyść wszystkie wybory",
@@ -4747,6 +4764,17 @@ const TRANSLATIONS = {
       document.getElementById('favoritesCount').textContent = t('picks_count', { n: state.favorites.length });
     }
 
+    // Watched count — only worth showing once there's actually at least one
+    // watched title, otherwise "0 watched" next to "3 picks" is just noise
+    // for someone who hasn't used the eye toggle yet at all.
+    const watchedEl = document.getElementById('watchedCount');
+    if(state.watchedTitles.size > 0){
+      watchedEl.textContent = t('watched_count', { n: state.watchedTitles.size });
+      watchedEl.style.display = '';
+    } else {
+      watchedEl.style.display = 'none';
+    }
+
     // One-time explainer for the heart/eye icons — only shown when there's
     // actually something in the grid to point at, and never again once
     // dismissed (own storage flag, same fail-soft pattern as everything
@@ -4828,6 +4856,16 @@ const TRANSLATIONS = {
           e.stopPropagation();
           toggleWatched(movie.title);
           setWatchedState();
+          // This eye button only ever renders when showWatchedToggle is
+          // true, which is only ever the favorites grid — safe to update
+          // this element directly without extra context checks.
+          const watchedEl = document.getElementById('watchedCount');
+          if(state.watchedTitles.size > 0){
+            watchedEl.textContent = t('watched_count', { n: state.watchedTitles.size });
+            watchedEl.style.display = '';
+          } else {
+            watchedEl.style.display = 'none';
+          }
         });
         poster.appendChild(eyeBtn);
         poster.appendChild(watchedOverlay);
@@ -4867,6 +4905,7 @@ const TRANSLATIONS = {
     document.getElementById('favoritesTip').style.display = 'none';
     try { localStorage.setItem(FAVORITES_TIP_STORAGE_KEY, 'true'); } catch(e){}
   });
+  document.getElementById('btnStartSwipingFromEmptyFavorites').addEventListener('click', fullRestart);
 
   /* ════════════════════════════════════════════════════════════
      DIALOG ACCESSIBILITY — shared focus handling for all four overlay
