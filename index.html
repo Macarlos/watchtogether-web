@@ -162,6 +162,7 @@
     border:none;
     padding:0;
     cursor:pointer;
+    touch-action:none;
   }
 
   .persistent-back-btn{
@@ -744,6 +745,19 @@
   .ticket::after{ right:-11px; }
 
   /* ───────────────────────── Swipe deck ───────────────────────── */
+  /* The deck screen has no scrollable content of its own (unlike the
+     favorites grid or search results, which need normal vertical scroll
+     and are deliberately NOT touched here) — so it's safe to tell the
+     browser upfront, before any JS even runs, not to treat vertical
+     touch movement here as a native scroll gesture at all. This was
+     needed because calling preventDefault() reactively in JS — even from
+     the very first pointermove — was still sometimes too late: Android's
+     gesture recognizer could already commit to treating the touch as a
+     scroll before JS got a chance to react, which showed up as a clean
+     direction-lock immediately followed by the browser cancelling the
+     touch outright (pointercancel) instead of just suppressing it. */
+  #screen-deck{ touch-action:pan-x; }
+
   .deck-wrap{
     width:100%;
     max-width:320px;
@@ -1905,7 +1919,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.75 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.76 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
