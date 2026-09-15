@@ -52,9 +52,10 @@
   }
 
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  html{-webkit-font-smoothing:antialiased;}
+  html{-webkit-font-smoothing:antialiased; overscroll-behavior-y:contain;}
 
   body{
+    overscroll-behavior-y:contain;
     background:
       radial-gradient(ellipse 900px 500px at 50% -10%, rgba(255,176,32,.06), transparent 60%),
       linear-gradient(180deg, #05060a 0%, #060811 22%, #0a1024 55%, #101b3e 82%, #16265a 100%);
@@ -1904,7 +1905,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.70 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.71 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -5105,11 +5106,20 @@ const TRANSLATIONS = {
       }
       if(locked !== 'vertical') return;
 
+      // Without this, the WebView's own default overscroll/bounce behavior
+      // stays active for the gesture and visually fights with the custom
+      // indicator — confirmed on-device as content stretching from top to
+      // bottom instead of showing the indicator. The listener below is
+      // registered with { passive: false } specifically so this call isn't
+      // silently ignored, which is the default for touch-derived pointer
+      // events in most browsers/WebViews.
+      e.preventDefault();
+
       lastPull = deltaY < MAX_VISUAL ? deltaY : MAX_VISUAL + (deltaY - MAX_VISUAL) * 0.2;
       indicator.classList.add('pulling');
       indicator.style.transform = `translate(-50%, ${-60 + Math.min(lastPull, MAX_VISUAL + 20)}px) rotate(${Math.min(lastPull * 3, 360)}deg)`;
       indicator.style.opacity = String(Math.min(lastPull / THRESHOLD, 1));
-    });
+    }, { passive: false });
 
     function finishPull(){
       if(!tracking || locked !== 'vertical'){ tracking = false; locked = null; return; }
