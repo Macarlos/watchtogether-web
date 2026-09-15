@@ -962,6 +962,27 @@
     align-self:center;
   }
   .swipe-btn.rewind:hover{ border-color:var(--teal); }
+
+  /* Pull-to-refresh — a custom implementation because this is only needed
+     inside the Capacitor app's WebView. The plain website and the original
+     TWA already get this for free: TWA literally renders through Chrome
+     itself, so Chrome's own pull-to-refresh UI applies automatically.
+     Capacitor's WebView has no such built-in gesture at all — it was never
+     "lost", it just was never there to begin with. Since this lives in
+     index.html, it ships to all three surfaces identically; on the website
+     and TWA it simply layers on top of (and is redundant with, but doesn't
+     conflict with) the browser's native version. */
+  .pull-refresh-indicator{
+    position:fixed; top:0; left:50%;
+    width:42px; height:42px; border-radius:50%;
+    background:var(--surface); border:1.5px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    z-index:500; opacity:0; pointer-events:none;
+    transform:translate(-50%,-60px);
+  }
+  .pull-refresh-indicator i{ font-size:1.1rem; color:var(--amber); }
+  .pull-refresh-indicator.spinning i{ animation:pullRefreshSpin .7s linear infinite; }
+  @keyframes pullRefreshSpin{ from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
   .swipe-btn.rewind:disabled{
     opacity:.3;
     cursor:default;
@@ -1883,7 +1904,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.69 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.70 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -5011,6 +5032,103 @@ const TRANSLATIONS = {
     else if(e.key === 'ArrowRight') document.getElementById('btnLike').click();
     else document.getElementById('btnRewind').click();
   });
+
+  /* ════════════════════════════════════════════════════════════
+     PULL TO REFRESH — swipe down from the very top of the screen to
+     force a genuinely fresh reload. See the CSS comment above
+     .pull-refresh-indicator for why this is only needed inside
+     Capacitor's WebView specifically (the website and the original TWA
+     get this for free from the browser itself).
+     ════════════════════════════════════════════════════════════ */
+  (function setupPullToRefresh(){
+    const indicator = document.createElement('div');
+    indicator.className = 'pull-refresh-indicator';
+    indicator.innerHTML = '<i class="ti ti-rotate" aria-hidden="true"></i>';
+    document.body.appendChild(indicator);
+
+    const THRESHOLD = 70;  // px of pull needed to trigger a reload
+    const MAX_VISUAL = 100; // visual travel cap; pulling further adds resistance, not more distance
+    let startY = 0, startX = 0, tracking = false, locked = null; // locked: null | 'vertical' | 'horizontal'
+    let lastPull = 0;
+
+    function reset(){
+      indicator.classList.remove('pulling', 'spinning');
+      indicator.style.transform = 'translate(-50%,-60px)';
+      indicator.style.opacity = '0';
+      tracking = false;
+      locked = null;
+      lastPull = 0;
+    }
+
+    function anyOverlayOpen(){
+      const ids = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay', 'singlePlatformOverlay'];
+      if(ids.some(id => document.getElementById(id)?.classList.contains('active'))) return true;
+      if(document.getElementById('tourTooltip')?.classList.contains('visible')) return true;
+      if(document.querySelector('.overview-overlay.show')) return true;
+      return false;
+    }
+
+    function forceFreshReload(){
+      // Not a plain location.reload() — this exists specifically because
+      // the WebView's own HTTP cache has been known to keep serving a
+      // stale build even right after a fresh push (see the handover notes
+      // on this). A unique query param guarantees a genuinely different
+      // URL, which reliably bypasses that cache layer instead of hoping
+      // the WebView treats a bare reload as "go check for a new version".
+      const url = new URL(location.href);
+      url.searchParams.set('_r', Date.now());
+      location.href = url.toString();
+    }
+
+    document.addEventListener('pointerdown', (e) => {
+      if(e.pointerType !== 'touch') return;
+      if(window.scrollY > 0) return;
+      if(anyOverlayOpen()) return;
+      startY = e.clientY;
+      startX = e.clientX;
+      tracking = true;
+      locked = null;
+    });
+
+    document.addEventListener('pointermove', (e) => {
+      if(!tracking) return;
+      const deltaY = e.clientY - startY;
+      const deltaX = e.clientX - startX;
+
+      if(locked === null){
+        // Wait for clear directional intent before committing to anything —
+        // this is what keeps a horizontal card swipe that happens to start
+        // near the top of the screen from ever being mistaken for a pull.
+        if(Math.abs(deltaY) < 10 && Math.abs(deltaX) < 10) return;
+        locked = (Math.abs(deltaY) > Math.abs(deltaX) && deltaY > 0) ? 'vertical' : 'horizontal';
+        if(locked === 'horizontal'){ tracking = false; return; }
+      }
+      if(locked !== 'vertical') return;
+
+      lastPull = deltaY < MAX_VISUAL ? deltaY : MAX_VISUAL + (deltaY - MAX_VISUAL) * 0.2;
+      indicator.classList.add('pulling');
+      indicator.style.transform = `translate(-50%, ${-60 + Math.min(lastPull, MAX_VISUAL + 20)}px) rotate(${Math.min(lastPull * 3, 360)}deg)`;
+      indicator.style.opacity = String(Math.min(lastPull / THRESHOLD, 1));
+    });
+
+    function finishPull(){
+      if(!tracking || locked !== 'vertical'){ tracking = false; locked = null; return; }
+      indicator.classList.remove('pulling');
+      if(lastPull >= THRESHOLD){
+        indicator.style.transform = 'translate(-50%, 10px)';
+        indicator.style.opacity = '1';
+        indicator.classList.add('spinning');
+        setTimeout(forceFreshReload, 300);
+      } else {
+        reset();
+      }
+      tracking = false;
+      locked = null;
+    }
+
+    document.addEventListener('pointerup', finishPull);
+    document.addEventListener('pointercancel', reset);
+  })();
 
   /* ════════════════════════════════════════════════════════════
      MID-SWIPE CATEGORY ADJUSTER — add or remove mood filters without
