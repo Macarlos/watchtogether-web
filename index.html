@@ -1905,7 +1905,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.73 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.74 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -5066,6 +5066,7 @@ const TRANSLATIONS = {
     const MAX_VISUAL = 100; // visual travel cap; pulling further adds resistance, not more distance
     let startY = 0, startX = 0, tracking = false, locked = null; // locked: null | 'vertical' | 'horizontal'
     let lastPull = 0;
+    let sawFirstMove = false; // temporary diagnostic flag
 
     function reset(){
       indicator.classList.remove('pulling', 'spinning');
@@ -5105,10 +5106,16 @@ const TRANSLATIONS = {
       startX = e.clientX;
       tracking = true;
       locked = null;
+      sawFirstMove = false;
       debugLog('  → tracking started');
     });
 
     document.addEventListener('pointermove', (e) => {
+      // Unconditional — logs once per gesture regardless of tracking/locked
+      // state, to answer definitively whether document ever receives
+      // pointermove at all during a real drag, independent of any of this
+      // listener's own gating logic below.
+      if(!sawFirstMove){ sawFirstMove = true; debugLog(`  [raw] first move reached document: y=${e.clientY}`); }
       if(!tracking) return;
       const deltaY = e.clientY - startY;
       const deltaX = e.clientX - startX;
