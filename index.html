@@ -1883,7 +1883,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.67 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.68 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -4054,12 +4054,24 @@ const TRANSLATIONS = {
       const ratingParam = state.minRating > 0 ? `&min_rating=${state.minRating}` : '';
       url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=${state.orderBy}&language=${state.language}${ratingParam}`;
     }
-    return fetch(url)
+    // A hard timeout, not just relying on the browser's own (much longer,
+    // sometimes effectively unbounded) default. Without this, a slow or
+    // hung response — e.g. Render's free tier cold-starting — left this
+    // fetch pending indefinitely: it never resolved *or* rejected, so
+    // callers waiting on it (like loadMoreIfNeeded's state.loadingMore
+    // flag) never got un-stuck either. Confirmed as the cause of "Szukamy
+    // kolejnych tytułów…" appearing to hang forever — it wasn't a logic
+    // bug in the retry/give-up sequence, the fetch itself just never
+    // settled for that sequence to run.
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    return fetch(url, { signal: controller.signal })
       .then(r => { if(!r.ok) throw new Error('bad response'); return r.json(); })
       .then(data => {
         if(data.budget_paused) throw new Error('budget_paused');
         return mapApiResults(data.results || []);
-      });
+      })
+      .finally(() => clearTimeout(timeoutId));
   }
 
   // Render's free tier occasionally returns a brief error while waking from
