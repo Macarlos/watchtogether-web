@@ -1905,7 +1905,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.74 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.75 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -5117,6 +5117,17 @@ const TRANSLATIONS = {
       // listener's own gating logic below.
       if(!sawFirstMove){ sawFirstMove = true; debugLog(`  [raw] first move reached document: y=${e.clientY}`); }
       if(!tracking) return;
+
+      // Called as early as possible — from the very first move while we're
+      // still tracking, before direction is even decided — rather than
+      // waiting until after locking as vertical. Calling preventDefault
+      // only once a native scroll gesture may have already started being
+      // processed is a known cause of the browser cancelling the touch
+      // outright (pointercancel) instead of just suppressing the scroll,
+      // which matches what was observed: a clean lock, then total silence
+      // with no further events at all.
+      e.preventDefault();
+
       const deltaY = e.clientY - startY;
       const deltaX = e.clientX - startX;
 
@@ -5130,15 +5141,6 @@ const TRANSLATIONS = {
         if(locked === 'horizontal'){ tracking = false; return; }
       }
       if(locked !== 'vertical') return;
-
-      // Without this, the WebView's own default overscroll/bounce behavior
-      // stays active for the gesture and visually fights with the custom
-      // indicator — confirmed on-device as content stretching from top to
-      // bottom instead of showing the indicator. The listener below is
-      // registered with { passive: false } specifically so this call isn't
-      // silently ignored, which is the default for touch-derived pointer
-      // events in most browsers/WebViews.
-      e.preventDefault();
 
       lastPull = deltaY < MAX_VISUAL ? deltaY : MAX_VISUAL + (deltaY - MAX_VISUAL) * 0.2;
       indicator.classList.add('pulling');
@@ -5167,7 +5169,7 @@ const TRANSLATIONS = {
     }
 
     document.addEventListener('pointerup', finishPull);
-    document.addEventListener('pointercancel', reset);
+    document.addEventListener('pointercancel', () => { debugLog('  ⊗ CANCEL received'); reset(); });
   })();
 
   /* ════════════════════════════════════════════════════════════
