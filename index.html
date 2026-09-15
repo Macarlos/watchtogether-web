@@ -1883,7 +1883,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.68 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.69 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -4981,6 +4981,35 @@ const TRANSLATIONS = {
     else if(recentlyAdded.classList.contains('active')) closeDialog(recentlyAdded, 'active');
     else if(singlePlatform.classList.contains('active')) closeDialog(singlePlatform, 'active');
     else if(tour.classList.contains('visible')) endTour();
+  });
+
+  // Keyboard shortcuts for the swipe deck — desktop/web only in practice
+  // (nothing stops a touch device with an attached keyboard from using
+  // these too, but that's not the target case). Left/Right mirror the
+  // pass/like buttons exactly by calling .click() on them rather than
+  // duplicating resolveSwipe's logic — this also means a disabled button
+  // (no current card) correctly makes the shortcut a no-op for free,
+  // since .click() on a disabled button fires nothing. Up AND Down both
+  // rewind, since there's only one "go back" action to map, not two
+  // distinct ones — if a second directional action gets added later this
+  // will need revisiting.
+  document.addEventListener('keydown', (e) => {
+    if(!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
+    if(getActiveScreenId() !== 'screen-deck') return;
+    // Don't hijack arrow keys while someone's actually typing, or while a
+    // dialog/overlay is open on top of the deck screen (same overlay list
+    // as the Escape handler above, plus the per-card plot-summary overlay,
+    // which isn't in that list since Escape doesn't close it).
+    const tag = document.activeElement && document.activeElement.tagName;
+    if(tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable)) return;
+    const openOverlayIds = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay', 'singlePlatformOverlay'];
+    if(openOverlayIds.some(id => document.getElementById(id)?.classList.contains('active'))) return;
+    if(document.getElementById('tourTooltip')?.classList.contains('visible')) return;
+    if(document.querySelector('.overview-overlay.show')) return;
+    e.preventDefault();
+    if(e.key === 'ArrowLeft') document.getElementById('btnPass').click();
+    else if(e.key === 'ArrowRight') document.getElementById('btnLike').click();
+    else document.getElementById('btnRewind').click();
   });
 
   /* ════════════════════════════════════════════════════════════
