@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Watch2Night — swipe to find something to watch</title>
 <meta name="description" content="Stuck on what to watch? Pick your streaming platforms and mood, swipe through real movies and shows, see exact prices and trailers, and save or share your picks. Free, no account needed." />
 <link rel="canonical" href="https://watch2night.com/" />
@@ -66,6 +66,21 @@
     flex-direction:column;
     align-items:center;
     overflow-x:hidden;
+    /* Android 16 (targetSdk 36) makes edge-to-edge rendering mandatory,
+       often overriding older opt-outs — meaning the WebView can end up
+       drawing full-screen, behind the status bar and navigation bar,
+       regardless of anything set on the native side. Without this, header
+       content and bottom controls could render underneath those system
+       bars: invisible and unreachable, even though the page has technically
+       "loaded" successfully. env() safely falls back to 0px wherever insets
+       don't apply (older Android, desktop web, the plain browser), so this
+       is a no-op everywhere except where it's actually needed. Requires
+       viewport-fit=cover on the meta viewport tag above — without that,
+       these env() values are always 0 regardless of the real device insets. */
+    padding-top:env(safe-area-inset-top, 0px);
+    padding-bottom:env(safe-area-inset-bottom, 0px);
+    padding-left:env(safe-area-inset-left, 0px);
+    padding-right:env(safe-area-inset-right, 0px);
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -164,7 +179,10 @@
   }
 
   .persistent-back-btn{
-    position:fixed; top:14px; right:14px; z-index:90;
+    position:fixed;
+    top:calc(14px + env(safe-area-inset-top, 0px));
+    right:calc(14px + env(safe-area-inset-right, 0px));
+    z-index:90;
     display:none; align-items:center; justify-content:center;
     width:40px; height:40px;
     background:rgba(11,14,20,.6);
@@ -1398,7 +1416,8 @@
 
   .cookie-notice{
     position:fixed;
-    left:1rem; right:1rem; bottom:1rem;
+    left:1rem; right:1rem;
+    bottom:calc(1rem + env(safe-area-inset-bottom, 0px));
     max-width:600px;
     margin:0 auto;
     background:var(--surface-2);
@@ -1883,7 +1902,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.78 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.79 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
