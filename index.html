@@ -1902,7 +1902,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.79 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.80 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3921,7 +3921,16 @@ const TRANSLATIONS = {
         multi: true,
         onSelect: (platformIds) => {
           state.mode = 'recently_added';
-          state.platforms = new Set(platformIds);
+          // Mutate the existing Set in place — never reassign state.platforms.
+          // The setup-screen chips were built by buildChips() holding a
+          // reference to this exact Set object; replacing it with a new Set
+          // left those chips toggling an orphaned copy nobody reads, so after
+          // using "Recently added" a later platform pick (e.g. Netflix) never
+          // reached state.platforms. The deck request then went out with no
+          // platform filter (titles from every service) and cards were
+          // labelled "Streaming" instead of the chosen platform.
+          state.platforms.clear();
+          platformIds.forEach(id => state.platforms.add(id));
           buildDeck();
           showScreen('screen-deck');
         },
