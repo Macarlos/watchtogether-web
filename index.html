@@ -1449,6 +1449,22 @@
   .ab-badge{ flex:0 0 auto; display:inline-block; line-height:0; padding:14px; margin:-14px; text-decoration:none; }
   .ab-badge img{ height:52px; width:auto; display:block; transition:transform .15s ease; }
   .ab-badge:hover img{ transform:translateY(-1px); }
+  /* Permanent app link at the bottom of the home screen (stays after the banner is closed). */
+  .android-footer{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    gap:.35rem;
+    max-width:520px;
+    margin:1.6rem auto 0;
+    padding:1rem 1rem 1.1rem;
+    border-top:1px solid var(--border);
+    text-align:center;
+    width:100%;
+  }
+  .android-footer.show{ display:flex; }
+  .android-footer .af-text{ font-size:.82rem; color:var(--muted); line-height:1.4; }
+  .android-footer .ab-badge img{ height:48px; }
   .ab-close{
     position:absolute; top:.3rem; right:.35rem;
     width:28px; height:28px;
@@ -1740,6 +1756,13 @@
           </div>
           <div class="picks-tile-thumbs" id="picksTileThumbs"></div>
         </button>
+      </div>
+
+      <div class="android-footer" id="androidFooter">
+        <span class="af-text" data-i18n="android_footer_text">Take Watch2Night with you — free on Android.</span>
+        <a class="ab-badge" href="https://play.google.com/store/apps/details?id=com.watch2night.app&amp;referrer=utm_source%3Dwatch2night.com%26utm_medium%3Dwebsite%26utm_campaign%3Dfooter_link" target="_blank" rel="noopener" aria-label="Get it on Google Play">
+          <img id="androidFooterBadgeImg" alt="Get it on Google Play" width="811" height="241" />
+        </a>
       </div>
     </section>
 
@@ -2058,6 +2081,7 @@ const TRANSLATIONS = {
     android_banner_title: "Watch2Night is now on Google Play",
     android_banner_sub: "Free, no account. Same swipes, now on your home screen.",
     android_banner_close: "Close",
+    android_footer_text: "Take Watch2Night with you — free on Android.",
     tour_skip: "Skip tour",
     tour_close: "Close tour",
     tour_step_count: "Step {current} of {total}",
@@ -2266,6 +2290,7 @@ const TRANSLATIONS = {
     android_banner_title: "Watch2Night ya está en Google Play",
     android_banner_sub: "Gratis y sin cuenta. Los mismos swipes, ahora en tu pantalla de inicio.",
     android_banner_close: "Cerrar",
+    android_footer_text: "Lleva Watch2Night contigo — gratis en Android.",
     tour_skip: "Saltar tutorial",
     tour_close: "Cerrar tutorial",
     tour_step_count: "Paso {current} de {total}",
@@ -2474,6 +2499,7 @@ const TRANSLATIONS = {
     android_banner_title: "O Watch2Night agora está no Google Play",
     android_banner_sub: "Grátis e sem conta. Os mesmos swipes, agora na sua tela inicial.",
     android_banner_close: "Fechar",
+    android_footer_text: "Leve o Watch2Night com você — grátis no Android.",
     tour_skip: "Pular tutorial",
     tour_close: "Fechar tutorial",
     tour_step_count: "Passo {current} de {total}",
@@ -2682,6 +2708,7 @@ const TRANSLATIONS = {
     android_banner_title: "Watch2Night est maintenant sur Google Play",
     android_banner_sub: "Gratuit, sans compte. Les mêmes swipes, maintenant sur votre écran d'accueil.",
     android_banner_close: "Fermer",
+    android_footer_text: "Emportez Watch2Night partout — gratuit sur Android.",
     tour_skip: "Passer le tutoriel",
     tour_close: "Fermer le tutoriel",
     tour_step_count: "Étape {current} sur {total}",
@@ -2890,6 +2917,7 @@ const TRANSLATIONS = {
     android_banner_title: "Watch2Night gibt es jetzt bei Google Play",
     android_banner_sub: "Kostenlos, ohne Konto. Dieselben Swipes, jetzt auf deinem Startbildschirm.",
     android_banner_close: "Schließen",
+    android_footer_text: "Nimm Watch2Night mit — kostenlos für Android.",
     tour_skip: "Tour überspringen",
     tour_close: "Tour schließen",
     tour_step_count: "Schritt {current} von {total}",
@@ -3098,6 +3126,7 @@ const TRANSLATIONS = {
     android_banner_title: "Watch2Night अब Google Play पर उपलब्ध है",
     android_banner_sub: "मुफ़्त, बिना अकाउंट। वही स्वाइप, अब आपके होम स्क्रीन पर।",
     android_banner_close: "बंद करें",
+    android_footer_text: "Watch2Night को अपने साथ रखें — Android पर मुफ़्त।",
     tour_skip: "टूर छोड़ें",
     tour_close: "टूर बंद करें",
     tour_step_count: "चरण {current} / {total}",
@@ -3306,6 +3335,7 @@ const TRANSLATIONS = {
     android_banner_title: "Watch2Night jest już w Google Play",
     android_banner_sub: "Za darmo, bez konta. Te same swipe'y, teraz na ekranie głównym.",
     android_banner_close: "Zamknij",
+    android_footer_text: "Zabierz Watch2Night ze sobą — za darmo na Androida.",
     tour_skip: "Pomiń samouczek",
     tour_close: "Zamknij samouczek",
     tour_step_count: "Krok {current} z {total}",
@@ -3587,7 +3617,8 @@ const TRANSLATIONS = {
   // (with its official badge as a data URI) to localize it.
   const PLAY_BADGE_BY_LANG = {};
 
-  function shouldShowAndroidBanner(){
+  // Can this visitor install the app? (not in the app, not on iOS, not an installed PWA)
+  function canInstallAndroidApp(){
     try {
       if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) return false;
     } catch(e) {}
@@ -3601,19 +3632,30 @@ const TRANSLATIONS = {
       if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return false;
     } catch(e) {}
     if (/iPhone|iPad|iPod/i.test(navigator.userAgent || '')) return false;
-    try {
-      if (localStorage.getItem(ANDROID_BANNER_KEY) === 'true') return false;
-    } catch(e) {}
     return true;
   }
 
+  function androidBannerDismissed(){
+    try { return localStorage.getItem(ANDROID_BANNER_KEY) === 'true'; }
+    catch(e) { return false; }
+  }
+
+  // The top banner can be closed; the footer link at the bottom of the home
+  // screen is permanent so the app link is always reachable.
   function updateAndroidBanner(){
+    const installable = canInstallAndroidApp();
     const banner = document.getElementById('androidBanner');
-    if (!banner) return;
-    banner.classList.toggle('show', shouldShowAndroidBanner());
+    if (banner) banner.classList.toggle('show', installable && !androidBannerDismissed());
+    const footer = document.getElementById('androidFooter');
+    if (footer) footer.classList.toggle('show', installable);
+
     const img = document.getElementById('androidBadgeImg');
+    const footerImg = document.getElementById('androidFooterBadgeImg');
     const localized = PLAY_BADGE_BY_LANG[state.language];
     if (img && localized && img.getAttribute('src') !== localized) img.src = localized;
+    if (img && footerImg && footerImg.getAttribute('src') !== img.getAttribute('src')) {
+      footerImg.src = img.getAttribute('src');
+    }
   }
 
   // Walks every element tagged with data-i18n / data-i18n-aria / data-i18n-placeholder
