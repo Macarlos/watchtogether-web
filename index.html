@@ -1987,7 +1987,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.82 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.83 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3510,7 +3510,20 @@ const TRANSLATIONS = {
 
   // Anonymous session counter — one silent ping per page load, no cookie or
   // identifier attached. Purely a "how many times has this been opened" tally.
-  fetch(`${BACKEND_URL}/api/ping`, { method: 'POST' }).catch(() => {});
+  // The ping also says whether this is the Android app or the website, so
+  // opens can be counted per platform. Only the word "app" or "web" is sent.
+  // No Content-Type header on purpose — keeps it a "simple" request, so the
+  // browser doesn't need a CORS preflight first.
+  function detectOpenPlatform() {
+    try {
+      if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) return 'app';
+    } catch (e) {}
+    try {
+      if (/Android[^)]*;\s*wv\)/i.test(navigator.userAgent || '')) return 'app';
+    } catch (e) {}
+    return 'web';
+  }
+  fetch(`${BACKEND_URL}/api/ping`, { method: 'POST', body: JSON.stringify({ platform: detectOpenPlatform() }) }).catch(() => {});
 
   /* ════════════════════════════════════════════════════════════
      STATE
