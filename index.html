@@ -1016,15 +1016,6 @@
 
   /* ───────────────────────── Share dialog ───────────────────────── */
   /* ── Explore other countries ── */
-  .path-card .explore-flags{ position:absolute; right:16px; top:12px; display:flex; z-index:1; }
-  .explore-flags span{
-    width:40px; height:30px; border-radius:6px; margin-left:-12px;
-    background-size:cover; background-position:center; background-color:var(--surface-2);
-    box-shadow:0 0 0 1.5px rgba(255,255,255,.55), 0 4px 10px rgba(0,0,0,.45);
-  }
-  .explore-flags span:nth-child(1){ transform:rotate(-8deg); }
-  .explore-flags span:nth-child(2){ transform:rotate(2deg) translateY(4px); }
-  .explore-flags span:nth-child(3){ transform:rotate(9deg); }
   .path-card.explore-card{
     --orb1:#2aa6c9;
     --orb2:#0f4150;
@@ -1825,7 +1816,8 @@
 
         <div class="path-row" style="margin-top:.85rem;">
           <button class="path-card explore-card" id="btnPickExplore">
-            <div class="explore-flags" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="fan-poster fan-1" data-fan></div>
+            <div class="fan-poster fan-2" data-fan></div>
             <h3 data-i18n="card_explore_title">Explore other countries</h3>
             <p data-i18n="card_explore_desc">See what people in other countries are watching.</p>
           </button>
@@ -2078,7 +2070,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.87 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.88 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -4257,14 +4249,6 @@ const TRANSLATIONS = {
   document.addEventListener('click', (e) => {
     if(e.target.closest && e.target.closest('.ec-change')) openExploreCountryDialog();
   });
-
-  // Three random flags on the home card (random so no country is favoured).
-  (function paintExploreCardFlags(){
-    const picks = Object.keys(FLAG_SRC).sort(() => Math.random() - 0.5).slice(0, 3);
-    document.querySelectorAll('#btnPickExplore .explore-flags span').forEach((el, i) => {
-      el.style.backgroundImage = `url("${FLAG_SRC[picks[i]]}")`;
-    });
-  })();
 
   // "Surprise me" — ignores mood (and, from the very first screen, content
   // type too, since nothing's been chosen yet). Still respects whatever
