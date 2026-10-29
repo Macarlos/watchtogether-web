@@ -601,6 +601,8 @@
     min-height:90px;
     margin-bottom:1.2rem;
   }
+  /* No AdSense inside the Android app — see the loader in <head>. */
+  .in-app .ad-slot-responsive{ display:none !important; }
 
   .similar-scroll-btn{
     display:none; /* desktop-only — see the min-width:700px block below */
@@ -1532,7 +1534,22 @@
     .cookie-notice-actions{ justify-content:center; }
   }
 </style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2115703553093825" crossorigin="anonymous"></script>
+<script>
+/* AdSense is for the website only. Inside the Android app (a WebView) it may only
+   run when the WebView is registered with Google's Mobile Ads SDK, which this app
+   doesn't do — so in the app we skip loading it entirely and hide the ad slot. */
+(function(){
+  var inApp = false;
+  try { if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) inApp = true; } catch (e) {}
+  try { if (/Android[^)]*;\s*wv\)/i.test(navigator.userAgent || '')) inApp = true; } catch (e) {}
+  if (inApp) { document.documentElement.classList.add('in-app'); return; }
+  var s = document.createElement('script');
+  s.async = true;
+  s.crossOrigin = 'anonymous';
+  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2115703553093825';
+  document.head.appendChild(s);
+})();
+</script>
 </head>
 <body>
 
@@ -1987,7 +2004,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.84 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.85 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
