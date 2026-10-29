@@ -1015,6 +1015,48 @@
   .demo-note strong{ color:var(--teal); }
 
   /* ───────────────────────── Share dialog ───────────────────────── */
+  /* ── Explore other countries ── */
+  .path-card .explore-flags{ position:absolute; right:16px; top:12px; display:flex; z-index:1; }
+  .explore-flags span{
+    width:40px; height:30px; border-radius:6px; margin-left:-12px;
+    background-size:cover; background-position:center; background-color:var(--surface-2);
+    box-shadow:0 0 0 1.5px rgba(255,255,255,.55), 0 4px 10px rgba(0,0,0,.45);
+  }
+  .explore-flags span:nth-child(1){ transform:rotate(-8deg); }
+  .explore-flags span:nth-child(2){ transform:rotate(2deg) translateY(4px); }
+  .explore-flags span:nth-child(3){ transform:rotate(9deg); }
+  .path-card.explore-card{
+    --orb1:#2aa6c9;
+    --orb2:#0f4150;
+    --glow:rgba(42,166,201,.22);
+  }
+  #exploreCountryDialogCard{ display:flex; flex-direction:column; max-height:86vh; }
+  .country-list{ overflow-y:auto; flex:1; min-height:0; margin-bottom:.8rem; padding-right:2px; -webkit-overflow-scrolling:touch; }
+  .country-option img{ height:21px; width:28px; max-width:none; object-fit:cover; border-radius:3px; box-shadow:0 0 0 1px rgba(255,255,255,.25); }
+  .explore-type-head{ display:flex; align-items:center; gap:.7rem; margin-bottom:.5rem; }
+  .explore-type-head img{ width:36px; height:27px; object-fit:cover; border-radius:4px; box-shadow:0 0 0 1.5px rgba(255,255,255,.5); }
+  .explore-type-head h3{ margin-bottom:0; }
+  .explore-chip{
+    display:none; align-items:center; gap:.5rem;
+    margin:0 0 .9rem; padding:.3rem .4rem .3rem .6rem;
+    border:1px solid var(--border); border-radius:999px; background:var(--surface);
+    font-family:var(--font-mono); font-size:.72rem; color:var(--ink);
+  }
+  .explore-chip img{ width:22px; height:16px; object-fit:cover; border-radius:3px; box-shadow:0 0 0 1px rgba(255,255,255,.3); }
+  .explore-chip .ec-change{
+    border:1px solid var(--amber); color:var(--amber); background:transparent;
+    border-radius:999px; padding:.15rem .6rem; font-family:inherit; font-size:.68rem; cursor:pointer; touch-action:manipulation;
+  }
+  .flag-badge{
+    position:absolute; right:7px; bottom:7px; z-index:3;
+    width:30px; height:22px; border-radius:5px;
+    background-size:cover; background-position:center; background-color:var(--surface-2);
+    box-shadow:0 0 0 1.5px rgba(255,255,255,.85), 0 3px 8px rgba(0,0,0,.55);
+    pointer-events:none;
+  }
+  /* On the swipe card the lower-right corner belongs to the trailer button. */
+  .flag-badge.flag-badge-left{ right:auto; left:10px; bottom:10px; width:34px; height:25px; }
+
   .share-overlay{
     position:fixed; inset:0;
     background:rgba(5,7,14,.85);
@@ -1646,6 +1688,25 @@
     </div>
   </div>
 
+  <div class="share-overlay" id="exploreCountryOverlay">
+    <div class="share-dialog" id="exploreCountryDialogCard" role="dialog" aria-modal="true" aria-labelledby="exploreCountryTitle" tabindex="-1" style="max-width:380px;">
+      <h3 id="exploreCountryTitle" data-i18n="explore_country_title">Pick a country</h3>
+      <p data-i18n="explore_country_hint">See what's streaming there.</p>
+      <div class="country-list" id="exploreCountryList"></div>
+      <button class="btn btn-ghost btn-block" id="btnCloseExploreCountry" data-i18n="btn_close">Close</button>
+    </div>
+  </div>
+
+  <div class="share-overlay" id="exploreTypeOverlay">
+    <div class="share-dialog" id="exploreTypeDialogCard" role="dialog" aria-modal="true" aria-labelledby="exploreTypeTitle" tabindex="-1" style="max-width:380px;">
+      <div class="explore-type-head"><img id="exploreTypeFlag" alt="" /><h3 id="exploreTypeTitle"></h3></div>
+      <p data-i18n="family_dialog_question">Movies or series?</p>
+      <button class="btn btn-primary btn-block" id="btnExploreMovies" data-i18n="card_movies_title" style="margin-bottom:.6rem;">Movies</button>
+      <button class="btn btn-primary btn-block" id="btnExploreSeries" data-i18n="card_series_title" style="margin-bottom:.6rem;">Series</button>
+      <button class="btn btn-ghost btn-block" id="btnExploreBack" data-i18n="explore_back">Back</button>
+    </div>
+  </div>
+
   <div class="share-overlay" id="recentlyAddedTypeOverlay">
     <div class="share-dialog" id="recentlyAddedTypeDialogCard" role="dialog" aria-modal="true" aria-labelledby="recentlyAddedTypeDialogTitle" tabindex="-1" style="max-width:380px;">
       <h3 id="recentlyAddedTypeDialogTitle">Recently added</h3>
@@ -1761,6 +1822,14 @@
             <p data-i18n="card_surprise_desc">Skip the choices — get a random pick instantly.</p>
           </button>
         </div>
+
+        <div class="path-row" style="margin-top:.85rem;">
+          <button class="path-card explore-card" id="btnPickExplore">
+            <div class="explore-flags" aria-hidden="true"><span></span><span></span><span></span></div>
+            <h3 data-i18n="card_explore_title">Explore other countries</h3>
+            <p data-i18n="card_explore_desc">See what people in other countries are watching.</p>
+          </button>
+        </div>
       </div>
 
       <button class="btn btn-ghost" id="btnShowOnboarding" data-i18n="btn_how_to_use" style="margin-top:1.2rem;">How to use W2N</button>
@@ -1785,6 +1854,7 @@
 
     <!-- ═══════════════ SCREEN 2 — SETUP ═══════════════ -->
     <section class="screen" id="screen-setup">
+      <div class="explore-chip"><img alt="" /><span class="ec-text"></span><button type="button" class="ec-change"></button></div>
       <div class="section-head">
         <span class="eyebrow" id="setupStep1Eyebrow" data-i18n="setup_step1_label">Step 1 of 2</span>
         <h2 data-i18n="setup_step1_heading">What can you watch on?</h2>
@@ -1825,6 +1895,7 @@
       <div class="section-head" style="text-align:center;">
         <h2 data-i18n="deck_heading">Swipe to decide</h2>
       </div>
+      <div style="text-align:center;"><div class="explore-chip"><img alt="" /><span class="ec-text"></span><button type="button" class="ec-change"></button></div></div>
 
       <div class="deck-wrap" id="deckWrap"></div>
 
@@ -2004,7 +2075,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.85 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.86 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -2265,6 +2336,14 @@ const TRANSLATIONS = {
     region_br: "Brazilian", region_fr: "French", region_de: "German", region_pl: "Polish",
     region_ie: "Irish", region_nz: "New Zealand", region_pt: "Portuguese", region_ar: "Argentinian", region_co: "Colombian",
     region_at: "Austrian", region_ch: "Swiss", region_sg: "Singaporean", region_ae: "UAE",
+    card_explore_title: "Explore other countries",
+    card_explore_desc: "See what people in other countries are watching.",
+    explore_country_title: "Pick a country",
+    explore_country_hint: "See what's streaming there.",
+    explore_back: "Back",
+    explore_chip_label: "Exploring {country}",
+    explore_chip_change: "Change",
+    explore_flag_aria: "Found in {country}",
   },
 
   es: {
@@ -2476,6 +2555,14 @@ const TRANSLATIONS = {
     region_br: "brasileño", region_fr: "francés", region_de: "alemán", region_pl: "polaco",
     region_ie: "irlandés", region_nz: "neozelandés", region_pt: "portugués", region_ar: "argentino", region_co: "colombiano",
     region_at: "austriaco", region_ch: "suizo", region_sg: "singapurense", region_ae: "emiratí",
+    card_explore_title: "Explora otros países",
+    card_explore_desc: "Mira qué ve la gente en otros países.",
+    explore_country_title: "Elige un país",
+    explore_country_hint: "Mira qué hay en streaming allí.",
+    explore_back: "Atrás",
+    explore_chip_label: "Explorando {country}",
+    explore_chip_change: "Cambiar",
+    explore_flag_aria: "Encontrado en {country}",
   },
 
   pt: {
@@ -2687,6 +2774,14 @@ const TRANSLATIONS = {
     region_br: "brasileiro", region_fr: "francês", region_de: "alemão", region_pl: "polonês",
     region_ie: "irlandês", region_nz: "neozelandês", region_pt: "português", region_ar: "argentino", region_co: "colombiano",
     region_at: "austríaco", region_ch: "suíço", region_sg: "singapuriano", region_ae: "dos Emirados Árabes Unidos",
+    card_explore_title: "Explore outros países",
+    card_explore_desc: "Veja o que as pessoas de outros países estão assistindo.",
+    explore_country_title: "Escolha um país",
+    explore_country_hint: "Veja o que está em streaming por lá.",
+    explore_back: "Voltar",
+    explore_chip_label: "Explorando {country}",
+    explore_chip_change: "Alterar",
+    explore_flag_aria: "Encontrado em {country}",
   },
 
   fr: {
@@ -2898,6 +2993,14 @@ const TRANSLATIONS = {
     region_br: "brésilien", region_fr: "français", region_de: "allemand", region_pl: "polonais",
     region_ie: "irlandais", region_nz: "néo-zélandais", region_pt: "portugais", region_ar: "argentin", region_co: "colombien",
     region_at: "autrichien", region_ch: "suisse", region_sg: "singapourien", region_ae: "des Émirats arabes unis",
+    card_explore_title: "Explorer d'autres pays",
+    card_explore_desc: "Découvrez ce que regardent les gens dans d'autres pays.",
+    explore_country_title: "Choisissez un pays",
+    explore_country_hint: "Découvrez ce qui est en streaming là-bas.",
+    explore_back: "Retour",
+    explore_chip_label: "Exploration : {country}",
+    explore_chip_change: "Changer",
+    explore_flag_aria: "Trouvé en {country}",
   },
 
   de: {
@@ -3109,6 +3212,14 @@ const TRANSLATIONS = {
     region_br: "brasilianischen", region_fr: "französischen", region_de: "deutschen", region_pl: "polnischen",
     region_ie: "irischen", region_nz: "neuseeländischen", region_pt: "portugiesischen", region_ar: "argentinischen", region_co: "kolumbianischen",
     region_at: "österreichischen", region_ch: "Schweizer", region_sg: "singapurischen", region_ae: "emiratischen",
+    card_explore_title: "Andere Länder entdecken",
+    card_explore_desc: "Sieh, was Leute in anderen Ländern schauen.",
+    explore_country_title: "Wähle ein Land",
+    explore_country_hint: "Sieh, was dort gestreamt wird.",
+    explore_back: "Zurück",
+    explore_chip_label: "Du entdeckst: {country}",
+    explore_chip_change: "Ändern",
+    explore_flag_aria: "Gefunden in {country}",
   },
 
   hi: {
@@ -3320,6 +3431,14 @@ const TRANSLATIONS = {
     region_br: "ब्राज़ीलियाई", region_fr: "फ़्रेंच", region_de: "जर्मन", region_pl: "पोलिश",
     region_ie: "आयरिश", region_nz: "न्यूज़ीलैंड", region_pt: "पुर्तगाली", region_ar: "अर्जेंटीना", region_co: "कोलंबियाई",
     region_at: "ऑस्ट्रियाई", region_ch: "स्विस", region_sg: "सिंगापुर", region_ae: "यूएई",
+    card_explore_title: "दूसरे देशों को देखें",
+    card_explore_desc: "देखें कि दूसरे देशों के लोग क्या देख रहे हैं।",
+    explore_country_title: "एक देश चुनें",
+    explore_country_hint: "देखें वहाँ स्ट्रीमिंग पर क्या है।",
+    explore_back: "वापस",
+    explore_chip_label: "{country} देख रहे हैं",
+    explore_chip_change: "बदलें",
+    explore_flag_aria: "{country} में मिला",
   },
 
   pl: {
@@ -3531,6 +3650,14 @@ const TRANSLATIONS = {
     region_br: "brazylijski", region_fr: "francuski", region_de: "niemiecki", region_pl: "polski",
     region_ie: "irlandzki", region_nz: "nowozelandzki", region_pt: "portugalski", region_ar: "argentyński", region_co: "kolumbijski",
     region_at: "austriacki", region_ch: "szwajcarski", region_sg: "singapurski", region_ae: "emiracki",
+    card_explore_title: "Odkrywaj inne kraje",
+    card_explore_desc: "Zobacz, co oglądają ludzie w innych krajach.",
+    explore_country_title: "Wybierz kraj",
+    explore_country_hint: "Zobacz, co jest tam dostępne w streamingu.",
+    explore_back: "Wstecz",
+    explore_chip_label: "Odkrywasz: {country}",
+    explore_chip_change: "Zmień",
+    explore_flag_aria: "Znalezione w: {country}",
   },
 };
 
@@ -3602,6 +3729,11 @@ const TRANSLATIONS = {
     } catch(e){}
   }
 
+  // Flag images for the 'explore other countries' feature — small inline SVGs so they
+  // render everywhere (emoji flags show as letters on Windows) and work offline.
+  const FLAG_SRC = {"US":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLXVzIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PHBhdGggZmlsbD0iI2JkM2Q0NCIgZD0iTTAgMGg2NDB2NDgwSDAiLz48cGF0aCBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMzciIGQ9Ik0wIDU1LjNoNjQwTTAgMTI5aDY0ME0wIDIwM2g2NDBNMCAyNzdoNjQwTTAgMzUxaDY0ME0wIDQyNWg2NDAiLz48cGF0aCBmaWxsPSIjMTkyZjVkIiBkPSJNMCAwaDM2NC44djI1OC41SDAiLz48bWFya2VyIGlkPSJ1cy1hIiBtYXJrZXJIZWlnaHQ9IjMwIiBtYXJrZXJXaWR0aD0iMzAiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Im0xNCAwIDkgMjdMMCAxMGgyOEw1IDI3eiIvPjwvbWFya2VyPjxwYXRoIGZpbGw9Im5vbmUiIG1hcmtlci1taWQ9InVybCgjdXMtYSkiIGQ9Im0wIDAgMTYgMTFoNjEgNjEgNjEgNjEgNjBMNDcgMzdoNjEgNjEgNjAgNjFMMTYgNjNoNjEgNjEgNjEgNjEgNjBMNDcgODloNjEgNjEgNjAgNjFMMTYgMTE1aDYxIDYxIDYxIDYxIDYwTDQ3IDE0MWg2MSA2MSA2MCA2MUwxNiAxNjZoNjEgNjEgNjEgNjEgNjBMNDcgMTkyaDYxIDYxIDYwIDYxTDE2IDIxOGg2MSA2MSA2MSA2MSA2MHoiLz48L3N2Zz4=","CA":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWNhIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE1MC4xIDBoMzM5Ljd2NDgwSDE1MHoiLz48cGF0aCBmaWxsPSIjZDUyYjFlIiBkPSJNLTE5LjcgMGgxNjkuOHY0ODBILTE5Ljd6bTUwOS41IDBoMTY5Ljh2NDgwSDQ4OS45ek0yMDEgMjMybC0xMy4zIDQuNCA2MS40IDU0YzQuNyAxMy43LTEuNiAxNy44LTUuNiAyNWw2Ni42LTguNC0xLjYgNjcgMTMuOS0uMy0zLjEtNjYuNiA2Ni43IDhjLTQuMS04LjctNy44LTEzLjMtNC0yNy4ybDYxLjMtNTEtMTAuNy00Yy04LjgtNi44IDMuOC0zMi42IDUuNi00OC45IDAgMC0zNS43IDEyLjMtMzggNS44bC05LjItMTcuNS0zMi42IDM1LjhjLTMuNS45LTUtLjUtNS45LTMuNWwxNS03NC44LTIzLjggMTMuNHEtMy4yIDEuMy01LjItMi4ybC0yMy00Ni0yMy42IDQ3LjhxLTIuOCAyLjUtNSAuN0wyNjQgMTMwLjhsMTMuNyA3NC4xYy0xLjEgMy0zLjcgMy44LTYuNyAyLjJsLTMxLjItMzUuM2MtNCA2LjUtNi44IDE3LjEtMTIuMiAxOS41cy0yMy41LTQuNS0zNS42LTdjNC4yIDE0LjggMTcgMzkuNiA5IDQ3LjciLz48L3N2Zz4=","MX":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNDgwIj48cGF0aCBmaWxsPSIjMDA2ODQ3IiBkPSJNMCAwaDIxMy4zdjQ4MEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yMTMuMyAwaDIxMy40djQ4MEgyMTMuM3oiLz48cGF0aCBmaWxsPSIjY2UxMTI2IiBkPSJNNDI2LjcgMEg2NDB2NDgwSDQyNi43eiIvPjxjaXJjbGUgY3g9IjMyMCIgY3k9IjI0MCIgcj0iNjIiIGZpbGw9IiM4YzZhMmYiIG9wYWNpdHk9Ii44NSIvPjxjaXJjbGUgY3g9IjMyMCIgY3k9IjI0MCIgcj0iNDAiIGZpbGw9IiM2YjhlMjMiIG9wYWNpdHk9Ii45Ii8+PC9zdmc+","CO":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWNvIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PGcgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2Utd2lkdGg9IjFwdCI+PHBhdGggZmlsbD0iI2ZmZTgwMCIgZD0iTTAgMGg2NDB2NDgwSDB6Ii8+PHBhdGggZmlsbD0iIzAwMTQ4ZSIgZD0iTTAgMjQwaDY0MHYyNDBIMHoiLz48cGF0aCBmaWxsPSIjZGEwMDEwIiBkPSJNMCAzNjBoNjQwdjEyMEgweiIvPjwvZz48L3N2Zz4=","BR":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWJyIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PGcgc3Ryb2tlLXdpZHRoPSIxcHQiPjxwYXRoIGZpbGw9IiMyMjllNDUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTAgMGg2NDB2NDgwSDB6Ii8+PHBhdGggZmlsbD0iI2Y4ZTUwOSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJtMzIxLjQgNDM2IDMwMS41LTE5NS43TDMxOS42IDQ0IDE3LjEgMjQwLjd6Ii8+PHBhdGggZmlsbD0iIzJiNDlhMyIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNDUyLjggMjQwYzAgNzAuMy01Ny4xIDEyNy4zLTEyNy42IDEyNy4zQTEyNy40IDEyNy40IDAgMSAxIDQ1Mi44IDI0MCIvPjxwYXRoIGZpbGw9IiNmZmZmZWYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0ibTI4My4zIDMxNi4zLTQtMi4zLTQgMiAuOS00LjUtMy4yLTMuNCA0LjUtLjUgMi4yLTQgMS45IDQuMiA0LjQuOC0zLjMgM204NiAyNi4zLTMuOS0yLjMtNCAyIC44LTQuNS0zLjEtMy4zIDQuNS0uNSAyLjEtNC4xIDIgNC4yIDQuNC44LTMuNCAzLjFtLTM2LjItMzAtMy40LTItMy41IDEuOC44LTMuOS0yLjgtMi45IDQtLjQgMS44LTMuNiAxLjYgMy43IDMuOS43LTMgMi43bTg3LTguNS0zLjQtMi0zLjUgMS44LjgtMy45LTIuNy0yLjggMy45LS40IDEuOC0zLjUgMS42IDMuNiAzLjguNy0yLjkgMi42bS04Ny4zLTIyLTQtMi4yLTQgMiAuOC00LjYtMy4xLTMuMyA0LjUtLjUgMi4xLTQuMSAyIDQuMiA0LjQuOC0zLjQgMy4ybS0xMDQuNi0zNS00LTIuMi00IDIgMS00LjYtMy4zLTMuMyA0LjYtLjUgMi00LjEgMiA0LjIgNC40LjgtMy4zIDMuMW0xMy4zIDU3LjItNC0yLjMtNCAyIC45LTQuNS0zLjItMy4zIDQuNS0uNiAyLjEtNCAyIDQuMiA0LjQuOC0zLjMgMy4xbTEzMi02Ny4zLTMuNi0yLTMuNiAxLjguOC00LTIuOC0zIDQtLjUgMS45LTMuNiAxLjcgMy44IDQgLjctMyAyLjdtLTYuNyAzOC4zLTIuNy0xLjYtMi45IDEuNC42LTMuMi0yLjItMi4zIDMuMi0uNCAxLjUtMi44IDEuMyAzIDMgLjUtMi4yIDIuMm0tMTQyLjIgNTAuNC0yLjctMS41LTIuNyAxLjMuNi0zLTIuMS0yLjIgMy0uNCAxLjQtMi43IDEuMyAyLjggMyAuNi0yLjMgMk00MTkgMjk5LjhsLTIuMi0xLjEtMi4yIDEgLjUtMi4zLTEuNy0xLjYgMi40LS4zIDEuMi0yIDEgMiAyLjUuNS0xLjkgMS41Ii8+PHBhdGggZmlsbD0iI2ZmZmZlZiIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJtMjE5LjMgMjg3LjYtMi43LTEuNS0yLjcgMS4zLjYtMy0yLjEtMi4yIDMtLjQgMS40LTIuNyAxLjMgMi44IDMgLjYtMi4zIDIiLz48cGF0aCBmaWxsPSIjZmZmZmVmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Im0yMTkuMyAyODcuNi0yLjctMS41LTIuNyAxLjMuNi0zLTIuMS0yLjIgMy0uNCAxLjQtMi43IDEuMyAyLjggMyAuNi0yLjMgMm00Mi4zIDMtMi42LTEuNC0yLjcgMS4zLjYtMy0yLjEtMi4yIDMtLjQgMS40LTIuNyAxLjMgMi44IDMgLjUtMi4zIDIuMW0tNC44IDE3LTIuNi0xLjUtMi43IDEuNC42LTMtMi4xLTIuMyAzLS40IDEuNC0yLjcgMS4zIDIuOCAzIC42LTIuMyAybTg3LjQtMjIuMi0yLjYtMS42LTIuOCAxLjQuNi0zLTItMi4zIDMtLjMgMS40LTIuNyAxLjIgMi44IDMgLjUtMi4yIDIuMW0tMjUuMSAzLTIuNy0xLjUtMi43IDEuNC42LTMtMi0yLjMgMy0uMyAxLjQtMi44IDEuMiAyLjkgMyAuNS0yLjIgMi4xbS02OC44LTUuOC0xLjctMS0xLjcuOC40LTEuOS0xLjMtMS40IDEuOS0uMi44LTEuNy44IDEuOCAxLjkuMy0xLjQgMS4zbTE2Ny44IDQ1LjQtMi42LTEuNS0yLjcgMS40LjYtMy0yLjEtMi4zIDMtLjQgMS40LTIuNyAxLjMgMi44IDMgLjYtMi4zIDJtLTIwLjggNi0yLjItMS40LTIuMyAxLjIuNS0yLjYtMS43LTEuOCAyLjUtLjMgMS4yLTIuMyAxIDIuNCAyLjUuNC0xLjkgMS44bTEwLjQgMi4zLTItMS4yLTIuMSAxIC40LTIuMy0xLjYtMS43IDIuMy0uMyAxLjEtMiAxIDIgMi4zLjUtMS43IDEuNm0yOS4xLTIyLjgtMi0xLTIgMSAuNS0yLjMtMS42LTEuNyAyLjMtLjMgMS0yIDEgMi4xIDIuMS40LTEuNiAxLjZtLTM4LjggNDEuOC0yLjUtMS40LTIuNyAxLjIuNi0yLjgtMi0yIDMtLjMgMS4zLTIuNSAxLjIgMi42IDMgLjUtMi4zIDEuOW0uNiAxNC4yLTIuNC0xLjQtMi40IDEuMy42LTIuOC0xLjktMiAyLjctLjQgMS4yLTIuNSAxLjEgMi42IDIuNy41LTIgMm0tMTktMjMuMS0xLjktMS4yLTIgMSAuNC0yLjItMS41LTEuNyAyLjItLjIgMS0yIDEgMiAyLjIuNC0xLjYgMS42bS0xNy44IDIuMy0yLTEuMi0yIDEgLjUtMi4yLTEuNi0xLjcgMi4zLS4yIDEtMiAxIDIgMi4xLjQtMS42IDEuNm0tMzAuNC0yNC42LTItMS4xLTIgMSAuNS0yLjMtMS42LTEuNiAyLjItLjMgMS0yIDEgMiAyLjIuNS0xLjYgMS41bTMuNyA1Ny0xLjYtLjktMS44LjkuNC0yLTEuMy0xLjQgMS45LS4yLjktMS43LjggMS44IDEuOS4zLTEuNCAxLjNtLTQ2LjItODYuNi00LTIuMy00IDIgLjktNC41LTMuMi0zLjMgNC41LS42IDIuMi00IDEuOSA0LjIgNC40LjgtMy4zIDMuMSIvPjxwYXRoIGZpbGw9IiNmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTQ0NC40IDI4NS44YTEyNSAxMjUgMCAwIDAgNS44LTE5LjhjLTY3LjgtNTkuNS0xNDMuMy05MC0yMzguNy04My43YTEyNSAxMjUgMCAwIDAtOC41IDIwLjljMTEzLTEwLjggMTk2IDM5LjIgMjQxLjQgODIuNiIvPjxwYXRoIGZpbGw9IiMzMDllM2EiIGQ9Im00MTQgMjUyLjQgMi4zIDEuM2EzIDMgMCAwIDAtLjMgMi4yIDMgMyAwIDAgMCAxLjQgMS43cTEgLjggMiAuNy45IDAgMS4zLS43bC4yLS45LS41LTEtMS41LTEuOGE4IDggMCAwIDEtMS44LTMgNCA0IDAgMCAxIDItNC40IDQgNCAwIDAgMSAyLjMtLjIgNyA3IDAgMCAxIDIuNiAxLjJxMi4xIDEuNSAyLjYgMy4yYTQgNCAwIDAgMS0uNiAzLjNsLTIuNC0xLjVxLjUtMSAuMi0xLjctLjItLjgtMS4yLTEuNGEzIDMgMCAwIDAtMS44LS43IDEgMSAwIDAgMC0uOS41cS0uMy40LS4xIDEgLjIuOCAxLjYgMi4ydDIgMi41YTQgNCAwIDAgMS0uMyA0LjIgNCA0IDAgMCAxLTEuOSAxLjUgNCA0IDAgMCAxLTIuNC4zcS0xLjMtLjMtMi44LTEuMy0yLjItMS41LTIuNy0zLjNhNSA1IDAgMCAxIC42LTR6bS0xMS42LTcuNiAyLjUgMS4zYTMgMyAwIDAgMC0uMiAyLjIgMyAzIDAgMCAwIDEuNCAxLjZxMS4xLjggMiAuNi45IDAgMS4zLS44bC4yLS44cTAtLjUtLjUtMWwtMS42LTEuOHEtMS43LTEuNi0yLTIuOGE0IDQgMCAwIDEgLjQtMy4xIDQgNCAwIDAgMSAxLjYtMS40IDQgNCAwIDAgMSAyLjItLjMgNyA3IDAgMCAxIDIuNiAxcTIuMyAxLjUgMi43IDMuMWE0IDQgMCAwIDEtLjQgMy40bC0yLjUtMS40cS41LTEgLjItMS43LS40LTEtMS4zLTEuNGEzIDMgMCAwIDAtMS45LS42IDEgMSAwIDAgMC0uOC41cS0uMy40LS4xIDEgLjMuOCAxLjcgMi4yIDEuNSAxLjUgMiAyLjRhNCA0IDAgMCAxIDAgNC4yIDQgNCAwIDAgMS0xLjggMS42IDQgNCAwIDAgMS0yLjQuMyA4IDggMCAwIDEtMi45LTEuMSA2IDYgMCAwIDEtMi44LTMuMiA1IDUgMCAwIDEgLjQtNG0tMTQuMi0zLjggNy4zLTEyIDguOCA1LjUtMS4yIDItNi40LTQtMS42IDIuNyA2IDMuNy0xLjMgMi02LTMuNy0yIDMuMyA2LjcgNC0xLjIgMnptLTIwLjctMTcgMS4xLTIgNS40IDIuNy0yLjUgNXEtMS4yLjMtMyAuMmE5IDkgMCAwIDEtMy4zLTEgOCA4IDAgMCAxLTMtMi42IDYgNiAwIDAgMS0xLTMuNSA5IDkgMCAwIDEgMS0zLjcgOCA4IDAgMCAxIDIuNi0zIDYgNiAwIDAgMSAzLjYtMS4xcTEuNCAwIDMuMiAxIDIuNCAxLjEgMy4xIDIuOGE1IDUgMCAwIDEgLjMgMy41bC0yLjctLjhhMyAzIDAgMCAwLS4yLTJxLS40LS45LTEuNi0xLjRhNCA0IDAgMCAwLTMuMS0uM3EtMS41LjUtMi42IDIuNnQtLjcgMy44YTQgNCAwIDAgMCAyIDIuNHEuOC41IDEuNy41aDEuOGwuOC0xLjZ6bS05MC4yLTIyLjMgMi0xNCA0LjIuNyAxLjEgOS44IDMuOS05IDQuMi42LTIgMTMuOC0yLjctLjQgMS43LTEwLjktNC40IDEwLjUtMi43LS40LTEuMS0xMS4zLTEuNiAxMXptLTE0LjEtMS43IDEuMy0xNCAxMC4zIDEtLjIgMi40LTcuNS0uNy0uMyAzIDcgLjctLjMgMi40LTctLjctLjMgMy44IDcuOC43LS4yIDIuNHoiLz48ZyBzdHJva2Utb3BhY2l0eT0iLjUiPjxwYXRoIGZpbGw9IiMzMDllM2EiIGQ9Ik0yMTYuNSAxOTEuM3EwLTIuMi43LTMuNmE3IDcgMCAwIDEgMS40LTEuOSA1IDUgMCAwIDEgMS44LTEuMnExLjUtLjUgMy0uNSAzLjEuMSA1IDJhNyA3IDAgMCAxIDEuNiA1LjVxMCAzLjMtMiA1LjNhNyA3IDAgMCAxLTUgMS43IDcgNyAwIDAgMS00LjgtMiA3IDcgMCAwIDEtMS43LTUuMyIvPjxwYXRoIGZpbGw9IiNmN2ZmZmYiIGQ9Ik0yMTkuNCAxOTEuM3EwIDIuMyAxIDMuNnQyLjggMS4zYTQgNCAwIDAgMCAyLjgtMS4xcTEtMS4yIDEuMS0zLjcuMS0yLjQtMS0zLjZhNCA0IDAgMCAwLTIuNy0xLjMgNCA0IDAgMCAwLTIuOCAxLjJxLTEuMSAxLjItMS4yIDMuNiIvPjwvZz48ZyBzdHJva2Utb3BhY2l0eT0iLjUiPjxwYXRoIGZpbGw9IiMzMDllM2EiIGQ9Im0yMzMgMTk4LjUuMi0xNGg2cTIuMiAwIDMuMi41IDEgLjMgMS42IDEuM2MuNiAxIC42IDEuNC42IDIuM2E0IDQgMCAwIDEtMSAyLjYgNSA1IDAgMCAxLTIuNyAxLjJsMS41IDEuMnEuNi42IDEuNSAyLjNsMS43IDIuOGgtMy40bC0yLTMuMi0xLjQtMi0uOS0uNi0xLjQtLjJoLS42djUuOHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjM2IDE5MC41aDJxMi4xIDAgMi42LS4yLjUtLjEuOC0uNS40LS42LjMtMSAwLS45LS40LTEuMi0uMy0uNC0xLS42aC0ybC0yLjMtLjF6Ii8+PC9nPjxnIHN0cm9rZS1vcGFjaXR5PSIuNSI+PHBhdGggZmlsbD0iIzMwOWUzYSIgZD0ibTI0OSAxODUuMiA1LjIuM3ExLjcgMCAyLjYuM2E1IDUgMCAwIDEgMiAxLjQgNiA2IDAgMCAxIDEuMiAyLjRxLjQgMS40LjMgMy4zYTkgOSAwIDAgMS0uNSAzcS0uNiAxLjUtMS43IDIuNGE1IDUgMCAwIDEtMiAxcS0xIC4zLTIuNS4ybC01LjMtLjN6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0ibTI1MS43IDE4Ny43LS41IDkuM2gzLjhxLjggMCAxLjItLjUuNS0uNC44LTEuM3QuNC0yLjZsLS4xLTIuNWEzIDMgMCAwIDAtLjgtMS40bC0xLjItLjctMi4zLS4zeiIvPjwvZz48ZyBzdHJva2Utb3BhY2l0eT0iLjUiPjxwYXRoIGZpbGw9IiMzMDllM2EiIGQ9Im0zMTcuNiAyMTAuMiAzLjMtMTMuNiA0LjQgMSAzLjIgMXExLjEuNiAxLjYgMS45dC4yIDIuOHEtLjMgMS4yLTEgMmE0IDQgMCAwIDEtMyAxLjRxLTEgMC0zLS41bC0xLjctLjUtMS4yIDUuMnoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJtMzIzIDE5OS42LS44IDMuOCAxLjUuNHExLjYuNCAyLjIuM2EyIDIgMCAwIDAgMS42LTEuNXEwLS43LS4yLTEuM2EyIDIgMCAwIDAtMS0uOWwtMS45LS41LTEuMy0uM3oiLz48L2c+PGcgc3Ryb2tlLW9wYWNpdHk9Ii41Ij48cGF0aCBmaWxsPSIjMzA5ZTNhIiBkPSJtMzMwLjYgMjE0LjEgNC43LTEzLjIgNS41IDJxMi4yLjggMyAxLjQuOC43IDEgMS44Yy4yIDEuMS4yIDEuNSAwIDIuM3EtLjYgMS41LTEuOCAyLjItMS4yLjYtMyAuMy42LjcgMSAxLjZsLjggMi43LjYgMy4xLTMuMS0xLjEtMS0zLjYtLjctMi40LS42LS44cS0uMy0uNC0xLjMtLjdsLS41LS4yLTIgNS42eiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Im0zMzYgMjA3LjQgMS45LjdxMiAuNyAyLjUuN3QuOS0uM3EuNS0uMy42LS45LjMtLjYgMC0xLjJsLS44LS45LTItLjctMi0uNy0xLjIgMy4zeiIvPjwvZz48ZyBzdHJva2Utb3BhY2l0eT0iLjUiPjxwYXRoIGZpbGw9IiMzMDllM2EiIGQ9Ik0zNDcgMjEzLjZhOSA5IDAgMCAxIDEuNy0zLjJsMS44LTEuNSAyLS43cTEuNS0uMSAzLjEuNGE3IDcgMCAwIDEgNC4yIDMuM3ExLjIgMi40LjIgNS43YTcgNyAwIDAgMS0zLjQgNC41cS0yLjMgMS4zLTUuMi40YTcgNyAwIDAgMS00LjItMy4zIDcgNyAwIDAgMS0uMi01LjYiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMzQ5LjggMjE0LjRxLS43IDIuMyAwIDMuOGMuNyAxLjUgMS4yIDEuNiAyLjMgMnExLjUuNSAzLS40IDEuNC0uOCAyLjEtMy4yLjgtMi4yIDAtMy43YTQgNCAwIDAgMC0yLjItMiA0IDQgMCAwIDAtMyAuM3EtMS41LjgtMi4yIDMuMiIvPjwvZz48ZyBzdHJva2Utb3BhY2l0eT0iLjUiPjxwYXRoIGZpbGw9IiMzMDllM2EiIGQ9Im0zNzQuMyAyMzMuMSA2LjQtMTIuNCA1LjMgMi43YTEwIDEwIDAgMCAxIDIuNyAxLjlxLjguNy44IDEuOWMwIDEuMiAwIDEuNS0uNCAyLjJhNCA0IDAgMCAxLTIgMnEtMS41LjQtMy4xLS4yLjYgMSAuOCAxLjcuMy45LjQgMi44bC4yIDMuMi0zLTEuNS0uNC0zLjctLjMtMi41LS41LTEtMS4yLS43LS41LS4zLTIuNyA1LjJ6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0ibTM4MC41IDIyNy4yIDEuOSAxcTEuOCAxIDIuMyAxdDEtLjJxLjQtLjIuNy0uOHQuMi0xLjJsLS43LTEtMS44LTEtMi0xeiIvPjwvZz48ZyBzdHJva2Utb3BhY2l0eT0iLjUiPjxwYXRoIGZpbGw9IiMzMDllM2EiIGQ9Ik00MjYuMSAyNTguN2E5IDkgMCAwIDEgMi41LTIuNiA3IDcgMCAwIDEgMi4yLS45IDYgNiAwIDAgMSAyLjIgMHExLjUuMyAyLjggMS4yYTcgNyAwIDAgMSAzIDQuNHEuNCAyLjYtMS40IDUuNWE3IDcgMCAwIDEtNC41IDMuMyA3IDcgMCAwIDEtNS4yLTEuMSA3IDcgMCAwIDEtMy00LjRxLS40LTIuNyAxLjQtNS40Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTQyOC42IDI2MC4zcS0xLjQgMi0xLjEgMy42YTQgNCAwIDAgMCAxLjYgMi41cTEuNSAxIDMgLjZ0Mi45LTIuNHExLjQtMi4xIDEuMS0zLjZ0LTEuNi0yLjZjLTEuNC0xLjEtMi0uOC0zLS41cS0xLjUuMy0zIDIuNHoiLz48L2c+PHBhdGggZmlsbD0iIzMwOWUzYSIgZD0ibTMwMS44IDIwNC41IDIuMy05LjggNy4yIDEuNy0uMyAxLjYtNS4zLTEuMi0uNSAyLjIgNC45IDEuMS0uNCAxLjctNC45LTEuMi0uNiAyLjcgNS41IDEuMy0uNCAxLjZ6Ii8+PC9nPjwvc3ZnPg==","AR":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBpZD0iZmxhZy1pY29ucy1hciIgdmlld0JveD0iMCAwIDY0MCA0ODAiPjxwYXRoIGZpbGw9IiM3NGFjZGYiIGQ9Ik0wIDBoNjQwdjQ4MEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDE2MGg2NDB2MTYwSDB6Ii8+PGcgaWQ9ImFyLWMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC02NClzY2FsZSguOTYpIj48cGF0aCBpZD0iYXItYSIgZmlsbD0iI2Y2YjQwZSIgc3Ryb2tlPSIjODUzNDBhIiBzdHJva2Utd2lkdGg9IjEuMSIgZD0ibTM5Ni44IDI1MS4zIDI4LjUgNjJzLjUgMS4yIDEuMy45Yy44LS40LjMtMS42LjMtMS42bC0yMy43LTY0bS0uNyAyNC4yYy0uNCA5LjQgNS40IDE0LjYgNC43IDIzczMuOCAxMy4yIDUgMTYuNWMxIDMuMy0xLjIgNS4yLS4zIDUuNyAxIC41IDMtMi4xIDIuNC02LjhzLTQuMi02LTMuNC0xNi4zLTQuMi0xMi43LTMtMjIiLz48dXNlIHhsaW5rOmhyZWY9IiNhci1hIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB0cmFuc2Zvcm09InJvdGF0ZSgyMi41IDQwMCAyNTApIi8+PHVzZSB4bGluazpocmVmPSIjYXItYSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdHJhbnNmb3JtPSJyb3RhdGUoNDUgNDAwIDI1MCkiLz48dXNlIHhsaW5rOmhyZWY9IiNhci1hIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB0cmFuc2Zvcm09InJvdGF0ZSg2Ny41IDQwMCAyNTApIi8+PHBhdGggaWQ9ImFyLWIiIGZpbGw9IiM4NTM0MGEiIGQ9Ik00MDQuMyAyNzQuNGMuNSA5IDUuNiAxMyA0LjYgMjEuMyAyLjItNi41LTMuMS0xMS42LTIuOC0yMS4ybS03LjctMjMuOCAxOS41IDQyLjYtMTYuMy00My45Ii8+PHVzZSB4bGluazpocmVmPSIjYXItYiIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdHJhbnNmb3JtPSJyb3RhdGUoMjIuNSA0MDAgMjUwKSIvPjx1c2UgeGxpbms6aHJlZj0iI2FyLWIiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHRyYW5zZm9ybT0icm90YXRlKDQ1IDQwMCAyNTApIi8+PHVzZSB4bGluazpocmVmPSIjYXItYiIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdHJhbnNmb3JtPSJyb3RhdGUoNjcuNSA0MDAgMjUwKSIvPjwvZz48dXNlIHhsaW5rOmhyZWY9IiNhci1jIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB0cmFuc2Zvcm09InJvdGF0ZSg5MCAzMjAgMjQwKSIvPjx1c2UgeGxpbms6aHJlZj0iI2FyLWMiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHRyYW5zZm9ybT0icm90YXRlKDE4MCAzMjAgMjQwKSIvPjx1c2UgeGxpbms6aHJlZj0iI2FyLWMiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHRyYW5zZm9ybT0icm90YXRlKC05MCAzMjAgMjQwKSIvPjxjaXJjbGUgY3g9IjMyMCIgY3k9IjI0MCIgcj0iMjYuNyIgZmlsbD0iI2Y2YjQwZSIgc3Ryb2tlPSIjODUzNDBhIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGlkPSJhci1oIiBmaWxsPSIjODQzNTExIiBzdHJva2Utd2lkdGg9IjEiIGQ9Ik0zMjkgMjM0LjNjLTEuNyAwLTMuNS44LTQuNSAyLjQgMiAxLjkgNi42IDIgOS43LS4yYTcgNyAwIDAgMC01LjEtMi4yem0wIC40YzEuOCAwIDMuNS44IDMuNyAxLjYtMiAyLjMtNS4zIDItNy40LjRxMS42LTIgMy44LTJ6Ii8+PHVzZSB4bGluazpocmVmPSIjYXItZCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjQwLjIgMCkiLz48dXNlIHhsaW5rOmhyZWY9IiNhci1lIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA2NDAuMiAwKSIvPjx1c2UgeGxpbms6aHJlZj0iI2FyLWYiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE4LjEpIi8+PHVzZSB4bGluazpocmVmPSIjYXItZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjQwLjIgMCkiLz48cGF0aCBmaWxsPSIjODUzNDBhIiBkPSJNMzE2IDI0My43YTEuOCAxLjggMCAxIDAgMS44IDIuOSA0IDQgMCAwIDAgMi4yLjZoLjJxMSAwIDIuMy0uNi41LjcgMS41LjdhMS44IDEuOCAwIDAgMCAuMy0zLjZxLjguMy44IDEuMmExLjIgMS4yIDAgMCAxLTIuNCAwIDMgMyAwIDAgMS0yLjYgMS43IDMgMyAwIDAgMS0yLjUtMS43cS0uMSAxLjEtMS4zIDEuMi0xLS4xLTEuMi0xLjJjLS4yLTEuMS4zLTEgLjgtMS4yem0yIDUuNGMtMi4xIDAtMyAyLTQuOCAzLjEgMS0uNCAxLjgtMS4yIDMuMy0yczIuNi4yIDMuNS4yIDItMSAzLjUtLjJsMy4zIDJjLTEuOS0xLjItMi43LTMtNC44LTNxLS43IDAtMiAuNnoiLz48cGF0aCBmaWxsPSIjODUzNDBhIiBkPSJNMzE3LjIgMjUxLjZxLTEuMSAwLTMuNC42YzMuNy0uOCA0LjUuNSA2LjIuNSAxLjYgMCAyLjUtMS4zIDYuMS0uNS00LTEuMi00LjktLjQtNi4xLS40LS44IDAtMS40LS4zLTIuOC0uMiIvPjxwYXRoIGZpbGw9IiM4NTM0MGEiIGQ9Ik0zMTQgMjUyLjJoLS44YzQuMy41IDIuMyAzIDYuOCAzczIuNS0yLjUgNi44LTNjLTQuNS0uNC0zLjEgMi4zLTYuOCAyLjMtMy41IDAtMi40LTIuMy02LTIuMyIvPjxwYXRoIGZpbGw9IiM4NTM0MGEiIGQ9Ik0zMjMuNyAyNTguOWEzLjcgMy43IDAgMCAwLTcuNCAwIDMuOCAzLjggMCAwIDEgNy40IDAiLz48cGF0aCBpZD0iYXItZSIgZmlsbD0iIzg1MzQwYSIgc3Ryb2tlLXdpZHRoPSIxIiBkPSJNMzAzLjQgMjM0LjNjNC43LTQuMSAxMC43LTQuOCAxNC0xLjdhOCA4IDAgMCAxIDEuNSAzLjRxLjYgMy42LTIuMSA3LjVsLjguNHEyLjQtNC43IDEuNi05LjRsLS42LTIuM2MtNC41LTMuNy0xMC43LTQtMTUuMiAyeiIvPjxwYXRoIGlkPSJhci1kIiBmaWxsPSIjODUzNDBhIiBzdHJva2Utd2lkdGg9IjEiIGQ9Ik0zMTAuOCAyMzNjMi43IDAgMy4zLjYgNC41IDEuNyAxLjIgMSAxLjkuOCAyIDEgLjMuMiAwIC44LS4zLjZxLS43LS4yLTIuNS0xLjZjLTEuOC0xLjQtMi41LTEtMy43LTEtMy43IDAtNS43IDMtNi4xIDIuOC0uNS0uMiAyLTMuNSA2LjEtMy41Ii8+PHVzZSB4bGluazpocmVmPSIjYXItaCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4LjQpIi8+PGNpcmNsZSBpZD0iYXItZiIgY3g9IjMxMC45IiBjeT0iMjM2LjMiIHI9IjEuOCIgZmlsbD0iIzg1MzQwYSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggaWQ9ImFyLWciIGZpbGw9IiM4NTM0MGEiIHN0cm9rZS13aWR0aD0iMSIgZD0iTTMwNS45IDIzNy41YzMuNSAyLjcgNyAyLjUgOSAxLjMgMi0xLjMgMi0xLjcgMS42LTEuN3MtLjguNC0yLjQgMS4zYy0xLjcuOC00LjEuOC04LjItLjkiLz48L3N2Zz4=","GB":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWdiIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PHBhdGggZmlsbD0iIzAxMjE2OSIgZD0iTTAgMGg2NDB2NDgwSDB6Ii8+PHBhdGggZmlsbD0iI0ZGRiIgZD0ibTc1IDAgMjQ0IDE4MUw1NjIgMGg3OHY2Mkw0MDAgMjQxbDI0MCAxNzh2NjFoLTgwTDMyMCAzMDEgODEgNDgwSDB2LTYwbDIzOS0xNzhMMCA2NFYweiIvPjxwYXRoIGZpbGw9IiNDODEwMkUiIGQ9Im00MjQgMjgxIDIxNiAxNTl2NDBMMzY5IDI4MXptLTE4NCAyMCA2IDM1TDU0IDQ4MEgwek02NDAgMHYzTDM5MSAxOTFsMi00NEw1OTAgMHpNMCAwbDIzOSAxNzZoLTYwTDAgNDJ6Ii8+PHBhdGggZmlsbD0iI0ZGRiIgZD0iTTI0MSAwdjQ4MGgxNjBWMHpNMCAxNjB2MTYwaDY0MFYxNjB6Ii8+PHBhdGggZmlsbD0iI0M4MTAyRSIgZD0iTTAgMTkzdjk2aDY0MHYtOTZ6TTI3MyAwdjQ4MGg5NlYweiIvPjwvc3ZnPg==","IE":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWllIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PGcgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2Utd2lkdGg9IjFwdCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTAgMGg2NDB2NDgwSDB6Ii8+PHBhdGggZmlsbD0iIzAwOUE0OSIgZD0iTTAgMGgyMTMuM3Y0ODBIMHoiLz48cGF0aCBmaWxsPSIjRkY3OTAwIiBkPSJNNDI2LjcgMEg2NDB2NDgwSDQyNi43eiIvPjwvZz48L3N2Zz4=","FR":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWZyIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTAgMGg2NDB2NDgwSDB6Ii8+PHBhdGggZmlsbD0iIzAwMDA5MSIgZD0iTTAgMGgyMTMuM3Y0ODBIMHoiLz48cGF0aCBmaWxsPSIjZTEwMDBmIiBkPSJNNDI2LjcgMEg2NDB2NDgwSDQyNi43eiIvPjwvc3ZnPg==","DE":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWRlIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PHBhdGggZmlsbD0iI2ZjMCIgZD0iTTAgMzIwaDY0MHYxNjBIMHoiLz48cGF0aCBmaWxsPSIjMDAwMDAxIiBkPSJNMCAwaDY0MHYxNjBIMHoiLz48cGF0aCBmaWxsPSJyZWQiIGQ9Ik0wIDE2MGg2NDB2MTYwSDB6Ii8+PC9zdmc+","AT":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWF0IiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTAgMTYwaDY0MHYxNjBIMHoiLz48cGF0aCBmaWxsPSIjYzgxMDJlIiBkPSJNMCAwaDY0MHYxNjBIMHptMCAzMjBoNjQwdjE2MEgweiIvPjwvc3ZnPg==","CH":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWNoIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PGcgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2Utd2lkdGg9IjFwdCI+PHBhdGggZmlsbD0icmVkIiBkPSJNMCAwaDY0MHY0ODBIMHoiLz48ZyBmaWxsPSIjZmZmIj48cGF0aCBkPSJNMTcwIDE5NWgzMDB2OTBIMTcweiIvPjxwYXRoIGQ9Ik0yNzUgOTBoOTB2MzAwaC05MHoiLz48L2c+PC9nPjwvc3ZnPg==","ES":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNDgwIj48cGF0aCBmaWxsPSIjYzYwYjFlIiBkPSJNMCAwaDY0MHY0ODBIMHoiLz48cGF0aCBmaWxsPSIjZmZjNDAwIiBkPSJNMCAxMjBoNjQwdjI0MEgweiIvPjxyZWN0IHg9IjE1MCIgeT0iMTkwIiB3aWR0aD0iNzAiIGhlaWdodD0iMTAwIiByeD0iMTQiIGZpbGw9IiNhZDE1MTkiIG9wYWNpdHk9Ii45Ii8+PHJlY3QgeD0iMTcwIiB5PSIyMDUiIHdpZHRoPSIzMCIgaGVpZ2h0PSI3MCIgZmlsbD0iI2Q5YjQ0YSIgb3BhY2l0eT0iLjgiLz48L3N2Zz4=","PT":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBpZD0iZmxhZy1pY29ucy1wdCIgdmlld0JveD0iMCAwIDY0MCA0ODAiPjxwYXRoIGZpbGw9InJlZCIgZD0iTTI1NiAwaDM4NHY0ODBIMjU2eiIvPjxwYXRoIGZpbGw9IiMwNjAiIGQ9Ik0wIDBoMjU2djQ4MEgweiIvPjxnIGZpbGw9IiNmZjAiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iLjYiPjxwYXRoIGQ9Ik0zMzkuNSAzMDYuMmMtMzIuMy0xLTE4MC05My4yLTE4MS0xMDhsOC4xLTEzLjVjMTQuNyAyMS4zIDE2NS43IDExMSAxODAuNiAxMDcuOHoiLz48cGF0aCBkPSJNMTY0LjkgMTgyLjhjLTIuOSA3LjggMzguNiAzMy40IDg4LjQgNjMuOHM5Mi45IDQ5IDk2IDQ2LjRsMS41LTIuOHEtLjkgMS42LTQuMy42Yy0xMy41LTMuOS00OC42LTIwLTkyLjEtNDYuNC00My42LTI2LjQtODEuNC01MC43LTg3LjMtNjFhNiA2IDAgMCAxLS42LTMuMWgtLjJsLTEuMiAyLjJ6bTE3NS4zIDEyMy44cS0uNyAxLjMtMy41LjhjLTEyLTEuMy00OC42LTE5LjEtOTEuOS00NS01MC40LTMwLjItOTItNTcuNi04Ny40LTY0LjhsMS4yLTIuMi4yLjFjLTQgMTIuMiA4Mi4xIDYxLjQgODcuMiA2NC42IDQ5LjggMzAuOCA5MS44IDQ4LjkgOTUuNSA0NC4yeiIvPjxwYXRoIGQ9Ik0yNTYuMiAyMDcuMmMzMi4yLS4zIDcyLTQuNCA5NS0xMy42bC01LThjLTEzLjUgNy41LTUzLjUgMTIuNS05MC4zIDEzLjItNDMuNC0uNC03NC4xLTQuNS04OS41LTE0LjhsLTQuNiA4LjZjMjguMiAxMiA1Ny4yIDE0LjUgOTQuNCAxNC42Ii8+PHBhdGggZD0iTTM1Mi41IDE5My44Yy0uOCAxLjMtMTUuOCA2LjQtMzcuOCAxMC4yYTM4MSAzODEgMCAwIDEtNTguNiA0LjMgNDE2IDQxNiAwIDAgMS01Ni4yLTMuNmMtMjMuMS0zLjYtMzUtOC42LTM5LjUtMTAuNGwxLjEtMi4yYzEyLjcgNSAyNC43IDggMzguNyAxMC4yQTQxMiA0MTIgMCAwIDAgMjU2IDIwNmEzOTIgMzkyIDAgMCAwIDU4LjMtNC4zYzIyLjUtMy43IDM0LjgtOC40IDM2LjYtMTAuNXptLTQuNC04LjFjLTIuNCAyLTE0LjYgNi4zLTM2IDkuN2EzODggMzg4IDAgMCAxLTU1LjggNGMtMjIgMC00MC4xLTEuNi01My44LTMuNi0yMS44LTIuOC0zMy40LTgtMzcuNi05LjRsMS4zLTIuMmMzLjMgMS43IDE0LjQgNi4yIDM2LjUgOS4zYTM4NSAzODUgMCAwIDAgNTMuNiAzLjQgMzg0IDM4NCAwIDAgMCA1NS40LTRjMjEuNS0zIDMzLjEtOC40IDM0LjktOS44ek0xNTAuMyAyNDZjMTkuOCAxMC43IDYzLjkgMTYgMTA1LjYgMTYuNCAzOCAuMSA4Ny40LTUuOCAxMDUuOS0xNS42bC0uNS0xMC43Yy01LjggOS01OC44IDE3LjctMTA1LjggMTcuNHMtOTAuNy03LjYtMTA1LjMtMTd2OS41Ii8+PHBhdGggZD0iTTM2Mi44IDI0NC41djIuNWMtMi44IDMuNC0yMC4yIDguNC00MiAxMmE0MzQgNDM0IDAgMCAxLTY1LjQgNC40IDQwMCA0MDAgMCAwIDEtNjItNC4zIDE1NSAxNTUgMCAwIDEtNDQuNC0xMnYtMi45YzkuNyA2LjQgMzUuOSAxMS4yIDQ0LjcgMTIuNiAxNS44IDIuNCAzNi4xIDQuMiA2MS43IDQuMiAyNi45IDAgNDguNC0xLjkgNjUtNC40IDE1LjctMi4zIDM4LTguMiA0Mi40LTEyLjFtMC05djIuNWMtMi44IDMuMy0yMC4yIDguMy00MiAxMS45YTQzNCA0MzQgMCAwIDEtNjUuNCA0LjUgNDE0IDQxNCAwIDAgMS02Mi00LjMgMTU1IDE1NSAwIDAgMS00NC40LTEydi0zYzkuNyA2LjUgMzYgMTEuMiA0NC43IDEyLjZhNDA4IDQwOCAwIDAgMCA2MS43IDQuM2MyNi45IDAgNDguNS0yIDY1LTQuNSAxNS43LTIuMiAzOC04LjEgNDIuNC0xMm0tMTA3IDY4LjhjLTQ1LjYtLjItODQuNy0xMi40LTkzLTE0LjRsNiA5LjRhMjUwIDI1MCAwIDAgMCA4Ny40IDE0LjNjMzQuNy0xIDY1LTMuNyA4Ni4zLTE0LjFsNi4yLTkuOGMtMTQuNSA2LjktNjQgMTQuNi05MyAxNC42Ii8+PHBhdGggZD0ibTM0NC45IDI5Ny4zLTIuOCA0Yy0xMCAzLjYtMjYgNy40LTMyLjYgOC40YTI5NiAyOTYgMCAwIDEtNTMuNyA1Yy00MC40LS42LTczLjUtOC41LTg5LTE1LjNsLTEuMy0yLjEuMi0uNCAyLjEuOWEyODcgMjg3IDAgMCAwIDg4LjIgMTQuNWMxOC44IDAgMzcuNS0yLjEgNTIuNi00LjggMjMuMi00LjcgMzIuNi04LjIgMzUuNS05LjhsLjctLjR6bTUuMy04LjgtMiAzLjVjLTUuNCAyLTIwIDYuMi00MS4zIDkuMi0xNCAxLjktMjIuNyAzLjgtNTAuNiA0LjNhMzQ3IDM0NyAwIDAgMS05NC4yLTE0TDE2MSAyODlhMzkwIDM5MCAwIDAgMCA5NS40IDE0YzI1LjUtLjUgMzYuNC0yLjQgNTAuMy00LjMgMjQuOC0zLjggMzcuMy04IDQxLTkuMXYtLjJsMi42LTF6Ii8+PHBhdGggZD0iTTM1MC44IDIzNy42Yy4xIDMwLTE1LjMgNTctMjcuNiA2OC44YTk5IDk5IDAgMCAxLTY3LjggMjguMmMtMzAuMy41LTU4LjgtMTkuMi02Ni41LTI3LjlhMTAxIDEwMSAwIDAgMS0yNy41LTY3LjRjMS44LTMyLjggMTQuNy01NS42IDMzLjMtNzEuM2ExMDAgMTAwIDAgMCAxIDY0LjItMjIuNyA5OCA5OCAwIDAgMSA3MSAzNS42YzEyLjUgMTUuMiAxOCAzMS43IDIwLjkgNTYuN00yNTUuNiAxMzVhMTA2IDEwNiAwIDAgMSAxMDYgMTA1LjIgMTA1LjYgMTA1LjYgMCAxIDEtMjExLjQgMGMtLjEtNTggNDcuMy0xMDUuMiAxMDUuNC0xMDUuMiIvPjxwYXRoIGQ9Ik0yNTUuOSAxMzQuNWM1OC4yIDAgMTA1LjYgNDcuNCAxMDUuNiAxMDUuNlMzMTQuMSAzNDUuNyAyNTYgMzQ1LjdzLTEwNS42LTQ3LjQtMTA1LjYtMTA1LjZTMTk3LjggMTM0LjUgMjU2IDEzNC41ek0xNTIuNiAyNDBjMCA1Ni44IDQ2LjcgMTAzLjMgMTAzLjMgMTAzLjNTMzU5LjIgMjk2LjggMzU5LjIgMjQwcy00Ni43LTEwMy4zLTEwMy4zLTEwMy4zUzE1Mi42IDE4My4yIDE1Mi42IDI0MCIvPjxwYXRoIGQ9Ik0yNTYgMTQzLjNhOTcgOTcgMCAwIDEgOTYuNyA5Ni43IDk3IDk3IDAgMCAxLTk2LjcgOTYuOGMtNTMgMC05Ni43LTQzLjYtOTYuNy05Ni44YTk3IDk3IDAgMCAxIDk2LjctOTYuN00xNjEuNiAyNDBjMCA1MiA0Mi42IDk0LjQgOTQuNCA5NC40czk0LjQtNDIuNSA5NC40LTk0LjQtNDIuNi05NC40LTk0LjQtOTQuNGE5NSA5NSAwIDAgMC05NC40IDk0LjQiLz48cGF0aCBkPSJNMjYwLjMgMTM0aC05LjF2MjEyLjNoOXoiLz48cGF0aCBkPSJNMjU5LjMgMTMyLjhoMi4zdjIxNC43aC0yLjJWMTMyLjh6bS05IDBoMi40djIxNC43aC0yLjN6Ii8+PHBhdGggZD0iTTM2MS42IDI0NC4ydi03LjhsLTYuNC02LTM2LjMtOS42LTUyLjItNS4zLTYzIDMuMi00NC44IDEwLjYtOSA2Ljd2Ny45bDIyLjktMTAuMyA1NC40LTguNWg1Mi4zbDM4LjQgNC4yIDI2LjYgNi40eiIvPjxwYXRoIGQ9Ik0yNTYgMjIzLjhjMjQuOSAwIDQ5IDIuMyA2OC4zIDYgMTkuOCA0IDMzLjcgOSAzOC41IDE0LjV2Mi44Yy01LjgtNy0yNC41LTEyLTM5LTE1LTE5LTMuNi00My02LTY3LjktNi0yNi4xIDAtNTAuNSAyLjYtNjkuMyA2LjItMTUgMy0zNS4xIDktMzcuNiAxNC44di0yLjljMS4zLTQgMTYuMy0xMCAzNy4zLTE0LjMgMTguOS0zLjcgNDMuMy02LjEgNjkuNi02LjF6bTAtOS4xYTM4MyAzODMgMCAwIDEgNjguMyA2YzE5LjggNCAzMy43IDkgMzguNSAxNC42djIuN2MtNS44LTYuOS0yNC41LTEyLTM5LTE0LjktMTktMy43LTQzLTYtNjcuOS02YTM3NiAzNzYgMCAwIDAtNjkuMiA2LjJjLTE0LjUgMi43LTM1LjQgOC45LTM3LjcgMTQuN3YtMi44YzEuNC00IDE2LjYtMTAuMyAzNy4zLTE0LjMgMTktMy43IDQzLjMtNi4yIDY5LjctNi4ybS0uNi00Ni4yYzM5LjMtLjIgNzMuNiA1LjUgODkuMyAxMy41bDUuNyAxMGMtMTMuNi03LjQtNTAuNi0xNS05NC45LTE0LTM2LjEuMy03NC43IDQtOTQgMTQuNGw2LjgtMTEuNGMxNS45LTguMyA1My4zLTEyLjUgODcuMS0xMi41Ii8+PHBhdGggZD0iTTI1NiAxNzYuN2EzNTQgMzU0IDAgMCAxIDYxLjMgNC4zYzE2IDMgMzEuMyA3LjQgMzMuNSA5LjhsMS43IDNjLTUuMy0zLjQtMTguNi03LjMtMzUuNi0xMC41cy0zOC43LTQuMy02MS00LjJjLTI1LjMtLjEtNDUgMS4yLTYxLjggNC4yYTEwOSAxMDkgMCAwIDAtMzMuMyAxMC4zbDEuNy0zLjFjNi0zIDE1LjMtNi43IDMxLjEtOS42IDE3LjUtMy4yIDM3LjQtNC4xIDYyLjQtNC4ybTAtOWMyMS40LS4yIDQyLjYgMSA1OS4xIDRhOTYgOTYgMCAwIDEgMzAuNiAxMGwyLjUgNGMtNC4yLTQuNy0yMC05LjItMzQuMS0xMS42LTE2LjQtMi45LTM2LjctNC01OC4xLTQuMmEzNjEgMzYxIDAgMCAwLTU5LjUgNC40IDk3IDk3IDAgMCAwLTI5LjYgOS4xbDIuMi0zLjNjNS44LTMgMTUuMi01LjggMjctOC4xYTM1NyAzNTcgMCAwIDEgNTkuOS00LjR6TTMwOC40IDI4NGEyNzYgMjc2IDAgMCAwLTUyLjUtNGMtNjUuNS44LTg2LjYgMTMuNS04OS4yIDE3LjNsLTUtOGMxNi44LTEyIDUyLjQtMTguOCA5NC42LTE4LjJxMzIuOS41IDU2LjYgNWwtNC41IDgiLz48cGF0aCBkPSJNMjU1LjYgMjc4LjljMTguMi4zIDM2IDEgNTMuMyA0LjJsLTEuMiAyLjJjLTE2LTMtMzMuMi00LTUyLTQtMjQuMy0uMi00OC43IDIuMS03MCA4LjItNi43IDEuOS0xNy44IDYuMi0xOSA5LjhsLTEuMi0yYy40LTIuMiA3LTYuNiAxOS42LTEwIDI0LjQtNyA0Ny4yLTguMyA3MC41LTguNG0uOC05LjJhMzI3IDMyNyAwIDAgMSA1Ny4zIDVsLTEuMyAyLjNhMjk5IDI5OSAwIDAgMC01Ni00LjljLTI0LjIgMC00OS45IDEuOC03My4zIDguNi03LjUgMi4yLTIwLjYgNy0yMSAxMC43bC0xLjItMi4yYy4yLTMuNCAxMS41LTcuOSAyMS43LTEwLjggMjMuNS02LjkgNDkuMy04LjYgNzMuOC04LjciLz48cGF0aCBkPSJtMzQ5LjQgMjkwLjUtNy44IDEyLjMtMjIuNy0yMC4xLTU4LjYtMzkuNS02Ni4yLTM2LjMtMzQuMy0xMS43IDcuMy0xMy42IDIuNS0xLjMgMjEuMyA1LjMgNzAuNCAzNi4zIDQwLjYgMjUuNkwzMzYgMjcybDEzLjkgMTZ6Ii8+PHBhdGggZD0iTTE1OC42IDE5NS41YzYtNCA1MC4yIDE1LjYgOTYuNiA0My42IDQ2LjEgMjggOTAuMyA1OS42IDg2LjMgNjUuNWwtMS4zIDIuMS0uNi41Yy4xLS4xLjgtMSAwLTMuMS0yLTYuNS0zMy40LTMxLjUtODUuMy02Mi45LTUwLjctMzAuMS05Mi45LTQ4LjMtOTctNDMuMXpNMzUxIDI5MC40YzMuOC03LjYtMzcuMi0zOC41LTg4LjEtNjguNi01Mi0yOS41LTg5LjYtNDYuOS05Ni41LTQxLjdMMTY1IDE4M2wuNC0uNWMxLjItMSAzLjMtMSA0LjItMSAxMS44LjIgNDUuNSAxNS43IDkyLjggNDIuOCAyMC44IDEyIDg3LjYgNTUgODcuMyA2NyAwIDEgLjEgMS4yLS4zIDEuOGwxLjctMi42eiIvPjwvZz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDI2Ljcpc2NhbGUoMS4wNjY2NykiPjxwYXRoIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIuNyIgZD0iTTE4MC42IDIxMWE1OSA1OSAwIDAgMCAxNy41IDQxLjcgNTkgNTkgMCAwIDAgNDEuOCAxNy42IDU5IDU5IDAgMCAwIDQyLTE3LjQgNTkgNTkgMCAwIDAgMTcuNC00MS44di03OS4ybC0xMTguNy0uMnoiLz48cGF0aCBmaWxsPSJyZWQiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIuNSIgZD0iTTE4MyAyMTEuMWE1NiA1NiAwIDAgMCAxNi44IDQwIDU3IDU3IDAgMCAwIDQwLjIgMTYuOCA1NyA1NyAwIDAgMCA0MC4yLTE2LjYgNTYgNTYgMCAwIDAgMTYuNy00MHYtNzdIMTgzdjc2LjhtOTEtNTMuN3Y0OC45bC0uMSA1LjFhMzMgMzMgMCAwIDEtMTAgMjQgMzQgMzQgMCAwIDEtMjQgMTBjLTkuNCAwLTE3LjctNC0yMy45LTEwLjJhMzQgMzQgMCAwIDEtMTAtMjR2LTU0eiIvPjxnIGlkPSJwdC1lIj48ZyBpZD0icHQtZCIgZmlsbD0iI2ZmMCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9Ii41Ij48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0xOTAuMiAxNTQuNGMuMS01LjUgNC02LjggNC02LjguMSAwIDQuMyAxLjQgNC4zIDYuOXoiLz48cGF0aCBkPSJtMTg2LjggMTQ3LjctLjcgNi4zaDQuMmMwLTUuMiA0LTYgNC02IC4xIDAgNCAxLjEgNC4xIDZoNC4ybC0uOC02LjR6bS0xIDYuNGgxN3EuNSAwIC42LjcgMCAuOC0uNi44aC0xN3EtLjUgMC0uNi0uOCAwLS43LjctLjd6Ii8+PHBhdGggZD0iTTE5MiAxNTRjMC0zLjMgMi4zLTQuMiAyLjMtNC4yczIuMyAxIDIuMyA0LjJIMTkybS01LjgtOWgxNi4zcS41LjEuNi44IDAgLjUtLjYuNmgtMTYuM3EtLjUgMC0uNi0uNyAwLS41LjYtLjZ6bS40IDEuNUgyMDJxLjUgMCAuNi43dC0uNi43aC0xNS41cS0uNiAwLS42LS43dC42LS43em01LTEwLjZoMS4ydi44aC45di0uOGgxLjN2LjloLjl2LTFoMS4ydjJxMCAuNi0uNS42aC00LjRxLS41IDAtLjYtLjV6bTQuNiAyLjcuMyA2LjRoLTQuM2wuMy02LjVoMy43Ii8+PHBhdGggaWQ9InB0LWEiIGQ9Ik0xOTEgMTQxLjZ2My40aC00di0zLjR6Ii8+PHVzZSB4bGluazpocmVmPSIjcHQtYSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgeD0iMTAuNiIvPjxwYXRoIGlkPSJwdC1iIiBkPSJNMTg2LjMgMTM5aDEuMnYxaC45di0xaDEuMnYxaC45di0xaDEuMnYycTAgLjYtLjUuNmgtNC4zbC0uNi0uNnoiLz48dXNlIHhsaW5rOmhyZWY9IiNwdC1iIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4PSIxMC42Ii8+PHBhdGggZmlsbD0iIzAwMDAwMSIgc3Ryb2tlPSJub25lIiBkPSJNMTkzLjkgMTQwLjZjMC0uNi45LS42LjkgMHYxLjZoLS45eiIvPjxwYXRoIGlkPSJwdC1jIiBmaWxsPSIjMDAwMDAxIiBzdHJva2U9Im5vbmUiIGQ9Ik0xODguNiAxNDIuOGMwLS42LjgtLjYuOCAwdjEuMmgtLjh6Ii8+PHVzZSB4bGluazpocmVmPSIjcHQtYyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgeD0iMTAuNiIvPjwvZz48dXNlIHhsaW5rOmhyZWY9IiNwdC1kIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB5PSI0Ni4zIi8+PHVzZSB4bGluazpocmVmPSIjcHQtZCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdHJhbnNmb3JtPSJyb3RhdGUoLTQ1LjIgMzEyLjggMTgwKSIvPjwvZz48dXNlIHhsaW5rOmhyZWY9IiNwdC1kIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4PSI0NS43Ii8+PHVzZSB4bGluazpocmVmPSIjcHQtZSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNDc5LjggMCkiLz48ZyBpZD0icHQtZiIgZmlsbD0iI2ZmZiI+PHBhdGggZmlsbD0iIzAzOSIgZD0iTTIzMi42IDIwMi40YTggOCAwIDAgMCAyLjIgNS43IDcgNyAwIDAgMCA1LjMgMi40cTMuMi0uMiA1LjMtMi40YTggOCAwIDAgMCAyLjItNS43di0xMC44aC0xNXoiLz48Y2lyY2xlIGN4PSIyMzYuMSIgY3k9IjE5NS43IiByPSIxLjUiLz48Y2lyY2xlIGN4PSIyNDQuNCIgY3k9IjE5NS43IiByPSIxLjUiLz48Y2lyY2xlIGN4PSIyNDAuMiIgY3k9IjE5OS43IiByPSIxLjUiLz48Y2lyY2xlIGN4PSIyMzYuMSIgY3k9IjIwMy45IiByPSIxLjUiLz48Y2lyY2xlIGN4PSIyNDQuNCIgY3k9IjIwMy45IiByPSIxLjUiLz48L2c+PHVzZSB4bGluazpocmVmPSIjcHQtZiIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgeT0iLTI2Ii8+PHVzZSB4bGluazpocmVmPSIjcHQtZiIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgeD0iLTIwLjgiLz48dXNlIHhsaW5rOmhyZWY9IiNwdC1mIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4PSIyMC44Ii8+PHVzZSB4bGluazpocmVmPSIjcHQtZiIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgeT0iMjUuOCIvPjwvZz48L3N2Zz4=","PL":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLXBsIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PGcgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZmZmIiBkPSJNNjQwIDQ4MEgwVjBoNjQweiIvPjxwYXRoIGZpbGw9IiNkYzE0M2MiIGQ9Ik02NDAgNDgwSDBWMjQwaDY0MHoiLz48L2c+PC9zdmc+","IN":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBpZD0iZmxhZy1pY29ucy1pbiIgdmlld0JveD0iMCAwIDY0MCA0ODAiPjxwYXRoIGZpbGw9IiNmOTMiIGQ9Ik0wIDBoNjQwdjE2MEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDE2MGg2NDB2MTYwSDB6Ii8+PHBhdGggZmlsbD0iIzEyODgwNyIgZD0iTTAgMzIwaDY0MHYxNjBIMHoiLz48ZyB0cmFuc2Zvcm09Im1hdHJpeCgzLjIgMCAwIDMuMiAzMjAgMjQwKSI+PGNpcmNsZSByPSIyMCIgZmlsbD0iIzAwOCIvPjxjaXJjbGUgcj0iMTcuNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgcj0iMy41IiBmaWxsPSIjMDA4Ii8+PGcgaWQ9ImluLWQiPjxnIGlkPSJpbi1jIj48ZyBpZD0iaW4tYiI+PGcgaWQ9ImluLWEiIGZpbGw9IiMwMDgiPjxjaXJjbGUgcj0iLjkiIHRyYW5zZm9ybT0icm90YXRlKDcuNSAtOC44IDEzMy41KSIvPjxwYXRoIGQ9Ik0wIDE3LjUuNiA3IDAgMmwtLjYgNXoiLz48L2c+PHVzZSB4bGluazpocmVmPSIjaW4tYSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdHJhbnNmb3JtPSJyb3RhdGUoMTUpIi8+PC9nPjx1c2UgeGxpbms6aHJlZj0iI2luLWIiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHRyYW5zZm9ybT0icm90YXRlKDMwKSIvPjwvZz48dXNlIHhsaW5rOmhyZWY9IiNpbi1jIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB0cmFuc2Zvcm09InJvdGF0ZSg2MCkiLz48L2c+PHVzZSB4bGluazpocmVmPSIjaW4tZCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwKSIvPjx1c2UgeGxpbms6aHJlZj0iI2luLWQiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHRyYW5zZm9ybT0icm90YXRlKC0xMjApIi8+PC9nPjwvc3ZnPg==","SG":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLXNnIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PGRlZnM+PGNsaXBQYXRoIGlkPSJzZy1hIj48cGF0aCBmaWxsLW9wYWNpdHk9Ii43IiBkPSJNMCAwaDY0MHY0ODBIMHoiLz48L2NsaXBQYXRoPjwvZGVmcz48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcGF0aD0idXJsKCNzZy1hKSI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTS0yMCAwaDcyMHY0ODBILTIweiIvPjxwYXRoIGZpbGw9IiNkZjAwMDAiIGQ9Ik0tMjAgMGg3MjB2MjQwSC0yMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTQ2IDQwLjJhODQuNCA4NC40IDAgMCAwIC44IDE2NS4yIDg2IDg2IDAgMCAxLTEwNi42LTU5IDg2IDg2IDAgMCAxIDU5LTEwNmMxNi00LjYgMzAuOC00LjcgNDYuOS0uMnoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJtMTMzIDExMCA0LjkgMTUtMTMtOS4yLTEyLjggOS40IDQuNy0xNS4yLTEyLjgtOS4zIDE1LjktLjIgNS0xNSA1IDE1aDE1Ljh6bTE3LjUgNTIgNSAxNS4xLTEzLTkuMi0xMi45IDkuMyA0LjgtMTUuMS0xMi44LTkuNCAxNS45LS4xIDQuOS0xNS4xIDUgMTVoMTZ6bTU4LjUtLjQgNC45IDE1LjItMTMtOS4zLTEyLjggOS4zIDQuNy0xNS4xLTEyLjgtOS4zIDE1LjktLjIgNS0xNSA1IDE1aDE1Ljh6bTE3LjQtNTEuNiA0LjkgMTUuMS0xMy05LjItMTIuOCA5LjMgNC44LTE1LjEtMTIuOS05LjQgMTYtLjEgNC44LTE1LjEgNSAxNWgxNnptLTQ2LjMtMzQuMyA1IDE1LjItMTMtOS4zLTEyLjkgOS40IDQuOC0xNS4yLTEyLjgtOS40IDE1LjgtLjEgNS0xNS4xIDUgMTVoMTZ6Ii8+PC9nPjwvc3ZnPg==","AE":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWFlIiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PHBhdGggZmlsbD0iIzAwNzMyZiIgZD0iTTAgMGg2NDB2MTYwSDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTAgMTYwaDY0MHYxNjBIMHoiLz48cGF0aCBmaWxsPSIjMDAwMDAxIiBkPSJNMCAzMjBoNjQwdjE2MEgweiIvPjxwYXRoIGZpbGw9InJlZCIgZD0iTTAgMGgyMjB2NDgwSDB6Ii8+PC9zdmc+","AU":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJmbGFnLWljb25zLWF1IiB2aWV3Qm94PSIwIDAgNjQwIDQ4MCI+PHBhdGggZmlsbD0iIzAwMDA4QiIgZD0iTTAgMGg2NDB2NDgwSDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0ibTM3LjUgMCAxMjIgOTAuNUwyODEgMGgzOXYzMWwtMTIwIDg5LjUgMTIwIDg5VjI0MGgtNDBsLTEyMC04OS41TDQwLjUgMjQwSDB2LTMwbDExOS41LTg5TDAgMzJWMHoiLz48cGF0aCBmaWxsPSJyZWQiIGQ9Ik0yMTIgMTQwLjUgMzIwIDIyMHYyMGwtMTM1LjUtOTkuNXptLTkyIDEwIDMgMTcuNS05NiA3Mkgwek0zMjAgMHYxLjVsLTEyNC41IDk0IDEtMjJMMjk1IDB6TTAgMGwxMTkuNSA4OGgtMzBMMCAyMXoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTIwLjUgMHYyNDBoODBWMHpNMCA4MHY4MGgzMjBWODB6Ii8+PHBhdGggZmlsbD0icmVkIiBkPSJNMCA5Ni41djQ4aDMyMHYtNDh6TTEzNi41IDB2MjQwaDQ4VjB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0ibTUyNyAzOTYuNy0yMC41IDIuNiAyLjIgMjAuNS0xNC44LTE0LjQtMTQuNyAxNC41IDItMjAuNS0yMC41LTIuNCAxNy4zLTExLjItMTAuOS0xNy41IDE5LjYgNi41IDYuOS0xOS41IDcuMSAxOS40IDE5LjUtNi43LTEwLjcgMTcuNnptLTMuNy0xMTcuMiAyLjctMTMtOS44LTkgMTMuMi0xLjUgNS41LTEyLjEgNS41IDEyLjEgMTMuMiAxLjUtOS44IDkgMi43IDEzLTExLjYtNi42em0tMTA0LjEtNjAtMjAuMyAyLjIgMS44IDIwLjMtMTQuNC0xNC41LTE0LjggMTQuMSAyLjQtMjAuMy0yMC4yLTIuNyAxNy4zLTEwLjgtMTAuNS0xNy41IDE5LjMgNi44TDM4NyAxNzhsNi43IDE5LjMgMTkuNC02LjMtMTAuOSAxNy4zIDE3LjEgMTEuMlpNNjIzIDE4Ni43bC0yMC45IDIuNyAyLjMgMjAuOS0xNS4xLTE0LjctMTUgMTQuOCAyLjEtMjEtMjAuOS0yLjQgMTcuNy0xMS41LTExLjEtMTcuOSAyMCA2LjcgNy0xOS44IDcuMiAxOS44IDE5LjktNi45LTExIDE4em0tOTYuMS04My41LTIwLjcgMi4zIDEuOSAyMC44LTE0LjctMTQuOC0xNS4xIDE0LjQgMi40LTIwLjctMjAuNy0yLjggMTcuNy0xMUw0NjcgNzMuNWwxOS43IDYuOSA3LjMtMTkuNSA2LjggMTkuNyAxOS44LTYuNS0xMS4xIDE3LjZ6TTIzNCAzODUuN2wtNDUuOCA1LjQgNC42IDQ1LjktMzIuOC0zMi40LTMzIDMyLjIgNC45LTQ1LjktNDUuOC01LjggMzguOS0yNC44LTI0LTM5LjQgNDMuNiAxNSAxNS44LTQzLjQgMTUuNSA0My41IDQzLjctMTQuNy0yNC4zIDM5LjIgMzguOCAyNS4xWiIvPjwvc3ZnPg==","NZ":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBpZD0iZmxhZy1pY29ucy1ueiIgdmlld0JveD0iMCAwIDY0MCA0ODAiPjxkZWZzPjxnIGlkPSJuei1iIj48ZyBpZD0ibnotYSI+PHBhdGggZD0iTTAtLjN2LjVsMS0uNXoiLz48cGF0aCBkPSJNLjIuMyAwLS4xbDEtLjJ6Ii8+PC9nPjx1c2UgeGxpbms6aHJlZj0iI256LWEiIHRyYW5zZm9ybT0ic2NhbGUoLTEgMSkiLz48dXNlIHhsaW5rOmhyZWY9IiNuei1hIiB0cmFuc2Zvcm09InJvdGF0ZSg3MiAwIDApIi8+PHVzZSB4bGluazpocmVmPSIjbnotYSIgdHJhbnNmb3JtPSJyb3RhdGUoLTcyIDAgMCkiLz48dXNlIHhsaW5rOmhyZWY9IiNuei1hIiB0cmFuc2Zvcm09InNjYWxlKC0xIDEpcm90YXRlKDcyKSIvPjwvZz48L2RlZnM+PHBhdGggZmlsbD0iIzAwMjQ3ZCIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMCAwaDY0MHY0ODBIMHoiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTExIDM2LjEpc2NhbGUoLjY2ODI1KSI+PHVzZSB4bGluazpocmVmPSIjbnotYiIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2ZmZiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoOTAwIDEyMClzY2FsZSg0NS40KSIvPjx1c2UgeGxpbms6aHJlZj0iI256LWIiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNjYzE0MmIiIHRyYW5zZm9ybT0ibWF0cml4KDMwIDAgMCAzMCA5MDAgMTIwKSIvPjwvZz48ZyB0cmFuc2Zvcm09InJvdGF0ZSg4MiA1MjUuMiAxMTQuNilzY2FsZSguNjY4MjUpIj48dXNlIHhsaW5rOmhyZWY9IiNuei1iIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmIiB0cmFuc2Zvcm09InJvdGF0ZSgtODIgNTE5IC00NTcuNylzY2FsZSg0MC40KSIvPjx1c2UgeGxpbms6aHJlZj0iI256LWIiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNjYzE0MmIiIHRyYW5zZm9ybT0icm90YXRlKC04MiA1MTkgLTQ1Ny43KXNjYWxlKDI1KSIvPjwvZz48ZyB0cmFuc2Zvcm09InJvdGF0ZSg4MiA1MjUuMiAxMTQuNilzY2FsZSguNjY4MjUpIj48dXNlIHhsaW5rOmhyZWY9IiNuei1iIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmIiB0cmFuc2Zvcm09InJvdGF0ZSgtODIgNjY4LjYgLTMyNy43KXNjYWxlKDQ1LjQpIi8+PHVzZSB4bGluazpocmVmPSIjbnotYiIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2NjMTQyYiIgdHJhbnNmb3JtPSJyb3RhdGUoLTgyIDY2OC42IC0zMjcuNylzY2FsZSgzMCkiLz48L2c+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTExMSAzNi4xKXNjYWxlKC42NjgyNSkiPjx1c2UgeGxpbms6aHJlZj0iI256LWIiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmYiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDkwMCA0ODApc2NhbGUoNTAuNCkiLz48dXNlIHhsaW5rOmhyZWY9IiNuei1iIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjY2MxNDJiIiB0cmFuc2Zvcm09Im1hdHJpeCgzNSAwIDAgMzUgOTAwIDQ4MCkiLz48L2c+PHBhdGggZmlsbD0iIzAxMjE2OSIgZD0iTTAgMGgzMjB2MjQwSDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0ibTM3LjUgMCAxMjIgOTAuNUwyODEgMGgzOXYzMWwtMTIwIDg5LjUgMTIwIDg5VjI0MGgtNDBsLTEyMC04OS41TDQwLjUgMjQwSDB2LTMwbDExOS41LTg5TDAgMzJWMHoiLz48cGF0aCBmaWxsPSIjYzgxMDJlIiBkPSJNMjEyIDE0MC41IDMyMCAyMjB2MjBsLTEzNS41LTk5LjV6bS05MiAxMCAzIDE3LjUtOTYgNzJIMHpNMzIwIDB2MS41bC0xMjQuNSA5NCAxLTIyTDI5NSAwek0wIDBsMTE5LjUgODhoLTMwTDAgMjF6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEyMC41IDB2MjQwaDgwVjB6TTAgODB2ODBoMzIwVjgweiIvPjxwYXRoIGZpbGw9IiNjODEwMmUiIGQ9Ik0wIDk2LjV2NDhoMzIwdi00OHpNMTM2LjUgMHYyNDBoNDhWMHoiLz48L3N2Zz4="};
+  const COUNTRY_NAMES_EN = {"US":"United States","CA":"Canada","MX":"Mexico","CO":"Colombia","BR":"Brazil","AR":"Argentina","GB":"United Kingdom","IE":"Ireland","FR":"France","DE":"Germany","AT":"Austria","CH":"Switzerland","ES":"Spain","PT":"Portugal","PL":"Poland","IN":"India","SG":"Singapore","AE":"United Arab Emirates","AU":"Australia","NZ":"New Zealand"};
+
   const state = {
     contentType: 'movie', // 'movie' | 'tv_series'
     platforms: new Set(),
@@ -3613,6 +3745,7 @@ const TRANSLATIONS = {
     loadingMore: false,
     noMoreResultsStreak: 0, // consecutive load-more attempts that added nothing
     region: 'US', // auto-detected from IP shortly after load; US until then/on failure
+    exploreRegion: null, // set only during an 'Explore other countries' session — cleared whenever the home screen is shown (see showScreen)
     orderBy: 'popularity_1year', // randomized fresh per new deck — see buildDeck()
     skipMoodStep: false, // true for "Watch with your Family" or first-screen "Surprise me" — mood step hidden either way
     skipMoodReason: null, // 'family' | 'surprise' — which of the two skip-mood flows is active, for the eyebrow label
@@ -3756,12 +3889,13 @@ const TRANSLATIONS = {
     .catch(() => {}); // silent — English/US defaults are perfectly fine fallbacks
 
   function updateRegionDisclosure(){
-    const regionKey = 'region_' + state.region.toLowerCase();
+    const regionKey = 'region_' + activeRegion().toLowerCase();
     const name = TRANSLATIONS[state.language][regionKey] ? t(regionKey) : t('region_us');
     document.querySelectorAll('.region-disclosure').forEach(el => {
       const templateKey = el.dataset.i18nTemplate || 'region_disclosure_template';
       el.textContent = t(templateKey, { region: name });
     });
+    updateExploreChips();
   }
 
   // Real per-country platform list — Hulu is US-only, the UK has iPlayer/
@@ -3772,6 +3906,9 @@ const TRANSLATIONS = {
     fetch(`${BACKEND_URL}/api/platforms?region=${region}`)
       .then(r => r.ok ? r.json() : null)
       .then(data => {
+        // Ignore a stale response: the region may have changed (auto-detection
+        // resolved, or an explore session started/ended) while this was in flight.
+        if (region !== activeRegion()) return;
         if (data && Array.isArray(data.platforms) && data.platforms.length > 0){
           state.availablePlatforms = data.platforms;
           rebuildPlatformChips();
@@ -3831,6 +3968,8 @@ const TRANSLATIONS = {
      ════════════════════════════════════════════════════════════ */
   function showScreen(id, fromPopState){
     const current = getActiveScreenId();
+    // Back on the home screen = the explore session is over.
+    if(id === 'screen-content-type' && state.exploreRegion) leaveExploreMode();
 
     // An embedded YouTube trailer keeps playing (and making noise) even
     // after leaving the screen, since removing the .active class doesn't
@@ -3868,7 +4007,7 @@ const TRANSLATIONS = {
     // navigate the screen underneath. Reuses the same set of overlays
     // already checked by the Escape-key handler above, so any new dialog
     // added there gets this behavior automatically.
-    const openOverlay = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay', 'singlePlatformOverlay']
+    const openOverlay = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay', 'singlePlatformOverlay', 'exploreCountryOverlay', 'exploreTypeOverlay']
       .map(id => document.getElementById(id))
       .find(el => el && el.classList.contains('active'));
     if(openOverlay){
@@ -3988,6 +4127,133 @@ const TRANSLATIONS = {
   document.getElementById('btnCloseFamilyTypeDialog').addEventListener('click', () => {
     closeDialog(document.getElementById('familyTypeOverlay'), 'active');
   });
+
+  /* ═══════════════════════════════════════════════════════
+     EXPLORE OTHER COUNTRIES — same platform/mood/swipe flow, but against
+     another supported country's catalog. Invariant: state.exploreRegion is
+     set only while an explore session runs; showScreen() clears it (via
+     leaveExploreMode) whenever the home screen is shown again, so every other
+     flow keeps using the visitor's own region untouched.
+     ═══════════════════════════════════════════════════════ */
+  function activeRegion(){ return state.exploreRegion || state.region; }
+
+  function flagSrc(code){ return FLAG_SRC[code] || ''; }
+
+  // Country names come from the browser's own localized list (Intl.DisplayNames)
+  // so they follow the UI language for free; English table is the fallback.
+  function countryName(code){
+    try{
+      if(typeof Intl !== 'undefined' && Intl.DisplayNames){
+        const n = new Intl.DisplayNames([state.language], { type: 'region' }).of(code);
+        if(n && n !== code) return n;
+      }
+    } catch(e){}
+    return COUNTRY_NAMES_EN[code] || code;
+  }
+
+  function makeFlagBadge(code, side){
+    const el = document.createElement('span');
+    el.className = 'flag-badge' + (side === 'left' ? ' flag-badge-left' : '');
+    el.style.backgroundImage = `url("${flagSrc(code)}")`;
+    const label = t('explore_flag_aria', { country: countryName(code) });
+    el.setAttribute('role', 'img');
+    el.setAttribute('aria-label', label);
+    el.title = label;
+    return el;
+  }
+
+  function updateExploreChips(){
+    const code = state.exploreRegion;
+    document.querySelectorAll('.explore-chip').forEach(chip => {
+      if(!code){ chip.style.display = 'none'; return; }
+      chip.style.display = 'inline-flex';
+      chip.querySelector('img').src = flagSrc(code);
+      chip.querySelector('.ec-text').textContent = t('explore_chip_label', { country: countryName(code) });
+      chip.querySelector('.ec-change').textContent = t('explore_chip_change');
+    });
+  }
+
+  let pendingExploreCountry = null;
+
+  function openExploreCountryDialog(){
+    const list = document.getElementById('exploreCountryList');
+    list.innerHTML = '';
+    Object.keys(REGION_TO_LANGUAGE)
+      .map(code => ({ code, name: countryName(code) }))
+      .sort((a, b) => a.name.localeCompare(b.name, state.language))
+      .forEach(({ code, name }) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'platform-option country-option';
+        btn.innerHTML = `<img src="${flagSrc(code)}" alt="" />${escapeHtml(name)}`;
+        btn.addEventListener('click', () => chooseExploreCountry(code));
+        list.appendChild(btn);
+      });
+    openDialog(document.getElementById('exploreCountryOverlay'), 'active');
+    list.scrollTop = 0;
+  }
+
+  function chooseExploreCountry(code){
+    pendingExploreCountry = code;
+    closeDialog(document.getElementById('exploreCountryOverlay'), 'active');
+    document.getElementById('exploreTypeFlag').src = flagSrc(code);
+    document.getElementById('exploreTypeTitle').textContent = countryName(code);
+    openDialog(document.getElementById('exploreTypeOverlay'), 'active');
+  }
+
+  function enterExploreMode(contentType){
+    const code = pendingExploreCountry;
+    if(!code) return;
+    closeDialog(document.getElementById('exploreTypeOverlay'), 'active');
+    state.exploreRegion = code;
+    state.contentType = contentType;
+    state.mode = 'discover';
+    state.singlePlatform = null;
+    state.moods.clear();
+    clearMoodFilterVisual();
+    state.skipMoodStep = false;
+    state.skipMoodReason = null;
+    state.minRating = 0;
+    document.querySelectorAll('#chipMinRating .chip').forEach(c => setChipActive(c, false));
+    // Fresh platform list for the chosen country (platform sets differ per country);
+    // the generic list shows instantly until the real one arrives.
+    state.availablePlatforms = FALLBACK_PLATFORMS;
+    rebuildPlatformChips();
+    loadPlatformsForRegion(code);
+    updateRegionDisclosure();
+    updateSetupStepVisibility();
+    showScreen('screen-setup');
+  }
+
+  function leaveExploreMode(){
+    state.exploreRegion = null;
+    state.availablePlatforms = FALLBACK_PLATFORMS;
+    rebuildPlatformChips();
+    loadPlatformsForRegion(state.region);
+    updateRegionDisclosure();
+  }
+
+  document.getElementById('btnPickExplore').addEventListener('click', openExploreCountryDialog);
+  document.getElementById('btnCloseExploreCountry').addEventListener('click', () => {
+    closeDialog(document.getElementById('exploreCountryOverlay'), 'active');
+  });
+  document.getElementById('btnExploreMovies').addEventListener('click', () => enterExploreMode('movie'));
+  document.getElementById('btnExploreSeries').addEventListener('click', () => enterExploreMode('tv_series'));
+  document.getElementById('btnExploreBack').addEventListener('click', () => {
+    closeDialog(document.getElementById('exploreTypeOverlay'), 'active');
+    openExploreCountryDialog();
+  });
+  document.addEventListener('click', (e) => {
+    if(e.target.closest && e.target.closest('.ec-change')) openExploreCountryDialog();
+  });
+
+  // Three random flags on the home card (random so no country is favoured).
+  (function paintExploreCardFlags(){
+    const picks = Object.keys(FLAG_SRC).sort(() => Math.random() - 0.5).slice(0, 3);
+    document.querySelectorAll('#btnPickExplore .explore-flags span').forEach((el, i) => {
+      el.style.backgroundImage = `url("${FLAG_SRC[picks[i]]}")`;
+    });
+  })();
 
   // "Surprise me" — ignores mood (and, from the very first screen, content
   // type too, since nothing's been chosen yet). Still respects whatever
@@ -4291,17 +4557,17 @@ const TRANSLATIONS = {
       // Back to multiple platforms (state.platforms) as of the "let me pick
       // several platforms, then Start swiping" request — Top 10 below is
       // the one that stays single-platform.
-      url = `${BACKEND_URL}/api/recently-added?platforms=${platformParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&language=${state.language}`;
+      url = `${BACKEND_URL}/api/recently-added?platforms=${platformParam}&region=${activeRegion()}&limit=${limit}&page=${page}&content_type=${state.contentType}&language=${state.language}`;
     } else if(state.mode === 'top10'){
       // A fixed, single-platform, popularity-sorted list — deliberately
       // ignores state.platforms (multi-select) and state.moods entirely,
       // since "Top 10" is a specific concept (one platform, no filtering),
       // not a variant of the general discover flow.
-      url = `${BACKEND_URL}/api/discover?platforms=${state.singlePlatform}&moods=&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=popularity_1year&language=${state.language}&mode=top10`;
+      url = `${BACKEND_URL}/api/discover?platforms=${state.singlePlatform}&moods=&region=${activeRegion()}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=popularity_1year&language=${state.language}&mode=top10`;
     } else {
       const moodParam = [...state.moods].join(',');
       const ratingParam = state.minRating > 0 ? `&min_rating=${state.minRating}` : '';
-      url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${state.region}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=${state.orderBy}&language=${state.language}${ratingParam}`;
+      url = `${BACKEND_URL}/api/discover?platforms=${platformParam}&moods=${moodParam}&region=${activeRegion()}&limit=${limit}&page=${page}&content_type=${state.contentType}&order_by=${state.orderBy}&language=${state.language}${ratingParam}`;
     }
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -4723,6 +4989,8 @@ const TRANSLATIONS = {
       poster.appendChild(trailerBadge);
     }
 
+    if(state.exploreRegion) poster.appendChild(makeFlagBadge(state.exploreRegion, 'left'));
+
     card.appendChild(poster);
 
     const meta = document.createElement('div');
@@ -4884,6 +5152,9 @@ const TRANSLATIONS = {
 
   function addToFavorites(movie){
     if(state.favorites.some(f => f.title === movie.title)) return;
+    // Remember which country's catalog this pick came from (explore sessions
+    // only) — shown as a small flag on its poster in the picks grid.
+    if(state.exploreRegion && !movie.exploreCountry) movie.exploreCountry = state.exploreRegion;
     state.favorites.push(movie);
     persistFavorites();
   }
@@ -5087,6 +5358,7 @@ const TRANSLATIONS = {
         updateFavoritesButtons();
       });
       poster.appendChild(heartBtn);
+      if(movie.exploreCountry) poster.appendChild(makeFlagBadge(movie.exploreCountry));
 
       let watchedOverlay = null;
       if(showWatchedToggle){
@@ -5220,6 +5492,8 @@ const TRANSLATIONS = {
     else if(family.classList.contains('active')) closeDialog(family, 'active');
     else if(recentlyAdded.classList.contains('active')) closeDialog(recentlyAdded, 'active');
     else if(singlePlatform.classList.contains('active')) closeDialog(singlePlatform, 'active');
+    else if(document.getElementById('exploreCountryOverlay').classList.contains('active')) closeDialog(document.getElementById('exploreCountryOverlay'), 'active');
+    else if(document.getElementById('exploreTypeOverlay').classList.contains('active')) closeDialog(document.getElementById('exploreTypeOverlay'), 'active');
     else if(tour.classList.contains('visible')) endTour();
   });
 
@@ -5242,7 +5516,7 @@ const TRANSLATIONS = {
     // which isn't in that list since Escape doesn't close it).
     const tag = document.activeElement && document.activeElement.tagName;
     if(tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable)) return;
-    const openOverlayIds = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay', 'singlePlatformOverlay'];
+    const openOverlayIds = ['shareOverlay', 'categoryOverlay', 'platformOverlay', 'familyTypeOverlay', 'recentlyAddedTypeOverlay', 'singlePlatformOverlay', 'exploreCountryOverlay', 'exploreTypeOverlay'];
     if(openOverlayIds.some(id => document.getElementById(id)?.classList.contains('active'))) return;
     if(document.getElementById('tourTooltip')?.classList.contains('visible')) return;
     if(document.querySelector('.overview-overlay.show')) return;
@@ -5347,7 +5621,7 @@ const TRANSLATIONS = {
     document.getElementById('searchResultsCount').textContent = t('results_label');
     showScreen('screen-search-results');
 
-    fetch(`${BACKEND_URL}/api/search?query=${encodeURIComponent(query)}&content_type=${state.contentType}&language=${state.language}&region=${state.region}`)
+    fetch(`${BACKEND_URL}/api/search?query=${encodeURIComponent(query)}&content_type=${state.contentType}&language=${state.language}&region=${activeRegion()}`)
       .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
       .then(data => {
         const movies = mapApiResults(data.results || []);
@@ -5591,7 +5865,7 @@ const TRANSLATIONS = {
     containerEl.innerHTML = `<p class="providers-loading">${t("checking_where_to_watch")}</p>`;
 
     const attempt = (retriesLeft) => {
-      fetch(`${BACKEND_URL}/api/movie/${watchmodeId}/providers?region=${state.region}`)
+      fetch(`${BACKEND_URL}/api/movie/${watchmodeId}/providers?region=${activeRegion()}`)
         .then(r => { if(!r.ok) throw new Error('bad'); return r.json(); })
         .then(data => {
           const html = [
@@ -5832,7 +6106,7 @@ const TRANSLATIONS = {
     if(!movie.watchmodeId) return;
 
     const platformParam = [...state.platforms].join(',');
-    const url = `${BACKEND_URL}/api/similar/${encodeURIComponent(movie.watchmodeId)}?platforms=${platformParam}&region=${state.region}&content_type=${state.contentType}&language=${state.language}`;
+    const url = `${BACKEND_URL}/api/similar/${encodeURIComponent(movie.watchmodeId)}?platforms=${platformParam}&region=${activeRegion()}&content_type=${state.contentType}&language=${state.language}`;
 
     fetch(url)
       .then(r => r.ok ? r.json() : null)
