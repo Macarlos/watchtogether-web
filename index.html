@@ -1930,8 +1930,11 @@
 
       <div class="favorites-tip" id="favoritesTip" style="display:none;">
         <button class="favorites-tip-close" id="btnCloseFavoritesTip" data-i18n-aria="btn_close" aria-label="Close">&times;</button>
+        <div id="favoritesTipBasic">
         <p><i class="ti ti-thumb-up" aria-hidden="true" style="color:var(--amber);"></i> <span data-i18n="favorites_tip_heart">Tap the thumbs-up again to remove a title from your picks.</span></p>
         <p><i class="ti ti-eye" aria-hidden="true" style="color:var(--amber);"></i> <span data-i18n="favorites_tip_eye">Tap the eye to mark a title as already watched.</span></p>
+        </div>
+        <p id="favoritesTipFlag" style="display:none;"><i class="ti ti-flag" aria-hidden="true" style="color:var(--amber);"></i> <span data-i18n="favorites_tip_flag">A flag in the lower-right corner of a poster means you saved it from another country's catalog.</span></p>
       </div>
 
       <div class="empty-state" id="favoritesEmptyState" style="display:none;">
@@ -2075,7 +2078,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.86 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.87 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -2229,6 +2232,7 @@ const TRANSLATIONS = {
     platform_dialog_body: "More platforms means more titles to swipe through. This starts a fresh deck with your updated platforms.",
     favorites_heading: "Everything you liked",
     favorites_tip_heart: "Tap the thumbs-up again to remove a title from your picks.",
+    favorites_tip_flag: "A flag in the lower-right corner of a poster means you saved it from another country's catalog.",
     favorites_tip_eye: "Tap the eye to mark a title as already watched.",
     favorites_empty: "There is nothing here yet.",
     favorites_empty_body: "Swipe right on something you like, and it'll show up here.",
@@ -2448,6 +2452,7 @@ const TRANSLATIONS = {
     platform_dialog_body: "Más plataformas significan más títulos para deslizar. Esto empieza un mazo nuevo con tus plataformas actualizadas.",
     favorites_heading: "Todo lo que te gustó",
     favorites_tip_heart: "Toca el pulgar de nuevo para quitar un título de tus elecciones.",
+    favorites_tip_flag: "Una bandera en la esquina inferior derecha del póster significa que lo guardaste desde el catálogo de otro país.",
     favorites_tip_eye: "Toca el ojo para marcar un título como ya visto.",
     favorites_empty: "Todavía no hay nada aquí.",
     favorites_empty_body: "Desliza a la derecha algo que te guste, y aparecerá aquí.",
@@ -2667,6 +2672,7 @@ const TRANSLATIONS = {
     platform_dialog_body: "Mais plataformas significam mais títulos para deslizar. Isso começa um baralho novo com suas plataformas atualizadas.",
     favorites_heading: "Tudo que você curtiu",
     favorites_tip_heart: "Toque no polegar novamente para remover um título das suas escolhas.",
+    favorites_tip_flag: "Uma bandeira no canto inferior direito do pôster significa que você salvou o título do catálogo de outro país.",
     favorites_tip_eye: "Toque no olho para marcar um título como já assistido.",
     favorites_empty: "Ainda não há nada aqui.",
     favorites_empty_body: "Deslize para a direita algo que você goste, e vai aparecer aqui.",
@@ -2886,6 +2892,7 @@ const TRANSLATIONS = {
     platform_dialog_body: "Plus de plateformes veut dire plus de titres à parcourir. Cela démarre un nouveau paquet avec vos plateformes mises à jour.",
     favorites_heading: "Tout ce que vous avez aimé",
     favorites_tip_heart: "Retouchez le pouce pour retirer un titre de vos choix.",
+    favorites_tip_flag: "Un drapeau dans le coin inférieur droit de l'affiche signifie que vous l'avez enregistré depuis le catalogue d'un autre pays.",
     favorites_tip_eye: "Touchez l'œil pour marquer un titre comme déjà vu.",
     favorites_empty: "Il n'y a encore rien ici.",
     favorites_empty_body: "Balayez vers la droite quelque chose que vous aimez, et ça apparaîtra ici.",
@@ -3105,6 +3112,7 @@ const TRANSLATIONS = {
     platform_dialog_body: "Mehr Plattformen bedeuten mehr Titel zum Wischen. Das startet einen neuen Stapel mit deinen aktualisierten Plattformen.",
     favorites_heading: "Alles, was dir gefallen hat",
     favorites_tip_heart: "Tippe erneut auf den Daumen, um einen Titel aus deiner Auswahl zu entfernen.",
+    favorites_tip_flag: "Eine Flagge in der unteren rechten Ecke des Posters bedeutet, dass du den Titel aus dem Katalog eines anderen Landes gespeichert hast.",
     favorites_tip_eye: "Tippe auf das Auge, um einen Titel als bereits gesehen zu markieren.",
     favorites_empty: "Hier ist noch nichts.",
     favorites_empty_body: "Wische etwas, das dir gefällt, nach rechts — es erscheint dann hier.",
@@ -3324,6 +3332,7 @@ const TRANSLATIONS = {
     platform_dialog_body: "ज़्यादा प्लेटफ़ॉर्म का मतलब है स्वाइप करने के लिए ज़्यादा टाइटल। इससे आपके अपडेट किए गए प्लेटफ़ॉर्म के साथ एक नया डेक शुरू होता है।",
     favorites_heading: "आपको जो कुछ पसंद आया",
     favorites_tip_heart: "किसी टाइटल को अपनी पसंद से हटाने के लिए अंगूठे पर फिर से टैप करें।",
+    favorites_tip_flag: "पोस्टर के निचले दाएँ कोने में झंडा होने का मतलब है कि आपने इसे किसी दूसरे देश के कैटलॉग से सेव किया है।",
     favorites_tip_eye: "किसी टाइटल को पहले से देखा हुआ चिह्नित करने के लिए आंख पर टैप करें।",
     favorites_empty: "यहाँ अभी कुछ नहीं है।",
     favorites_empty_body: "जो पसंद आए उसे दाईं ओर स्वाइप करें, वह यहाँ दिखेगा।",
@@ -3543,6 +3552,7 @@ const TRANSLATIONS = {
     platform_dialog_body: "Więcej platform oznacza więcej tytułów do przesuwania. To rozpoczyna nową talię z Twoimi zaktualizowanymi platformami.",
     favorites_heading: "Wszystko, co Ci się spodobało",
     favorites_tip_heart: "Dotknij ponownie kciuka, aby usunąć tytuł ze swoich wyborów.",
+    favorites_tip_flag: "Flaga w prawym dolnym rogu plakatu oznacza, że tytuł pochodzi z katalogu innego kraju.",
     favorites_tip_eye: "Dotknij oka, aby oznaczyć tytuł jako już obejrzany.",
     favorites_empty: "Nic tu jeszcze nie ma.",
     favorites_empty_body: "Przesuń w prawo coś, co Ci się podoba, a pojawi się tutaj.",
@@ -3690,6 +3700,7 @@ const TRANSLATIONS = {
   const WATCHED_STORAGE_KEY = 'w2n_watched_titles_v1';
   const COOKIE_NOTICE_STORAGE_KEY = 'w2n_cookie_notice_dismissed_v1';
   const FAVORITES_TIP_STORAGE_KEY = 'w2n_favorites_tip_dismissed_v1';
+  const FAVORITES_FLAG_TIP_STORAGE_KEY = 'w2n_favorites_flag_tip_dismissed_v1';
 
   function loadSavedFavorites(){
     try{
@@ -5304,7 +5315,17 @@ const TRANSLATIONS = {
     // else backed by localStorage in this app).
     let tipAlreadyDismissed = false;
     try { tipAlreadyDismissed = localStorage.getItem(FAVORITES_TIP_STORAGE_KEY) === 'true'; } catch(e){}
-    document.getElementById('favoritesTip').style.display = (hasFavorites && !tipAlreadyDismissed) ? '' : 'none';
+    // The flag line only matters (and only shows) once at least one pick came
+    // from another country's catalog; it has its own dismissed flag so people
+    // who already closed the original tip still see it once.
+    let flagTipDismissed = false;
+    try { flagTipDismissed = localStorage.getItem(FAVORITES_FLAG_TIP_STORAGE_KEY) === 'true'; } catch(e){}
+    const showBasicTip = hasFavorites && !tipAlreadyDismissed;
+    const showFlagTip = state.favorites.some(f => f.exploreCountry) && !flagTipDismissed;
+    document.getElementById('favoritesTipBasic').style.display = showBasicTip ? '' : 'none';
+    document.getElementById('favoritesTipBasic').style.marginBottom = (showBasicTip && showFlagTip) ? '.5rem' : '0'; // keep the gap between the two groups of lines
+    document.getElementById('favoritesTipFlag').style.display = showFlagTip ? '' : 'none';
+    document.getElementById('favoritesTip').style.display = (showBasicTip || showFlagTip) ? '' : 'none';
 
     const backLabels = {
       'screen-deck': t('btn_back_to_swiping'),
@@ -5428,6 +5449,7 @@ const TRANSLATIONS = {
   document.getElementById('btnCloseFavoritesTip').addEventListener('click', () => {
     document.getElementById('favoritesTip').style.display = 'none';
     try { localStorage.setItem(FAVORITES_TIP_STORAGE_KEY, 'true'); } catch(e){}
+    try { localStorage.setItem(FAVORITES_FLAG_TIP_STORAGE_KEY, 'true'); } catch(e){}
   });
   document.getElementById('btnStartSwipingFromEmptyFavorites').addEventListener('click', fullRestart);
 
@@ -5679,6 +5701,7 @@ const TRANSLATIONS = {
     if(!confirmed) return;
     state.favorites = [];
     persistFavorites();
+    updateFavoritesButtons(); // refresh the "Your picks" tiles right away — they used to keep the old count until the next save
     showScreen(favoritesReturnScreen);
   });
   document.getElementById('btnBackToFavoritesGrid').addEventListener('click', () => showScreen(finalPickReturnScreen));
@@ -6289,6 +6312,7 @@ const TRANSLATIONS = {
         // dismissed flag here specifically: a full tutorial replay should
         // show everything again, even something already dismissed once.
         try { localStorage.removeItem(FAVORITES_TIP_STORAGE_KEY); } catch(e){}
+        try { localStorage.removeItem(FAVORITES_FLAG_TIP_STORAGE_KEY); } catch(e){}
         showFavoritesGrid('screen-content-type');
       } else {
         showScreen(step.screen);
