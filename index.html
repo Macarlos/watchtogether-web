@@ -2070,7 +2070,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.88 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.89 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3683,7 +3683,33 @@ const TRANSLATIONS = {
     } catch (e) {}
     return 'web';
   }
-  fetch(`${BACKEND_URL}/api/ping`, { method: 'POST', body: JSON.stringify({ platform: detectOpenPlatform() }) }).catch(() => {});
+  // Random anonymous device ID (made once, kept in this browser/app's own
+  // storage, never derived from anything about the person). The server keeps
+  // only a hash of it, to count unique devices and how many come back.
+  // If storage is blocked, no ID is sent and the open is simply counted.
+  function getDeviceId() {
+    try {
+      let id = localStorage.getItem('w2n_did');
+      if (!id || !/^[A-Za-z0-9\-]{16,64}$/.test(id)) {
+        if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+          id = window.crypto.randomUUID();
+        } else {
+          const bytes = new Uint8Array(16);
+          if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
+          else for (let i = 0; i < 16; i++) bytes[i] = Math.floor(Math.random() * 256);
+          id = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+        }
+        localStorage.setItem('w2n_did', id);
+      }
+      return id;
+    } catch (e) { return null; }
+  }
+  (function () {
+    const body = { platform: detectOpenPlatform() };
+    const did = getDeviceId();
+    if (did) body.did = did;
+    fetch(`${BACKEND_URL}/api/ping`, { method: 'POST', body: JSON.stringify(body) }).catch(() => {});
+  })();
 
   /* ════════════════════════════════════════════════════════════
      STATE
