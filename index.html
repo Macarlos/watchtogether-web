@@ -2098,7 +2098,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.96 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
+  <footer>Watch2Night v4.97 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p id="cookieNoticeText" data-i18n="cookie_notice_text">We use local storage to remember your picks and a random anonymous ID to count visits. Ads on this site are served by Google AdSense, which may use cookies to show and measure ads. Where the law requires it, you will be asked for consent.</p>
@@ -3947,7 +3947,19 @@ const TRANSLATIONS = {
     updateRegionDisclosure();
     rebuildMoodChips();
     updateAndroidBanner();
+    updateLegalLinks();
     document.dispatchEvent(new Event('w2n-language-applied'));
+  }
+
+  // The Legal & Privacy page exists in all 7 languages; open it in the one the
+  // person is currently using (keeps any #anchor, e.g. #cookies).
+  function updateLegalLinks(){
+    document.querySelectorAll('a[href^="legal.html"]').forEach(a => {
+      const raw = a.getAttribute('href');
+      const hashAt = raw.indexOf('#');
+      const hash = hashAt >= 0 ? raw.slice(hashAt) : '';
+      a.setAttribute('href', 'legal.html?lang=' + encodeURIComponent(state.language || 'en') + hash);
+    });
   }
 
   // Rebuilds mood chip elements with freshly translated labels — unlike
