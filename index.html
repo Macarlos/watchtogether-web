@@ -2097,7 +2097,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.94 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
+  <footer>Watch2Night v4.95 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -3939,6 +3939,7 @@ const TRANSLATIONS = {
     updateRegionDisclosure();
     rebuildMoodChips();
     updateAndroidBanner();
+    document.dispatchEvent(new Event('w2n-language-applied'));
   }
 
   // Rebuilds mood chip elements with freshly translated labels — unlike
@@ -6615,6 +6616,22 @@ const TRANSLATIONS = {
       showScreen('screen-content-type');
     }
   }
+
+  // The tour starts ~0.6 s after load, usually BEFORE the visitor's country (and
+  // so their language) has been detected. When the language arrives later, the
+  // card that is already open must be re-translated too, otherwise the first
+  // tip stays in English while all the next ones are translated.
+  document.addEventListener('w2n-language-applied', () => {
+    const tooltip = document.getElementById('tourTooltip');
+    if(!tooltip || !tooltip.classList.contains('visible') || !tourActiveList[tourIndex]) return;
+    const step = tourActiveList[tourIndex];
+    document.getElementById('tourTooltipTitle').textContent = t(step.titleKey);
+    document.getElementById('tourTooltipBody').textContent = t(step.bodyKey);
+    document.getElementById('tourNextBtn').textContent = (tourIndex === tourActiveList.length - 1) ? t('tour_done') : t('tour_next');
+    document.getElementById('tourTooltipStepCount').textContent = t('tour_step_count', { current: tourIndex + 1, total: tourActiveList.length });
+    const target = document.getElementById(step.targetId);
+    if(target) positionTourTooltip(target);
+  });
 
   document.getElementById('tourNextBtn').addEventListener('click', () => {
     if(tourIndex >= tourActiveList.length - 1){ endTour(false, true); return; }
