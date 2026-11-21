@@ -2097,7 +2097,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.90 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
+  <footer>Watch2Night v4.91 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -5362,17 +5362,20 @@ const TRANSLATIONS = {
     return el;
   }
 
+  function tourIsOpen(){ return document.documentElement.classList.contains('tour-on'); }
+
   async function showAds(){
-    if (adsShown || isAdFree()) return;
+    if (adsShown || isAdFree() || tourIsOpen()) return;
     const AdMob = adsPlugin();
     if (!AdMob) return;
     if (!adUnit('banner') || !adUnit('reward')) return;
     if (!(await ensureAdsReady())) return;
-    if (adsShown || isAdFree()) return;
+    if (adsShown || isAdFree() || tourIsOpen()) return;
     try {
       await AdMob.showBanner({ adId: adUnit('banner'), adSize: 'ADAPTIVE_BANNER', position: 'BOTTOM_CENTER', margin: 0, isTesting: ADS.TEST_MODE });
       adsShown = true;
     } catch(e) { return; }
+    if (tourIsOpen()) { hideAds(); return; }   // the tour started while the banner was loading
     let closed = false;
     try { closed = sessionStorage.getItem('w2n_adfree_balloon_closed') === '1'; } catch(e) {}
     if (!closed) ensureBalloon().classList.add('show');
@@ -5419,6 +5422,9 @@ const TRANSLATIONS = {
     else showAds();
   }
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshAds(); });
+  // The first-run tour must not be covered by the native banner.
+  document.addEventListener('w2n-tour-start', () => { hideAds(); });
+  document.addEventListener('w2n-tour-end', () => { setTimeout(refreshAds, 300); });
   // Start a moment after the page is up (the plugin asks for a ready UI).
   setTimeout(refreshAds, 2500);
 
@@ -6574,12 +6580,16 @@ const TRANSLATIONS = {
     // stuck open while the screen underneath navigates away.
     history.pushState({tourOpen: true}, '', location.pathname + location.search);
     tourHistoryPushed = true;
+    document.documentElement.classList.add('tour-on');
+    document.dispatchEvent(new Event('w2n-tour-start'));
     showTourStep(tourIndex);
   }
 
   function endTour(fromPopState, goHome){
     document.querySelectorAll('.tour-spotlight-target').forEach(el => el.classList.remove('tour-spotlight-target'));
     document.getElementById('tourTooltip').classList.remove('visible');
+    document.documentElement.classList.remove('tour-on');
+    document.dispatchEvent(new Event('w2n-tour-end'));
     markTourSeen();
     if(tourHistoryPushed && !fromPopState){
       history.replaceState({}, '', location.pathname + location.search);
