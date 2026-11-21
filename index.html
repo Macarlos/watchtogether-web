@@ -2097,7 +2097,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.93 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
+  <footer>Watch2Night v4.94 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -5294,9 +5294,9 @@ const TRANSLATIONS = {
   // not contain the AdMob plugin (any version before the ads release) simply
   // never runs any of this, because window.Capacitor.Plugins.AdMob is missing.
   const ADS = {
-    TEST_MODE: true,              // true = Google's demo ads. Set to false once the real unit IDs below are filled in.
-    BANNER_ID: '',                // AdMob banner ad unit ID  (ca-app-pub-…/…)
-    REWARD_ID: '',                // AdMob rewarded ad unit ID (ca-app-pub-…/…)
+    TEST_MODE: false,             // true = Google's demo ads (never earns). false = real ads with the unit IDs below.
+    BANNER_ID: 'ca-app-pub-2115703553093825/8296075687',   // AdMob banner ad unit ID
+    REWARD_ID: 'ca-app-pub-2115703553093825/8360701047',   // AdMob rewarded ad unit ID
     TEST_BANNER_ID: 'ca-app-pub-3940256099942544/6300978111',   // Google's public demo units
     TEST_REWARD_ID: 'ca-app-pub-3940256099942544/5224354917',
     FREE_HOURS: 24,
