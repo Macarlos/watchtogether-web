@@ -1591,6 +1591,7 @@
   }
   @media (max-width:480px){
     .cookie-notice{ flex-direction:column; align-items:stretch; text-align:center; }
+    .cookie-notice p{ flex:0 0 auto; }
     .cookie-notice-actions{ justify-content:center; }
   }
 </style>
@@ -2097,10 +2098,10 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.95 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
+  <footer>Watch2Night v4.96 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
-    <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
+    <p id="cookieNoticeText" data-i18n="cookie_notice_text">We use local storage to remember your picks and a random anonymous ID to count visits. Ads on this site are served by Google AdSense, which may use cookies to show and measure ads. Where the law requires it, you will be asked for consent.</p>
     <div class="cookie-notice-actions">
       <a href="legal.html#cookies" data-i18n="cookie_notice_learn_more">Learn more</a>
       <button class="btn btn-primary" id="btnDismissCookieNotice" data-i18n="cookie_notice_dismiss">Got it</button>
@@ -2345,7 +2346,8 @@ const TRANSLATIONS = {
     aria_mark_watched: "Mark as watched",
     aria_mark_unwatched: "Mark as not watched",
     aria_remove_from_picks: "Remove from your picks",
-    cookie_notice_text: "We only use essential local storage to remember your saved picks. No tracking, no ads.",
+    cookie_notice_text: "We use local storage to remember your picks and a random anonymous ID to count visits. Ads on this site are served by Google AdSense, which may use cookies to show and measure ads. Where the law requires it, you will be asked for consent.",
+    cookie_notice_text_app: "We use local storage to remember your picks and a random anonymous ID to count visits. The app shows ads from Google AdMob, which may use your device's advertising ID to show and measure ads. Where the law requires it, you will be asked for consent.",
     cookie_notice_learn_more: "Learn more",
     cookie_notice_dismiss: "Got it",
     setup_surprise_mode_label: "Surprise me",
@@ -2569,7 +2571,8 @@ const TRANSLATIONS = {
     aria_mark_watched: "Marcar como visto",
     aria_mark_unwatched: "Marcar como no visto",
     aria_remove_from_picks: "Quitar de tus selecciones",
-    cookie_notice_text: "Solo usamos almacenamiento local esencial para recordar tus elecciones guardadas. Sin rastreo, sin anuncios.",
+    cookie_notice_text: "Usamos almacenamiento local para recordar tus elecciones y un identificador anónimo aleatorio para contar visitas. Los anuncios de este sitio los muestra Google AdSense, que puede usar cookies para mostrarlos y medirlos. Cuando la ley lo exige, se te pedirá tu consentimiento.",
+    cookie_notice_text_app: "Usamos almacenamiento local para recordar tus elecciones y un identificador anónimo aleatorio para contar visitas. La app muestra anuncios de Google AdMob, que puede usar el identificador de publicidad de tu dispositivo para mostrarlos y medirlos. Cuando la ley lo exige, se te pedirá tu consentimiento.",
     cookie_notice_learn_more: "Saber más",
     cookie_notice_dismiss: "Entendido",
     setup_surprise_mode_label: "Sorpréndeme",
@@ -2793,7 +2796,8 @@ const TRANSLATIONS = {
     aria_mark_watched: "Marcar como assistido",
     aria_mark_unwatched: "Marcar como não assistido",
     aria_remove_from_picks: "Remover das suas escolhas",
-    cookie_notice_text: "Usamos apenas armazenamento local essencial para lembrar suas escolhas salvas. Sem rastreamento, sem anúncios.",
+    cookie_notice_text: "Usamos armazenamento local para lembrar suas escolhas e um identificador anônimo aleatório para contar visitas. Os anúncios deste site são exibidos pelo Google AdSense, que pode usar cookies para exibi-los e medi-los. Quando a lei exigir, pediremos seu consentimento.",
+    cookie_notice_text_app: "Usamos armazenamento local para lembrar suas escolhas e um identificador anônimo aleatório para contar visitas. O app exibe anúncios do Google AdMob, que pode usar o ID de publicidade do seu dispositivo para exibi-los e medi-los. Quando a lei exigir, pediremos seu consentimento.",
     cookie_notice_learn_more: "Saiba mais",
     cookie_notice_dismiss: "Entendi",
     setup_surprise_mode_label: "Me surpreenda",
@@ -3017,7 +3021,8 @@ const TRANSLATIONS = {
     aria_mark_watched: "Marquer comme vu",
     aria_mark_unwatched: "Marquer comme non vu",
     aria_remove_from_picks: "Retirer de vos choix",
-    cookie_notice_text: "Nous utilisons uniquement un stockage local essentiel pour retenir vos choix enregistrés. Pas de suivi, pas de publicité.",
+    cookie_notice_text: "Nous utilisons le stockage local pour retenir vos choix et un identifiant anonyme aléatoire pour compter les visites. Les publicités de ce site sont diffusées par Google AdSense, qui peut utiliser des cookies pour les afficher et les mesurer. Lorsque la loi l'exige, votre consentement vous sera demandé.",
+    cookie_notice_text_app: "Nous utilisons le stockage local pour retenir vos choix et un identifiant anonyme aléatoire pour compter les visites. L'application affiche des publicités de Google AdMob, qui peut utiliser l'identifiant publicitaire de votre appareil pour les afficher et les mesurer. Lorsque la loi l'exige, votre consentement vous sera demandé.",
     cookie_notice_learn_more: "En savoir plus",
     cookie_notice_dismiss: "Compris",
     setup_surprise_mode_label: "Surprenez-moi",
@@ -3241,7 +3246,8 @@ const TRANSLATIONS = {
     aria_mark_watched: "Als gesehen markieren",
     aria_mark_unwatched: "Als ungesehen markieren",
     aria_remove_from_picks: "Aus Favoriten entfernen",
-    cookie_notice_text: "Wir verwenden nur unbedingt notwendigen lokalen Speicher, um deine gespeicherte Auswahl zu merken. Kein Tracking, keine Werbung.",
+    cookie_notice_text: "Wir nutzen lokalen Speicher, um deine Auswahl zu merken, und eine zufällige anonyme ID, um Besuche zu zählen. Die Werbung auf dieser Seite stammt von Google AdSense, das Cookies zum Anzeigen und Messen von Werbung verwenden kann. Wo das Gesetz es verlangt, fragen wir dich nach deiner Einwilligung.",
+    cookie_notice_text_app: "Wir nutzen lokalen Speicher, um deine Auswahl zu merken, und eine zufällige anonyme ID, um Besuche zu zählen. Die App zeigt Werbung von Google AdMob, das die Werbe-ID deines Geräts zum Anzeigen und Messen von Werbung verwenden kann. Wo das Gesetz es verlangt, fragen wir dich nach deiner Einwilligung.",
     cookie_notice_learn_more: "Mehr erfahren",
     cookie_notice_dismiss: "Verstanden",
     setup_surprise_mode_label: "Überrasch mich",
@@ -3465,7 +3471,8 @@ const TRANSLATIONS = {
     aria_mark_watched: "देखा हुआ चिह्नित करें",
     aria_mark_unwatched: "न देखा हुआ चिह्नित करें",
     aria_remove_from_picks: "अपनी पसंद से हटाएं",
-    cookie_notice_text: "हम सिर्य़ आपकी सेव की गई पसंद याद रखने के लिए जरूरी लोकल स्टोरेज का उपयोग करते हैं। कोई ट्रैकिंग नहीं, कोई विज्ञापन नहीं।",
+    cookie_notice_text: "हम आपकी पसंद याद रखने के लिए लोकल स्टोरेज और विज़िट गिनने के लिए एक रैंडम गुमनाम आईडी का उपयोग करते हैं। इस साइट पर विज्ञापन Google AdSense दिखाता है, जो विज्ञापन दिखाने और मापने के लिए कुकीज़ का उपयोग कर सकता है। जहाँ कानून ज़रूरी करता है, वहाँ आपसे सहमति माँगी जाएगी।",
+    cookie_notice_text_app: "हम आपकी पसंद याद रखने के लिए लोकल स्टोरेज और विज़िट गिनने के लिए एक रैंडम गुमनाम आईडी का उपयोग करते हैं। ऐप Google AdMob के विज्ञापन दिखाता है, जो विज्ञापन दिखाने और मापने के लिए आपके डिवाइस की विज्ञापन आईडी का उपयोग कर सकता है। जहाँ कानून ज़रूरी करता है, वहाँ आपसे सहमति माँगी जाएगी।",
     cookie_notice_learn_more: "और जानें",
     cookie_notice_dismiss: "ठीक है",
     setup_surprise_mode_label: "मुझे सरप्राइज़ करें",
@@ -3689,7 +3696,8 @@ const TRANSLATIONS = {
     aria_mark_watched: "Oznacz jako obejrzane",
     aria_mark_unwatched: "Oznacz jako nieobejrzane",
     aria_remove_from_picks: "Usuń ze swoich wyborów",
-    cookie_notice_text: "Używamy wyłącznie niezbędnego przechowywania lokalnego, aby zapamiętać Twoje zapisane wybory. Bez śledzenia, bez reklam.",
+    cookie_notice_text: "Używamy pamięci lokalnej, aby zapamiętać Twoje wybory, oraz losowego anonimowego identyfikatora do zliczania odwiedzin. Reklamy na tej stronie wyświetla Google AdSense, który może używać plików cookie do wyświetlania i pomiaru reklam. Tam, gdzie wymaga tego prawo, poprosimy o Twoją zgodę.",
+    cookie_notice_text_app: "Używamy pamięci lokalnej, aby zapamiętać Twoje wybory, oraz losowego anonimowego identyfikatora do zliczania odwiedzin. Aplikacja wyświetla reklamy Google AdMob, który może używać identyfikatora reklamowego Twojego urządzenia do wyświetlania i pomiaru reklam. Tam, gdzie wymaga tego prawo, poprosimy o Twoją zgodę.",
     cookie_notice_learn_more: "Dowiedz się więcej",
     cookie_notice_dismiss: "Rozumiem",
     setup_surprise_mode_label: "Zaskocz mnie",
@@ -3771,7 +3779,7 @@ const TRANSLATIONS = {
      ════════════════════════════════════════════════════════════ */
   const FAVORITES_STORAGE_KEY = 'reel_favorites_v1';
   const WATCHED_STORAGE_KEY = 'w2n_watched_titles_v1';
-  const COOKIE_NOTICE_STORAGE_KEY = 'w2n_cookie_notice_dismissed_v1';
+  const COOKIE_NOTICE_STORAGE_KEY = 'w2n_cookie_notice_dismissed_v2';   // v2: the notice now also covers ads, so everyone sees it once more
   const FAVORITES_TIP_STORAGE_KEY = 'w2n_favorites_tip_dismissed_v1';
   const FAVORITES_FLAG_TIP_STORAGE_KEY = 'w2n_favorites_flag_tip_dismissed_v1';
 
@@ -6674,6 +6682,14 @@ const TRANSLATIONS = {
       // Storage unavailable (private browsing, etc.) — default to not
       // showing the notice repeatedly is less important than not erroring.
       alreadyDismissed = true;
+    }
+
+    // Inside the Android app the ads come from AdMob (not AdSense), so the app
+    // shows its own wording.
+    const textEl = document.getElementById('cookieNoticeText');
+    if (textEl && document.documentElement.classList.contains('in-app')) {
+      textEl.setAttribute('data-i18n', 'cookie_notice_text_app');
+      textEl.textContent = t('cookie_notice_text_app');
     }
 
     if (!alreadyDismissed) {
