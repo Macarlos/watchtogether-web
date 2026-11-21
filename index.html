@@ -604,6 +604,33 @@
   /* No AdSense inside the Android app — see the loader in <head>. */
   .in-app .ad-slot-responsive{ display:none !important; }
 
+  /* ── Ads inside the Android app (AdMob banner + "watch a video" balloon) ── */
+  html.has-ad-banner body{ padding-bottom:var(--adh,0px); }
+  #adfreeBalloon{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:calc(var(--adh,0px) + 16px + env(safe-area-inset-bottom, 0px));
+    z-index:70; display:none; align-items:center; gap:.6rem;
+    width:max-content; max-width:calc(100vw - 24px); padding:.55rem .45rem .55rem .95rem;
+    border-radius:999px; border:1px solid var(--amber);
+    background:rgba(18,22,40,.97); color:#f5f0e8;
+    font-family:var(--font-body, system-ui, sans-serif); font-size:.82rem; font-weight:600; line-height:1.25;
+    box-shadow:0 8px 24px rgba(0,0,0,.5); cursor:pointer; text-align:left;
+  }
+  #adfreeBalloon.show{ display:flex; }
+  #adfreeBalloon::after{
+    content:""; position:absolute; left:50%; bottom:-6px; width:12px; height:12px;
+    background:rgba(18,22,40,.97); border-right:1px solid var(--amber); border-bottom:1px solid var(--amber);
+    transform:translateX(-50%) rotate(45deg);
+  }
+  #adfreeBalloon .adfree-play{ color:var(--amber); font-size:.85rem; }
+  #adfreeBalloon .adfree-x{
+    flex:none; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    color:#9aa3c7; font-size:1.1rem; line-height:1;
+  }
+  #adfreeBalloon.busy{ opacity:.6; pointer-events:none; }
+  /* first visit: the cookie notice sits in the same spot, so the balloon waits until it is dismissed */
+  body:has(#cookieNotice[style*="flex"]) #adfreeBalloon{ display:none !important; }
+
   .similar-scroll-btn{
     display:none; /* desktop-only — see the min-width:700px block below */
     position:absolute; top:0; bottom:.3rem;
@@ -1518,7 +1545,7 @@
   .cookie-notice{
     position:fixed;
     left:1rem; right:1rem;
-    bottom:calc(1rem + env(safe-area-inset-bottom, 0px));
+    bottom:calc(1rem + var(--adh,0px) + env(safe-area-inset-bottom, 0px));
     max-width:600px;
     margin:0 auto;
     background:var(--surface-2);
@@ -2070,7 +2097,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.89 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a></footer>
+  <footer>Watch2Night v4.90 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -2162,6 +2189,10 @@ const TRANSLATIONS = {
     tour_favorites_body: "Tap the thumbs-up again to remove a title, or the eye to mark it as already watched.",
     android_banner_eyebrow: "New · Android app",
     android_banner_title: "Watch2Night is now on Google Play",
+    adfree_offer: "Watch 1 short video → no ads for 24 h",
+    adfree_done: "Thanks! No ads for the next 24 hours.",
+    adfree_unavailable: "No video available right now. Try again in a moment.",
+    ad_privacy_link: "Ad privacy settings",
     android_banner_sub: "Free, no account. Same swipes, now on your home screen.",
     android_banner_close: "Close",
     android_footer_text: "Take Watch2Night with you — free on Android.",
@@ -2382,6 +2413,10 @@ const TRANSLATIONS = {
     tour_favorites_body: "Toca el pulgar de nuevo para quitar un título, o el ojo para marcarlo como ya visto.",
     android_banner_eyebrow: "Novedad · App para Android",
     android_banner_title: "Watch2Night ya está en Google Play",
+    adfree_offer: "Mira 1 vídeo corto → sin anuncios durante 24 h",
+    adfree_done: "¡Gracias! Sin anuncios durante las próximas 24 horas.",
+    adfree_unavailable: "No hay ningún vídeo disponible ahora. Inténtalo de nuevo en un momento.",
+    ad_privacy_link: "Privacidad de los anuncios",
     android_banner_sub: "Gratis y sin cuenta. Los mismos swipes, ahora en tu pantalla de inicio.",
     android_banner_close: "Cerrar",
     android_footer_text: "Lleva Watch2Night contigo — gratis en Android.",
@@ -2602,6 +2637,10 @@ const TRANSLATIONS = {
     tour_favorites_body: "Toque no polegar novamente para remover um título, ou no olho para marcá-lo como já assistido.",
     android_banner_eyebrow: "Novidade · App para Android",
     android_banner_title: "O Watch2Night agora está no Google Play",
+    adfree_offer: "Veja 1 vídeo curto → sem anúncios por 24 h",
+    adfree_done: "Obrigado! Sem anúncios nas próximas 24 horas.",
+    adfree_unavailable: "Nenhum vídeo disponível agora. Tente novamente daqui a pouco.",
+    ad_privacy_link: "Privacidade dos anúncios",
     android_banner_sub: "Grátis e sem conta. Os mesmos swipes, agora na sua tela inicial.",
     android_banner_close: "Fechar",
     android_footer_text: "Leve o Watch2Night com você — grátis no Android.",
@@ -2822,6 +2861,10 @@ const TRANSLATIONS = {
     tour_favorites_body: "Retouchez le pouce pour retirer un titre, ou l'œil pour le marquer comme déjà vu.",
     android_banner_eyebrow: "Nouveau · Appli Android",
     android_banner_title: "Watch2Night est maintenant sur Google Play",
+    adfree_offer: "Regardez 1 courte vidéo → sans pub pendant 24 h",
+    adfree_done: "Merci ! Plus de pub pendant 24 h.",
+    adfree_unavailable: "Aucune vidéo disponible pour le moment. Réessayez dans un instant.",
+    ad_privacy_link: "Confidentialité des publicités",
     android_banner_sub: "Gratuit, sans compte. Les mêmes swipes, maintenant sur votre écran d'accueil.",
     android_banner_close: "Fermer",
     android_footer_text: "Emportez Watch2Night partout — gratuit sur Android.",
@@ -3042,6 +3085,10 @@ const TRANSLATIONS = {
     tour_favorites_body: "Tippe erneut auf den Daumen, um einen Titel zu entfernen, oder auf das Auge, um ihn als bereits gesehen zu markieren.",
     android_banner_eyebrow: "Neu · Android-App",
     android_banner_title: "Watch2Night gibt es jetzt bei Google Play",
+    adfree_offer: "1 kurzes Video ansehen → 24 Std. ohne Werbung",
+    adfree_done: "Danke! 24 Stunden keine Werbung.",
+    adfree_unavailable: "Gerade ist kein Video verfügbar. Bitte gleich noch einmal versuchen.",
+    ad_privacy_link: "Datenschutz bei Werbung",
     android_banner_sub: "Kostenlos, ohne Konto. Dieselben Swipes, jetzt auf deinem Startbildschirm.",
     android_banner_close: "Schließen",
     android_footer_text: "Nimm Watch2Night mit — kostenlos für Android.",
@@ -3262,6 +3309,10 @@ const TRANSLATIONS = {
     tour_favorites_body: "किसी टाइटल को हटाने के लिए अंगूठे पर फिर से टैप करें, या उसे पहले से देखा हुआ चिह्नित करने के लिए आंख पर टैप करें।",
     android_banner_eyebrow: "नया · एंड्रॉइड ऐप",
     android_banner_title: "Watch2Night अब Google Play पर उपलब्ध है",
+    adfree_offer: "1 छोटा वीडियो देखें → 24 घंटे कोई विज्ञापन नहीं",
+    adfree_done: "धन्यवाद! अगले 24 घंटे कोई विज्ञापन नहीं।",
+    adfree_unavailable: "अभी कोई वीडियो उपलब्ध नहीं है। थोड़ी देर बाद फिर कोशिश करें।",
+    ad_privacy_link: "विज्ञापन गोपनीयता सेटिंग",
     android_banner_sub: "मुफ़्त, बिना अकाउंट। वही स्वाइप, अब आपके होम स्क्रीन पर।",
     android_banner_close: "बंद करें",
     android_footer_text: "Watch2Night को अपने साथ रखें — Android पर मुफ़्त।",
@@ -3482,6 +3533,10 @@ const TRANSLATIONS = {
     tour_favorites_body: "Dotknij ponownie kciuka, aby usunąć tytuł, albo oka, aby oznaczyć go jako już obejrzany.",
     android_banner_eyebrow: "Nowość · Aplikacja na Androida",
     android_banner_title: "Watch2Night jest już w Google Play",
+    adfree_offer: "Obejrzyj 1 krótki film → 24 h bez reklam",
+    adfree_done: "Dzięki! Przez 24 godziny bez reklam.",
+    adfree_unavailable: "Brak dostępnego filmu. Spróbuj za chwilę.",
+    ad_privacy_link: "Prywatność reklam",
     android_banner_sub: "Za darmo, bez konta. Te same swipe'y, teraz na ekranie głównym.",
     android_banner_close: "Zamknij",
     android_footer_text: "Zabierz Watch2Night ze sobą — za darmo na Androida.",
@@ -5218,6 +5273,154 @@ const TRANSLATIONS = {
       setTimeout(() => toast.remove(), 250);
     }, 1600);
   }
+
+  // ── Ads inside the Android app (AdMob) ──────────────────────────────
+  // A banner at the bottom plus a small balloon: "watch 1 short video → no ads
+  // for 24 h". The balloon is the way out of the banner; one finished rewarded
+  // video switches the banner off for ADS.FREE_HOURS.
+  // App-only: the website uses AdSense instead, and an installed app that does
+  // not contain the AdMob plugin (any version before the ads release) simply
+  // never runs any of this, because window.Capacitor.Plugins.AdMob is missing.
+  const ADS = {
+    TEST_MODE: true,              // true = Google's demo ads. Set to false once the real unit IDs below are filled in.
+    BANNER_ID: '',                // AdMob banner ad unit ID  (ca-app-pub-…/…)
+    REWARD_ID: '',                // AdMob rewarded ad unit ID (ca-app-pub-…/…)
+    TEST_BANNER_ID: 'ca-app-pub-3940256099942544/6300978111',   // Google's public demo units
+    TEST_REWARD_ID: 'ca-app-pub-3940256099942544/5224354917',
+    FREE_HOURS: 24,
+    KEY: 'w2n_adfree_until_v1'
+  };
+  let adsReadyPromise = null;
+  let adsShown = false;
+  let adsExpiryTimer = null;
+
+  function adsPlugin(){
+    try {
+      const c = window.Capacitor;
+      if (c && typeof c.isNativePlatform === 'function' && c.isNativePlatform() && c.Plugins && c.Plugins.AdMob) return c.Plugins.AdMob;
+    } catch(e) {}
+    return null;
+  }
+  function adUnit(kind){
+    if (ADS.TEST_MODE) return kind === 'banner' ? ADS.TEST_BANNER_ID : ADS.TEST_REWARD_ID;
+    return kind === 'banner' ? ADS.BANNER_ID : ADS.REWARD_ID;
+  }
+  function adFreeUntil(){
+    try { return Number(localStorage.getItem(ADS.KEY)) || 0; } catch(e) { return 0; }
+  }
+  function isAdFree(){ return adFreeUntil() > Date.now(); }
+
+  function setAdsInset(px){
+    const h = Math.max(0, Math.round(px || 0));
+    document.documentElement.style.setProperty('--adh', h + 'px');
+    document.documentElement.classList.toggle('has-ad-banner', h > 0);
+  }
+
+  // Consent (EU/UK rules) → SDK start. Resolves true only when ads may be requested.
+  function ensureAdsReady(){
+    if (adsReadyPromise) return adsReadyPromise;
+    adsReadyPromise = (async () => {
+      const AdMob = adsPlugin();
+      if (!AdMob) return false;
+      try {
+        let info = await AdMob.requestConsentInfo();
+        if (info.isConsentFormAvailable && info.status === 'REQUIRED') info = await AdMob.showConsentForm();
+        if (info.privacyOptionsRequirementStatus === 'REQUIRED') {
+          const wrap = document.getElementById('adPrivacyWrap');
+          const link = document.getElementById('adPrivacyLink');
+          if (wrap && link) {
+            wrap.hidden = false;
+            link.addEventListener('click', (e) => { e.preventDefault(); try { AdMob.showPrivacyOptionsForm(); } catch(err) {} });
+          }
+        }
+        if (!info.canRequestAds) return false;
+        await AdMob.initialize();
+        AdMob.addListener('bannerAdSizeChanged', (size) => setAdsInset(size && size.height));
+        return true;
+      } catch(e) {
+        return false;
+      }
+    })();
+    return adsReadyPromise;
+  }
+
+  function ensureBalloon(){
+    let el = document.getElementById('adfreeBalloon');
+    if (el) return el;
+    el = document.createElement('div');
+    el.id = 'adfreeBalloon';
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    el.innerHTML = '<span class="adfree-play" aria-hidden="true">▶</span><span class="adfree-text" data-i18n="adfree_offer"></span><span class="adfree-x" role="button" aria-label="Close">&times;</span>';
+    el.querySelector('.adfree-text').textContent = t('adfree_offer');
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('.adfree-x')) { e.stopPropagation(); try { sessionStorage.setItem('w2n_adfree_balloon_closed', '1'); } catch(err) {} el.classList.remove('show'); return; }
+      runAdFreeReward();
+    });
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); runAdFreeReward(); } });
+    document.body.appendChild(el);
+    return el;
+  }
+
+  async function showAds(){
+    if (adsShown || isAdFree()) return;
+    const AdMob = adsPlugin();
+    if (!AdMob) return;
+    if (!adUnit('banner') || !adUnit('reward')) return;
+    if (!(await ensureAdsReady())) return;
+    if (adsShown || isAdFree()) return;
+    try {
+      await AdMob.showBanner({ adId: adUnit('banner'), adSize: 'ADAPTIVE_BANNER', position: 'BOTTOM_CENTER', margin: 0, isTesting: ADS.TEST_MODE });
+      adsShown = true;
+    } catch(e) { return; }
+    let closed = false;
+    try { closed = sessionStorage.getItem('w2n_adfree_balloon_closed') === '1'; } catch(e) {}
+    if (!closed) ensureBalloon().classList.add('show');
+  }
+
+  async function hideAds(){
+    const AdMob = adsPlugin();
+    const b = document.getElementById('adfreeBalloon');
+    if (b) b.classList.remove('show');
+    if (adsShown && AdMob) { try { await AdMob.removeBanner(); } catch(e) {} }
+    adsShown = false;
+    setAdsInset(0);
+  }
+
+  async function runAdFreeReward(){
+    const AdMob = adsPlugin();
+    const balloon = document.getElementById('adfreeBalloon');
+    if (!AdMob || (balloon && balloon.classList.contains('busy'))) return;
+    if (balloon) balloon.classList.add('busy');
+    try {
+      await AdMob.prepareRewardVideoAd({ adId: adUnit('reward'), isTesting: ADS.TEST_MODE });
+      await AdMob.showRewardVideoAd();           // resolves only when the reward was earned
+      try { localStorage.setItem(ADS.KEY, String(Date.now() + ADS.FREE_HOURS * 3600 * 1000)); } catch(e) {}
+      await hideAds();
+      scheduleAdsRefresh();
+      showToast(t('adfree_done'));
+    } catch(e) {
+      const code = e && (e.code || e.message || '');
+      if (String(code).indexOf('REWARDED_AD_CANCELLED') === -1) showToast(t('adfree_unavailable'));
+    } finally {
+      if (balloon) balloon.classList.remove('busy');
+    }
+  }
+
+  // Bring the banner back automatically when the ad-free time is over.
+  function scheduleAdsRefresh(){
+    if (adsExpiryTimer) { clearTimeout(adsExpiryTimer); adsExpiryTimer = null; }
+    const left = adFreeUntil() - Date.now();
+    if (left > 0) adsExpiryTimer = setTimeout(refreshAds, Math.min(left + 1000, 2147000000));
+  }
+  function refreshAds(){
+    if (!adsPlugin()) return;
+    if (isAdFree()) { hideAds(); scheduleAdsRefresh(); }
+    else showAds();
+  }
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshAds(); });
+  // Start a moment after the page is up (the plugin asks for a ready UI).
+  setTimeout(refreshAds, 2500);
 
   function resolveSwipe(movie, liked, cardEl){
     const flyX = liked ? 600 : -600;
