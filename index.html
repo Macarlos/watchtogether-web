@@ -2097,7 +2097,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.92 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
+  <footer>Watch2Night v4.93 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p data-i18n="cookie_notice_text">We only use essential local storage to remember your saved picks. No tracking, no ads.</p>
@@ -4752,6 +4752,10 @@ const TRANSLATIONS = {
   }
   initPosterBackground();
 
+  // Movie of the Night returns up to 20 titles per page. Asking for fewer just
+  // threw the rest away (while still paying for the call), so take the whole page.
+  const DECK_PAGE_SIZE = 20;
+
   function buildDeck(){
     state.deckIndex = 0;
     // MOTN's cursor-based pagination can't jump to a random page, so every
@@ -4774,12 +4778,15 @@ const TRANSLATIONS = {
     // one exception — it's a fixed, capped list (exactly 10, by definition),
     // so it fetches everything in one go and never paginates further.
     const isTop10 = state.mode === 'top10';
-    fetchWithRetries(() => fetchDiscoverPage(1, isTop10 ? 10 : 8), 2, 1500)
+    fetchWithRetries(() => fetchDiscoverPage(1, isTop10 ? 10 : DECK_PAGE_SIZE), 2, 1500)
       .then(mapped => {
         if(mapped.length === 0) throw new Error('empty');
         deck = mapped;
         renderDeck();
-        if(!isTop10) loadMoreIfNeeded(true);
+        // No eager second fetch any more: a full page (20 titles) is enough to
+        // start, and the next page is requested automatically when 4 cards are
+        // left (renderDeck -> loadMoreIfNeeded). This saves a Movie of the Night
+        // call for every visitor who only swipes a few cards.
       })
       .catch(err => {
         if(err.message === 'budget_paused'){
@@ -4853,7 +4860,7 @@ const TRANSLATIONS = {
     // running, they end up on the "finding more titles" screen — and a flag
     // computed at the start would say "not waiting", so the new titles
     // arrived but nothing ever re-rendered (stuck forever, v4.91 and older).
-    fetchWithRetries(() => fetchDiscoverPage(state.backendPage + 1, 14), 2, 1500)
+    fetchWithRetries(() => fetchDiscoverPage(state.backendPage + 1, DECK_PAGE_SIZE), 2, 1500)
       .then(more => {
         state.backendPage++;
         state.loadingMore = false;
