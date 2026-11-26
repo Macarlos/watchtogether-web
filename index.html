@@ -2098,7 +2098,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer>Watch2Night v4.97 · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
+  <footer><span id="verTap">Watch2Night v4.98</span> · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p id="cookieNoticeText" data-i18n="cookie_notice_text">We use local storage to remember your picks and a random anonymous ID to count visits. Ads on this site are served by Google AdSense, which may use cookies to show and measure ads. Where the law requires it, you will be asked for consent.</p>
@@ -5326,6 +5326,7 @@ const TRANSLATIONS = {
   let adsReadyPromise = null;
   let adsShown = false;
   let adsExpiryTimer = null;
+  let adsRetries = 0, adsRetryTimer = null;
 
   function adsPlugin(){
     try {
@@ -5343,6 +5344,35 @@ const TRANSLATIONS = {
   }
   function isAdFree(){ return adFreeUntil() > Date.now(); }
 
+  // Diagnostics: every ad step is written to the console ("[W2N ads]"). With the
+  // hidden debug switch ON (tap the version number in the footer 5 times) each
+  // step is also shown as a short on-screen message, so a problem can be read
+  // straight from the phone. OFF by default; nothing is shown to normal users.
+  window.__w2nAdsLog = [];
+  function adsDebugOn(){ try { return localStorage.getItem('w2n_ads_debug') === '1'; } catch(e) { return false; } }
+  function adsLog(stage, detail){
+    let d = '';
+    try { d = detail == null ? '' : (typeof detail === 'string' ? detail : JSON.stringify(detail, Object.getOwnPropertyNames(Object(detail)))); } catch(e) { d = String(detail); }
+    window.__w2nAdsLog.push(new Date().toISOString().slice(11, 19) + ' ' + stage + (d ? ' ' + d : ''));
+    try { console.warn('[W2N ads]', stage, d); } catch(e) {}
+    if (adsDebugOn()) { try { showToast('ADS: ' + stage + (d ? ' ' + d.slice(0, 110) : '')); } catch(e) {} }
+  }
+  (function(){
+    const el = document.getElementById('verTap');
+    if (!el) return;
+    let taps = 0, timer = null;
+    el.addEventListener('click', () => {
+      taps++; clearTimeout(timer); timer = setTimeout(() => { taps = 0; }, 3000);
+      if (taps >= 5) {
+        taps = 0;
+        const on = !adsDebugOn();
+        try { localStorage.setItem('w2n_ads_debug', on ? '1' : '0'); } catch(e) {}
+        showToast('Ad debug ' + (on ? 'ON' : 'OFF'));
+        if (on) { adsReadyPromise = null; refreshAds(); }
+      }
+    });
+  })();
+
   function setAdsInset(px){
     const h = Math.max(0, Math.round(px || 0));
     document.documentElement.style.setProperty('--adh', h + 'px');
@@ -5357,7 +5387,8 @@ const TRANSLATIONS = {
       if (!AdMob) return false;
       try {
         let info = await AdMob.requestConsentInfo();
-        if (info.isConsentFormAvailable && info.status === 'REQUIRED') info = await AdMob.showConsentForm();
+        adsLog('consent info', { status: info.status, formAvailable: info.isConsentFormAvailable, canRequestAds: info.canRequestAds });
+        if (info.isConsentFormAvailable && info.status === 'REQUIRED') { info = await AdMob.showConsentForm(); adsLog('consent form done', { status: info.status, canRequestAds: info.canRequestAds }); }
         if (info.privacyOptionsRequirementStatus === 'REQUIRED') {
           const wrap = document.getElementById('adPrivacyWrap');
           const link = document.getElementById('adPrivacyLink');
@@ -5366,11 +5397,16 @@ const TRANSLATIONS = {
             link.addEventListener('click', (e) => { e.preventDefault(); try { AdMob.showPrivacyOptionsForm(); } catch(err) {} });
           }
         }
-        if (!info.canRequestAds) return false;
+        if (!info.canRequestAds) { adsLog('cannot request ads yet (consent)'); return false; }
         await AdMob.initialize();
-        AdMob.addListener('bannerAdSizeChanged', (size) => setAdsInset(size && size.height));
+        adsLog('initialized');
+        AdMob.addListener('bannerAdSizeChanged', (size) => { adsLog('banner size', size); setAdsInset(size && size.height); });
+        try { AdMob.addListener('bannerAdFailedToLoad', (err) => adsLog('BANNER FAILED TO LOAD', err)); } catch(e) {}
+        try { AdMob.addListener('bannerAdLoaded', () => adsLog('banner loaded OK')); } catch(e) {}
         return true;
       } catch(e) {
+        adsLog('consent/init error', e);
+        adsReadyPromise = null;   // allow a later retry instead of staying dead until the app restarts
         return false;
       }
     })();
@@ -5407,7 +5443,17 @@ const TRANSLATIONS = {
     try {
       await AdMob.showBanner({ adId: adUnit('banner'), adSize: 'ADAPTIVE_BANNER', position: 'BOTTOM_CENTER', margin: 0, isTesting: ADS.TEST_MODE });
       adsShown = true;
-    } catch(e) { return; }
+      adsRetries = 0;
+      adsLog('banner requested');
+    } catch(e) {
+      adsLog('showBanner error', e);
+      // A banner that fails to load is retried every minute (max 10 times).
+      if (adsRetries < 10 && !adsRetryTimer) {
+        adsRetries++;
+        adsRetryTimer = setTimeout(() => { adsRetryTimer = null; refreshAds(); }, 60000);
+      }
+      return;
+    }
     if (tourIsOpen()) { hideAds(); return; }   // the tour started while the banner was loading
     let closed = false;
     try { closed = sessionStorage.getItem('w2n_adfree_balloon_closed') === '1'; } catch(e) {}
@@ -5437,6 +5483,7 @@ const TRANSLATIONS = {
       showToast(t('adfree_done'));
     } catch(e) {
       const code = e && (e.code || e.message || '');
+      adsLog('reward error', e);
       if (String(code).indexOf('REWARDED_AD_CANCELLED') === -1) showToast(t('adfree_unavailable'));
     } finally {
       if (balloon) balloon.classList.remove('busy');
