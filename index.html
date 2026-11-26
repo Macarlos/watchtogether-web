@@ -605,7 +605,9 @@
   .in-app .ad-slot-responsive{ display:none !important; }
 
   /* ── Ads inside the Android app (AdMob banner + "watch a video" balloon) ── */
-  html.has-ad-banner body{ padding-bottom:var(--adh,0px); }
+  /* Room at the bottom of the page for the banner AND the balloon above it, so the
+     footer (version, Legal, "Ad privacy settings") can always be scrolled into view. */
+  html.has-ad-banner body{ padding-bottom:calc(var(--adh,0px) + 84px + env(safe-area-inset-bottom, 0px)); }
   #adfreeBalloon{
     position:fixed; left:50%; transform:translateX(-50%);
     bottom:calc(var(--adh,0px) + 16px + env(safe-area-inset-bottom, 0px));
@@ -2098,7 +2100,7 @@
 
   <div class="bulb-rail" id="bulbRailBottom"></div>
 
-  <footer><span id="verTap">Watch2Night v4.98</span> · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
+  <footer><span id="verTap">Watch2Night v4.99</span> · <span data-i18n="footer_line">Streaming availability powered by Movie of the Night</span> · <a href="legal.html" style="color:inherit;" data-i18n="legal_privacy_link">Legal & Privacy</a> · <a href="blog/index.html" style="color:inherit;" data-i18n="blog_link">Blog</a> · <a href="mailto:feedback@watch2night.com?subject=Watch2Night%20feedback" style="color:inherit;" data-i18n="contact_link">Contact</a><span id="adPrivacyWrap" hidden> · <a href="#" id="adPrivacyLink" style="color:inherit;" data-i18n="ad_privacy_link">Ad privacy settings</a></span></footer>
 
   <div class="cookie-notice" id="cookieNotice" style="display:none;">
     <p id="cookieNoticeText" data-i18n="cookie_notice_text">We use local storage to remember your picks and a random anonymous ID to count visits. Ads on this site are served by Google AdSense, which may use cookies to show and measure ads. Where the law requires it, you will be asked for consent.</p>
@@ -5373,7 +5375,9 @@ const TRANSLATIONS = {
     });
   })();
 
-  function setAdsInset(px){
+  let adsInsetFromEvent = false;
+  function setAdsInset(px, fromEvent){
+    if (fromEvent) adsInsetFromEvent = true;
     const h = Math.max(0, Math.round(px || 0));
     document.documentElement.style.setProperty('--adh', h + 'px');
     document.documentElement.classList.toggle('has-ad-banner', h > 0);
@@ -5400,7 +5404,7 @@ const TRANSLATIONS = {
         if (!info.canRequestAds) { adsLog('cannot request ads yet (consent)'); return false; }
         await AdMob.initialize();
         adsLog('initialized');
-        AdMob.addListener('bannerAdSizeChanged', (size) => { adsLog('banner size', size); setAdsInset(size && size.height); });
+        AdMob.addListener('bannerAdSizeChanged', (size) => { adsLog('banner size', size); setAdsInset(size && size.height, true); });
         try { AdMob.addListener('bannerAdFailedToLoad', (err) => adsLog('BANNER FAILED TO LOAD', err)); } catch(e) {}
         try { AdMob.addListener('bannerAdLoaded', () => adsLog('banner loaded OK')); } catch(e) {}
         return true;
@@ -5445,6 +5449,9 @@ const TRANSLATIONS = {
       adsShown = true;
       adsRetries = 0;
       adsLog('banner requested');
+      // Fallback: if the plugin never reports the banner's height, assume a
+      // typical phone banner so the page still makes room for it.
+      setTimeout(() => { if (adsShown && !adsInsetFromEvent) setAdsInset(60); }, 2000);
     } catch(e) {
       adsLog('showBanner error', e);
       // A banner that fails to load is retried every minute (max 10 times).
